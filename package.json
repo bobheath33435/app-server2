@@ -1,0 +1,24 @@
+{
+  "name": "asp-server2",
+  "version": "1.0.0",
+  "description": "Asp server for version 3.0 of H1bFacts.com",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Robert Heath",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "express": "^4.17.1",
+    "log4js": "^4.5.1",
+    "mongodb": "^3.3.0-beta2",
+    "mongoose": "^5.6.8"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  }
+}
