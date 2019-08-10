@@ -20,7 +20,7 @@ h1bRecordRouter.get('/h1b', async (req, res) => {
         const year = req.body.YEAR;
         log(chalk.bgGreenBright.red('Year: ' + year))
         const caseNumber = req.body.CASE_NUMBER;
-        console.log('Case Number: ' + caseNumber)
+        log('Case Number: ' + caseNumber)
      
         const h1bModel = modelMap[year]
         if(undefined === h1bModel){

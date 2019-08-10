@@ -2,6 +2,8 @@ const mongoose = require('mongoose')
 const express = require('express')
 const app = express()
 const log4js = require('log4js')
+const chalk = require('chalk')
+const log = console.log;
 const h1bRecordRouter =  require('./routers/h1bRecordRouter')
 
 log4js.configure({
@@ -19,7 +21,7 @@ app.use(h1bRecordRouter)
 
 app.post('/h1b', (req, res) => {
     logger.info('Processing post');
-    console.log(req.body)
+    log(chalk.bgRed.white(JSON.stringify(req.body)))
     const year = req.body.YEAR;
     console.log('Year: ' + year)
  
@@ -33,6 +35,6 @@ app.post('/h1b', (req, res) => {
 })
 
 app.listen(port, () => {
-    console.log('Server is up on port ' + port)
+    log(chalk.bgRed.white.bold('Server is up on port') + chalk.red.bold(' ' + port))
 })
 
