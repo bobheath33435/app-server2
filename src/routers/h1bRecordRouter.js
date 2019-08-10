@@ -28,8 +28,8 @@ h1bRecordRouter.get('/h1b', async (req, res) => {
         }
         debugger
     
-        const h1bRecords = await h1bModel.find({"CASE_NUMBER": caseNumber})
-        res.status(202).send(h1bRecords)
+        const h1bRecords = await h1bModel.find(req.body)
+        res.status(202).json(h1bRecords)
     }catch(e){
         res.status(500).send("Invalid request")
     }
@@ -43,6 +43,7 @@ h1bRecordRouter.get('/h1bCount', async (req, res) => {
         console.log('Year: ' + year)
         const caseNumber = req.body.CASE_NUMBER;
         console.log('Case Number: ' + caseNumber)
+        const body = req.body
      
         const h1bModel = modelMap[year]
         if(undefined === h1bModel){
@@ -50,7 +51,7 @@ h1bRecordRouter.get('/h1bCount', async (req, res) => {
         }
         debugger
     
-        const count = await h1bModel.countDocuments({"CASE_NUMBER": caseNumber})
+        const count = await h1bModel.countDocuments(req.body)
         res.status(200).send({ "count": count })
     }catch(e){
         res.status(500).send("Invalid request")
@@ -83,6 +84,32 @@ h1bRecordRouter.get('/h1bWsCd', async (req, res) => {
         const h1bRecords = await h1bModel.find({"WORKSITE_CONGRESS_DISTICT": wsCD,
                                                 "WORKSITE_STATE": wsState })
         res.status(202).send(h1bRecords)
+    }catch(e){
+        res.status(500).send("Invalid request")
+    }
+})
+
+h1bRecordRouter.get('/h1bWsState', async (req, res) => {
+    try{
+        logger.info('Processing get worksite state');
+        console.log(req.body)
+        const year = req.body.YEAR;
+        console.log('Year: ' + year)
+        const wsState = req.body.WORKSITE_STATE;
+        console.log('Worksite State: ' + wsState)
+     
+        const h1bModel = modelMap[year]
+        if(undefined === h1bModel){
+            return res.status(500).send("Invalid year")
+        }
+        if(undefined === wsState){
+            return res.status(500).send("Invalid worksite state")
+        }
+        debugger
+    
+        const h1bRecords = await h1bModel.find({"WORKSITE_STATE": wsState })
+        // log(h1bRecords)
+        res.status(202).send("DONE")
     }catch(e){
         res.status(500).send("Invalid request")
     }

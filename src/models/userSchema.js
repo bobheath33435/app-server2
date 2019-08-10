@@ -47,6 +47,18 @@ const userSchema = mongoose.Schema({
 		enum: roles,
 		default: 'User'
 	},
+	orginization: {
+		type: String,
+		default: ""
+	},
+	purpose: {
+		type: String,
+		default: ""
+	},
+	phone: {
+		type: String,
+		default: ""
+	},
 	key: {
 		type: String,
 		default: 'none'

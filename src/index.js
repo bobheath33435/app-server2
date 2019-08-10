@@ -21,22 +21,7 @@ app.use(express.json())
 app.use(h1bRecordRouter)
 app.use(usersRouter)
 
-app.post('/h1b', (req, res) => {
-    logger.info('Processing post');
-    log(chalk.bgRed.white(JSON.stringify(req.body)))
-    const year = req.body.YEAR;
-    console.log('Year: ' + year)
- 
-    const h1bRecord = new modelMap[year](req.body)
-    h1bRecord.save().then(() => {
-        logger.info('H1bRecord: ' + h1bRecord)
-        res.send(h1bRecord)
-    }).catch((error) => {
-        res.send(error)
-    })
-})
-
 app.listen(port, () => {
-    log(chalk.bgRed.white.bold('Server is up on port') + ' ' + chalk.bgBlueBright.yellow.bold(port))
+    log(chalk.bgRed.white.bold('Server is up on port') + ' ' + chalk.green.bold(port))
 })
 
