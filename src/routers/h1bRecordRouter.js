@@ -16,6 +16,7 @@ log4js.configure({
     categories: { default: { appenders: ['h1bData'], level: 'info' } }
 });
 const modelMap = require('../models/dbRecords')
+const { summarize, createKey } = require('../utilities/summarize')
 const logger = log4js.getLogger('h1bData');
 
 h1bRecordRouter.get('/h1b', async (req, res) => {
@@ -144,61 +145,6 @@ h1bRecordRouter.get('/h1bSummary', async (req, res) => {
         res.status(500).send("Invalid request")
     }
 })
-
-const summarize = (h1bRecords) => {
-
-    var summaryRecord = {}
-    summaryRecord[TOTAL_WORKERS] = 0
-    summaryRecord[TOTAL_LCAS] = h1bRecords.length
-    summaryRecord[LEVEL_1] = 0
-    summaryRecord[LEVEL_2] = 0
-    summaryRecord[LEVEL_3] = 0
-    summaryRecord[LEVEL_4] = 0
-    summaryRecord[UNSPECIFIED] = 0
-
-    
-    h1bRecords.forEach( (h1bRecord, index ) => {
-        summaryRecord[TOTAL_WORKERS] += h1bRecord[TOTAL_WORKERS]
-
-        if(LEVEL_1 == h1bRecord[WAGE_LEVEL]){
-            summaryRecord[LEVEL_1] += h1bRecord[TOTAL_WORKERS]
-        }else if(LEVEL_2 == h1bRecord[WAGE_LEVEL]){
-            summaryRecord[LEVEL_2] += h1bRecord[TOTAL_WORKERS]
-        }else if(LEVEL_3 == h1bRecord[WAGE_LEVEL]){
-            summaryRecord[LEVEL_3] += h1bRecord[TOTAL_WORKERS]
-        }else if(LEVEL_4 == h1bRecord[WAGE_LEVEL]){
-            summaryRecord[LEVEL_4] += h1bRecord[TOTAL_WORKERS]
-        }else{
-            summaryRecord[UNSPECIFIED] += h1bRecord[TOTAL_WORKERS]
-        }
-
-    })
-
-    return summaryRecord
-}
-
-const createKey = (query) => {
-    var key = query[YEAR]
-    delete query[YEAR]
-    if(undefined != query[EMPLOYER_NAME]){
-        key += "_" + query[EMPLOYER_NAME]
-        delete query[EMPLOYER_NAME]
-    }
-
-    if(undefined != query[WORKSITE_STATE]){
-        key += "_" + query[WORKSITE_STATE]
-        delete query[WORKSITE_STATE]
-    }
-
-    if(undefined != query[WORKSITE_COUNTY]){
-        key += "_" + query[WORKSITE_COUNTY]
-        delete query[WORKSITE_COUNTY]
-    }
-
-    if(!_.isEmpty(query))
-        return null
-    return _.replace(key, / /g, '_')
-}
 
 h1bRecordRouter.post('/h1b', (req, res) => {
     logger.info('Processing post');
