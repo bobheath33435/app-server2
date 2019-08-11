@@ -4,9 +4,10 @@ const h1bRecordRouter = express.Router()
 const log4js = require('log4js')
 const chalk = require('chalk')
 const log = console.log;
-const { CASE_NUMBER, YEAR, WAGE_LEVEL, WORKSITE_CONGRESS_DISTRICT,
-        WORKSITE_STATE, TOTAL_WORKERS, LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4,
-        h1bRecord } 
+const _ = require('lodash')
+const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT,
+        WORKSITE_COUNTY, WORKSITE_STATE, TOTAL_WORKERS, TOTAL_LCAS, LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4,
+        UNSPECIFIED, h1bRecord } 
             = require('../models/h1bRecordSchema')
 
 log4js.configure({
@@ -42,11 +43,11 @@ h1bRecordRouter.get('/h1b', async (req, res) => {
 h1bRecordRouter.get('/h1bCount', async (req, res) => {
     try{
         logger.info('Processing get');
-        console.log(req.body)
+        log(req.body)
         const year = req.body[YEAR];
-        console.log('Year: ' + year)
+        log('Year: ' + year)
         const caseNumber = req.body[CASE_NUMBER];
-        console.log('Case Number: ' + caseNumber)
+        log('Case Number: ' + caseNumber)
         const body = req.body
      
         const h1bModel = modelMap[year]
@@ -65,13 +66,13 @@ h1bRecordRouter.get('/h1bCount', async (req, res) => {
 h1bRecordRouter.get('/h1bWsCd', async (req, res) => {
     try{
         logger.info('Processing get worksite congressional district');
-        console.log(req.body)
+        log(req.body)
         const year = req.body[YEAR];
-        console.log('Year: ' + year)
+        log('Year: ' + year)
         const wsCD = req.body[WORKSITE_CONGRESS_DISTRICT];
-        console.log('Worksite Congressional District: ' + wsCD)
+        log('Worksite Congressional District: ' + wsCD)
         const wsState = req.body[WORKSITE_STATE];
-        console.log('Worksite State: ' + wsState)
+        log('Worksite State: ' + wsState)
      
         const h1bModel = modelMap[year]
         if(undefined === h1bModel){
@@ -96,11 +97,13 @@ h1bRecordRouter.get('/h1bWsCd', async (req, res) => {
 h1bRecordRouter.get('/h1bWsState', async (req, res) => {
     try{
         logger.info('Processing get worksite state');
-        console.log(req.body)
+        log(req.body)
         const year = req.body[YEAR];
-        console.log('Year: ' + year)
+        log('Year: ' + year)
         const wsState = req.body[WORKSITE_STATE];
-        console.log('Worksite State: ' + wsState)
+        log('Worksite State: ' + wsState)
+
+        log(chalk.bgRed.white(createKey(req.body)))
      
         const h1bModel = modelMap[year]
         if(undefined === h1bModel){
@@ -109,7 +112,6 @@ h1bRecordRouter.get('/h1bWsState', async (req, res) => {
         if(undefined === wsState){
             return res.status(500).send("Invalid worksite state")
         }
-        debugger
     
         const h1bRecords = await h1bModel.find({WORKSITE_STATE: wsState })
         // log(h1bRecords)
@@ -145,30 +147,57 @@ h1bRecordRouter.get('/h1bSummary', async (req, res) => {
 
 const summarize = (h1bRecords) => {
 
-    var summaryRecord = {
-        wageLevel1: 0,
-        wageLevel2: 0,
-        wageLevel3: 0,
-        wageLevel4: 0,
-        unspecified: 0
-    }
+    var summaryRecord = {}
+    summaryRecord[TOTAL_WORKERS] = 0
+    summaryRecord[TOTAL_LCAS] = h1bRecords.length
+    summaryRecord[LEVEL_1] = 0
+    summaryRecord[LEVEL_2] = 0
+    summaryRecord[LEVEL_3] = 0
+    summaryRecord[LEVEL_4] = 0
+    summaryRecord[UNSPECIFIED] = 0
 
+    
     h1bRecords.forEach( (h1bRecord, index ) => {
+        summaryRecord[TOTAL_WORKERS] += h1bRecord[TOTAL_WORKERS]
+
         if(LEVEL_1 == h1bRecord[WAGE_LEVEL]){
-            summaryRecord.wageLevel1 += h1bRecord[TOTAL_WORKERS]
+            summaryRecord[LEVEL_1] += h1bRecord[TOTAL_WORKERS]
         }else if(LEVEL_2 == h1bRecord[WAGE_LEVEL]){
-            summaryRecord.wageLevel2 += h1bRecord[TOTAL_WORKERS]
+            summaryRecord[LEVEL_2] += h1bRecord[TOTAL_WORKERS]
         }else if(LEVEL_3 == h1bRecord[WAGE_LEVEL]){
-            summaryRecord.wageLevel3 += h1bRecord[TOTAL_WORKERS]
+            summaryRecord[LEVEL_3] += h1bRecord[TOTAL_WORKERS]
         }else if(LEVEL_4 == h1bRecord[WAGE_LEVEL]){
-            summaryRecord.wageLevel4 += h1bRecord[TOTAL_WORKERS]
+            summaryRecord[LEVEL_4] += h1bRecord[TOTAL_WORKERS]
         }else{
-            summaryRecord.unspecified += h1bRecord[TOTAL_WORKERS]
+            summaryRecord[UNSPECIFIED] += h1bRecord[TOTAL_WORKERS]
         }
 
     })
 
     return summaryRecord
+}
+
+const createKey = (query) => {
+    var key = query[YEAR]
+    delete query[YEAR]
+    if(undefined != query[EMPLOYER_NAME]){
+        key += "_" + query[EMPLOYER_NAME]
+        delete query[EMPLOYER_NAME]
+    }
+
+    if(undefined != query[WORKSITE_STATE]){
+        key += "_" + query[WORKSITE_STATE]
+        delete query[WORKSITE_STATE]
+    }
+
+    if(undefined != query[WORKSITE_COUNTY]){
+        key += "_" + query[WORKSITE_COUNTY]
+        delete query[WORKSITE_COUNTY]
+    }
+
+    if(!_.isEmpty(query))
+        return null
+    return _.replace(key, / /g, '_')
 }
 
 h1bRecordRouter.post('/h1b', (req, res) => {

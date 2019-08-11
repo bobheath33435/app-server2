@@ -3,14 +3,18 @@ const YEAR = "YEAR"
 const CASE_NUMBER = "CASE_NUMBER"
 const CASE_STATUS = "CASE_STATUS"
 const WORKSITE_CONGRESS_DISTRICT = "WORKSITE_CONGRESS_DISTICT"
+const EMPLOYER_NAME = "EMPLOYER_NAME"
+const WORKSITE_COUNTY = "WORKSITE_COUNTY"
 const WORKSITE_STATE = 'WORKSITE_STATE'
 const WAGE_LEVEL = "WAGE_LEVEL"
 const TOTAL_WORKERS = "TOTAL_WORKERS"
+const TOTAL_LCAS = "TOTAL_LCAS"
 
 const LEVEL_1 = "Level I"
 const LEVEL_2 = "Level II"
 const LEVEL_3 = "Level III"
 const LEVEL_4 = "Level IV"
+const UNSPECIFIED = "Level Unspecified"
 
 // H1B Record Schema
 const h1bRecordSchema = mongoose.Schema({
@@ -291,11 +295,15 @@ module.exports = { YEAR,
   CASE_STATUS,
   WAGE_LEVEL,
   TOTAL_WORKERS,
+  TOTAL_LCAS,
+  EMPLOYER_NAME,
   WORKSITE_CONGRESS_DISTRICT,
+  WORKSITE_COUNTY,
   WORKSITE_STATE,
   LEVEL_1,
   LEVEL_2,
   LEVEL_3,
   LEVEL_4,
+  UNSPECIFIED,
   h1bRecordSchema
 }
