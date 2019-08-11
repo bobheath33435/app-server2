@@ -1,4 +1,16 @@
 const mongoose = require('mongoose');
+const YEAR = "YEAR"
+const CASE_NUMBER = "CASE_NUMBER"
+const CASE_STATUS = "CASE_STATUS"
+const WORKSITE_CONGRESS_DISTRICT = "WORKSITE_CONGRESS_DISTICT"
+const WORKSITE_STATE = 'WORKSITE_STATE'
+const WAGE_LEVEL = "WAGE_LEVEL"
+const TOTAL_WORKERS = "TOTAL_WORKERS"
+
+const LEVEL_1 = "Level I"
+const LEVEL_2 = "Level II"
+const LEVEL_3 = "Level III"
+const LEVEL_4 = "Level IV"
 
 // H1B Record Schema
 const h1bRecordSchema = mongoose.Schema({
@@ -144,7 +156,7 @@ const h1bRecordSchema = mongoose.Schema({
     type: Number,
     default: ""
   },
-  WORKSITE_CONGRESS_DISTICT: {
+  WORKSITE_CONGRESS_DISTRICT: {
     type: Number,
     default: ""
   },
@@ -274,4 +286,16 @@ const h1bRecordSchema = mongoose.Schema({
   }
 });
 
-module.exports = h1bRecordSchema;
+module.exports = { YEAR,
+  CASE_NUMBER,
+  CASE_STATUS,
+  WAGE_LEVEL,
+  TOTAL_WORKERS,
+  WORKSITE_CONGRESS_DISTRICT,
+  WORKSITE_STATE,
+  LEVEL_1,
+  LEVEL_2,
+  LEVEL_3,
+  LEVEL_4,
+  h1bRecordSchema
+}
