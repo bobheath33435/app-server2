@@ -13,6 +13,8 @@ const { summarize, createKey, findLevels, countItems }
         = require('../src/utilities/summarize')
 const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT,
     WORKSITE_COUNTY, WORKSITE_STATE, TOTAL_WORKERS, TOTAL_LCAS, LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4,
+    NEW_EMPLOYMENT, CONTINUED_EMPLOYMENT, CHANGE_PREVIOUS_EMPLOYMENT,
+    NEW_CONCURRENT_EMPLOYMENT, CHANGE_EMPLOYER, AMENDED_PETITION,
     UNSPECIFIED, h1bRecord } 
         = require('../src/models/h1bRecordSchema')
 
@@ -48,13 +50,20 @@ describe('Test createKey', () => {
 describe('Test summarize', () => {
     logger.trace('testing summarize');
     var h1bRecords = [
-        {WAGE_LEVEL: LEVEL_1, TOTAL_WORKERS: 2, ANNUALIZED_WAGE_RATE_OF_PAY: 150, SOC_CODE: "123"},
-        {WAGE_LEVEL: LEVEL_2, TOTAL_WORKERS: 3, ANNUALIZED_WAGE_RATE_OF_PAY: 500, SOC_CODE: "abc"},
-        {WAGE_LEVEL: LEVEL_3, TOTAL_WORKERS: 5, ANNUALIZED_WAGE_RATE_OF_PAY: 600, SOC_CODE: "xyz"},
-        {WAGE_LEVEL: LEVEL_4, TOTAL_WORKERS: 7, ANNUALIZED_WAGE_RATE_OF_PAY: 400, SOC_CODE: "xyz"},
-        {WAGE_LEVEL: LEVEL_1, TOTAL_WORKERS: 11, ANNUALIZED_WAGE_RATE_OF_PAY: 200, SOC_CODE: "abc"},
-        {WAGE_LEVEL: LEVEL_2, TOTAL_WORKERS: 17, ANNUALIZED_WAGE_RATE_OF_PAY: 300, SOC_CODE: "123"},
-        {TOTAL_WORKERS: 23, ANNUALIZED_WAGE_RATE_OF_PAY: 10000, SOC_CODE: "123"},
+        {WAGE_LEVEL: LEVEL_1, TOTAL_WORKERS: 2, NEW_EMPLOYMENT: 5, CHANGE_PREVIOUS_EMPLOYMENT: 1,
+            ANNUALIZED_WAGE_RATE_OF_PAY: 150, SOC_CODE: "123"},
+        {WAGE_LEVEL: LEVEL_2, TOTAL_WORKERS: 3, CONTINUED_EMPLOYMENT: 3,
+            ANNUALIZED_WAGE_RATE_OF_PAY: 500, SOC_CODE: "abc"},
+        {WAGE_LEVEL: LEVEL_3, TOTAL_WORKERS: 5, CHANGE_PREVIOUS_EMPLOYMENT: 7,
+            ANNUALIZED_WAGE_RATE_OF_PAY: 600, SOC_CODE: "xyz"},
+        {WAGE_LEVEL: LEVEL_4, TOTAL_WORKERS: 7, NEW_CONCURRENT_EMPLOYMENT: 1, CONTINUED_EMPLOYMENT: 4000,
+            ANNUALIZED_WAGE_RATE_OF_PAY: 400, SOC_CODE: "xyz"},
+        {WAGE_LEVEL: LEVEL_1, TOTAL_WORKERS: 11, CHANGE_EMPLOYER: 14, AMENDED_PETITION: 77,
+            ANNUALIZED_WAGE_RATE_OF_PAY: 200, SOC_CODE: "abc"},
+        {WAGE_LEVEL: LEVEL_2, TOTAL_WORKERS: 17,  NEW_EMPLOYMENT: 7,
+            ANNUALIZED_WAGE_RATE_OF_PAY: 300, SOC_CODE: "123"},
+        {TOTAL_WORKERS: 23, AMENDED_PETITION: 5,
+            ANNUALIZED_WAGE_RATE_OF_PAY: 10000, SOC_CODE: "123"},
         {},
         {CASE_NUMBER: "12345"}
     ]
@@ -91,7 +100,6 @@ describe('Test summarize', () => {
         expect(10000).to.equal(summary.percentiles['90%'])
         expect(10000).to.equal(summary.percentiles['100%'])
 
-        
         expect(13).to.equal(summary.wageLevels.workers[LEVEL_1])
         expect(2).to.equal(summary.wageLevels.lcas[LEVEL_1])
         expect(20).to.equal(summary.wageLevels.workers[LEVEL_2])
@@ -102,6 +110,14 @@ describe('Test summarize', () => {
         expect(1).to.equal(summary.wageLevels.lcas[LEVEL_4])
         expect(23).to.equal(summary.wageLevels.workers[UNSPECIFIED])
         expect(1).to.equal(summary.wageLevels.lcas[UNSPECIFIED])
+        
+        expect(12).to.equal(summary.categories[NEW_EMPLOYMENT])
+        expect(4003).to.equal(summary.categories[CONTINUED_EMPLOYMENT])
+        expect(8).to.equal(summary.categories[CHANGE_PREVIOUS_EMPLOYMENT])
+        expect(1).to.equal(summary.categories[NEW_CONCURRENT_EMPLOYMENT])
+        expect(14).to.equal(summary.categories[CHANGE_EMPLOYER])
+        expect(82).to.equal(summary.categories[AMENDED_PETITION])
+
         expect(9).to.equal(summary[TOTAL_LCAS])
         expect(68).to.equal(summary[TOTAL_WORKERS])
         delete summary.wageLevels.workers[LEVEL_1]
@@ -120,6 +136,14 @@ describe('Test summarize', () => {
         delete summary.wageLevels.lcas
         expect(_.isEmpty(summary.wageLevels)).to.be.true
         delete summary.wageLevels
+        delete summary.categories[NEW_EMPLOYMENT]
+        delete summary.categories[CONTINUED_EMPLOYMENT]
+        delete summary.categories[CHANGE_PREVIOUS_EMPLOYMENT]
+        delete summary.categories[NEW_CONCURRENT_EMPLOYMENT]
+        delete summary.categories[CHANGE_EMPLOYER]
+        delete summary.categories[AMENDED_PETITION]
+        expect(_.isEmpty(summary.categories)).to.be.true
+        delete summary.categories
         delete summary[TOTAL_LCAS]
         delete summary[TOTAL_WORKERS]
         delete summary['wageArray']

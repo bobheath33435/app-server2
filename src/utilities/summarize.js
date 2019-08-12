@@ -5,6 +5,8 @@ const _ = require('lodash')
 const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT,
         WORKSITE_COUNTY, WORKSITE_STATE, TOTAL_WORKERS, TOTAL_LCAS, SOC_CODE, 
         LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4,
+        NEW_EMPLOYMENT, CONTINUED_EMPLOYMENT, CHANGE_PREVIOUS_EMPLOYMENT,
+        NEW_CONCURRENT_EMPLOYMENT, CHANGE_EMPLOYER, AMENDED_PETITION,
         UNSPECIFIED, ANNUALIZED_PREVAILING_WAGE, ANNUALIZED_WAGE_RATE_OF_PAY,
         salaryLevels, h1bRecord } 
             = require('../models/h1bRecordSchema')
@@ -34,6 +36,13 @@ const summarize = (h1bRecords) => {
     summaryRecord.wageLevels.lcas[LEVEL_3] = 0
     summaryRecord.wageLevels.lcas[LEVEL_4] = 0
     summaryRecord.wageLevels.lcas[UNSPECIFIED] = 0
+    summaryRecord.categories = {}
+    summaryRecord.categories[NEW_EMPLOYMENT] = 0
+    summaryRecord.categories[CONTINUED_EMPLOYMENT] = 0
+    summaryRecord.categories[CHANGE_PREVIOUS_EMPLOYMENT] = 0
+    summaryRecord.categories[NEW_CONCURRENT_EMPLOYMENT] = 0
+    summaryRecord.categories[CHANGE_EMPLOYER] = 0
+    summaryRecord.categories[AMENDED_PETITION] = 0
     summaryRecord.wageArray = []
     summaryRecord.occupations = {}
 
@@ -59,6 +68,25 @@ const summarize = (h1bRecords) => {
             summaryRecord.wageLevels.workers[UNSPECIFIED] += h1bRecord[TOTAL_WORKERS]
             summaryRecord.wageLevels.lcas[UNSPECIFIED] += 1
         }
+        if(undefined != h1bRecord[NEW_EMPLOYMENT]){
+            summaryRecord.categories[NEW_EMPLOYMENT] += h1bRecord[NEW_EMPLOYMENT]
+        }
+        if(undefined != h1bRecord[CONTINUED_EMPLOYMENT]){
+            summaryRecord.categories[CONTINUED_EMPLOYMENT] += h1bRecord[CONTINUED_EMPLOYMENT]
+        }
+        if(undefined != h1bRecord[CHANGE_PREVIOUS_EMPLOYMENT]){
+            summaryRecord.categories[CHANGE_PREVIOUS_EMPLOYMENT] += h1bRecord[CHANGE_PREVIOUS_EMPLOYMENT]
+        }
+        if(undefined != h1bRecord[NEW_CONCURRENT_EMPLOYMENT]){
+            summaryRecord.categories[NEW_CONCURRENT_EMPLOYMENT] += h1bRecord[NEW_CONCURRENT_EMPLOYMENT]
+        }
+        if(undefined != h1bRecord[CHANGE_EMPLOYER]){
+            summaryRecord.categories[CHANGE_EMPLOYER] += h1bRecord[CHANGE_EMPLOYER]
+        }
+        if(undefined != h1bRecord[AMENDED_PETITION]){
+            summaryRecord.categories[AMENDED_PETITION] += h1bRecord[AMENDED_PETITION]
+        }
+    
         if(0 <= h1bRecord[TOTAL_WORKERS]
                 && undefined != h1bRecord[ANNUALIZED_WAGE_RATE_OF_PAY]){
             const arr = Array(h1bRecord[TOTAL_WORKERS])
