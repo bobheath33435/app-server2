@@ -3,7 +3,8 @@ const chalk = require('chalk')
 const log = console.log;
 const _ = require('lodash')
 const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT,
-        WORKSITE_COUNTY, WORKSITE_STATE, TOTAL_WORKERS, TOTAL_LCAS, LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4,
+        WORKSITE_COUNTY, WORKSITE_STATE, TOTAL_WORKERS, TOTAL_LCAS, SOC_CODE, 
+        LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4,
         UNSPECIFIED, ANNUALIZED_PREVAILING_WAGE, ANNUALIZED_WAGE_RATE_OF_PAY,
         salaryLevels, h1bRecord } 
             = require('../models/h1bRecordSchema')
@@ -28,6 +29,7 @@ const summarize = (h1bRecords) => {
     summaryRecord[LEVEL_4] = 0
     summaryRecord[UNSPECIFIED] = 0
     summaryRecord.wageArray = []
+    summaryRecord.occupations = {}
 
     h1bRecords.forEach( (h1bRecord, index ) => {
         if(undefined != h1bRecord[TOTAL_WORKERS]){

@@ -17,7 +17,7 @@ const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT
         = require('../src/models/h1bRecordSchema')
 
 describe('Test createKey', () => {
-    logger.info('testing createKey');
+    logger.trace('testing createKey');
     it('1) createKey should create a key with {"YEAR": "xyz"}', () => {
         const key = createKey({'YEAR': "xyz"})
         expect("xyz").to.equal(key)
@@ -46,15 +46,15 @@ describe('Test createKey', () => {
 })
 
 describe('Test summarize', () => {
-    logger.info('testing summarize');
+    logger.trace('testing summarize');
     var h1bRecords = [
-        {WAGE_LEVEL: LEVEL_1, TOTAL_WORKERS: 2, ANNUALIZED_WAGE_RATE_OF_PAY: 150},
-        {WAGE_LEVEL: LEVEL_2, TOTAL_WORKERS: 3, ANNUALIZED_WAGE_RATE_OF_PAY: 500},
-        {WAGE_LEVEL: LEVEL_3, TOTAL_WORKERS: 5, ANNUALIZED_WAGE_RATE_OF_PAY: 600},
-        {WAGE_LEVEL: LEVEL_4, TOTAL_WORKERS: 7, ANNUALIZED_WAGE_RATE_OF_PAY: 400},
-        {WAGE_LEVEL: LEVEL_1, TOTAL_WORKERS: 11, ANNUALIZED_WAGE_RATE_OF_PAY: 200},
-        {WAGE_LEVEL: LEVEL_2, TOTAL_WORKERS: 17, ANNUALIZED_WAGE_RATE_OF_PAY: 300},
-        {TOTAL_WORKERS: 23, ANNUALIZED_WAGE_RATE_OF_PAY: 10000},
+        {WAGE_LEVEL: LEVEL_1, TOTAL_WORKERS: 2, ANNUALIZED_WAGE_RATE_OF_PAY: 150, SOC_CODE: "123"},
+        {WAGE_LEVEL: LEVEL_2, TOTAL_WORKERS: 3, ANNUALIZED_WAGE_RATE_OF_PAY: 500, SOC_CODE: "abc"},
+        {WAGE_LEVEL: LEVEL_3, TOTAL_WORKERS: 5, ANNUALIZED_WAGE_RATE_OF_PAY: 600, SOC_CODE: "xyz"},
+        {WAGE_LEVEL: LEVEL_4, TOTAL_WORKERS: 7, ANNUALIZED_WAGE_RATE_OF_PAY: 400, SOC_CODE: "xyz"},
+        {WAGE_LEVEL: LEVEL_1, TOTAL_WORKERS: 11, ANNUALIZED_WAGE_RATE_OF_PAY: 200, SOC_CODE: "abc"},
+        {WAGE_LEVEL: LEVEL_2, TOTAL_WORKERS: 17, ANNUALIZED_WAGE_RATE_OF_PAY: 300, SOC_CODE: "123"},
+        {TOTAL_WORKERS: 23, ANNUALIZED_WAGE_RATE_OF_PAY: 10000, SOC_CODE: "123"},
         {},
         {CASE_NUMBER: "12345"}
     ]
@@ -68,11 +68,11 @@ describe('Test summarize', () => {
         logger.trace("summary: " + JSON.stringify(summary, undefined, 2))
         var count = countItems(summary.wageArray, 150)
         expect(2).to.equal(count)
-        // log("count for 200: " + count)
+        logger.trace("count for 200: " + count)
         count = countItems(summary.wageArray, 200)
         expect(11).to.equal(count)
         count = countItems(summary.wageArray, 300)
-        // log("count for 300: " + count)
+        logger.trace("count for 300: " + count)
         expect(17).to.equal(count)
         count = countItems(summary.wageArray, 600)
         expect(5).to.equal(count)
@@ -84,6 +84,11 @@ describe('Test summarize', () => {
         expect(23).to.equal(count)
 
         expect(150).to.equal(summary.percentiles['0%'])
+        expect(200).to.equal(summary.percentiles['10%'])
+        expect(300).to.equal(summary.percentiles['25%'])
+        expect(400).to.equal(summary.percentiles['50%'])
+        expect(10000).to.equal(summary.percentiles['75%'])
+        expect(10000).to.equal(summary.percentiles['90%'])
         expect(10000).to.equal(summary.percentiles['100%'])
 
         
@@ -103,13 +108,14 @@ describe('Test summarize', () => {
         delete summary[TOTAL_WORKERS]
         delete summary['wageArray']
         delete summary['percentiles']
+        delete summary['occupations']
         expect(_.isEmpty(summary)).to.be.true
         logger.trace("summary: " + JSON.stringify(summary, undefined, 2))
     })
 })
 
 describe('Test findLevels', () => {
-    logger.info('testing findLevels');
+    logger.trace('testing findLevels');
     it('1) findLevels should find percentile levels of array of 100 Numbers', () => {
         var array = []
         for(var i = 0; i < 100; ++i){
@@ -159,7 +165,7 @@ describe('Test findLevels', () => {
 })
 
 describe('Test countItems', () => {
-    logger.info('testing findLevels');
+    logger.trace('testing countItems');
     it('1) test countItems with 99 Numbers', () => {
         var array = []
         for(var i = 0; i < 99; ++i){
