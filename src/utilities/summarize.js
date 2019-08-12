@@ -51,6 +51,19 @@ const summarize = (h1bRecords) => {
         if(undefined != h1bRecord[TOTAL_WORKERS]){
             summaryRecord[TOTAL_WORKERS] += h1bRecord[TOTAL_WORKERS]
         }
+
+        const socCode = h1bRecord.SOC_CODE
+        var occupations = summaryRecord.occupations
+        var occupation = occupations[socCode]
+        if(undefined == occupation){
+            occupation  = {}
+            occupations[socCode] = occupation
+            occupation.data = {"wageArray": [], percentiles: {}}
+        }
+        const arr = Array(h1bRecord[TOTAL_WORKERS])
+                .fill(h1bRecord[ANNUALIZED_WAGE_RATE_OF_PAY])
+
+        occupation.data.wageArray = occupation.data.wageArray.concat(arr)
     
         if(LEVEL_1 == h1bRecord[WAGE_LEVEL]){
             summaryRecord.wageLevels.workers[LEVEL_1] += h1bRecord[TOTAL_WORKERS]
