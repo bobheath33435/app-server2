@@ -37,6 +37,7 @@ h1bRecordRouter.get('/h1b', async (req, res) => {
         const h1bRecords = await h1bModel.find(req.body)
         res.status(202).json(h1bRecords)
     }catch(e){
+        logger.error('Route /h1b: ' + e);
         res.status(500).send("Invalid request")
     }
 })
@@ -60,7 +61,8 @@ h1bRecordRouter.get('/h1bCount', async (req, res) => {
         const count = await h1bModel.countDocuments(req.body)
         res.status(200).send({ "count": count })
     }catch(e){
-        res.status(500).send("Invalid request")
+        logger.error('Route /h1bCount: ' + e);
+        res.status(500).send("Invalid request " + e)
     }
 })
 
@@ -91,6 +93,7 @@ h1bRecordRouter.get('/h1bWsCd', async (req, res) => {
                                                 WORKSITE_STATE: wsState })
         res.status(202).send(h1bRecords)
     }catch(e){
+        logger.error('Route /h1bWsCd: ' + e);
         res.status(500).send("Invalid request")
     }
 })
@@ -119,6 +122,7 @@ h1bRecordRouter.get('/h1bWsState', async (req, res) => {
         const h1bSummary = summarize(h1bRecords)
         res.status(201).json(h1bSummary)
     }catch(e){
+        logger.error('Route /h1bWsState: ' + e);
         res.status(500).send("Invalid request " + e)
     }
 })
@@ -142,6 +146,7 @@ h1bRecordRouter.get('/h1bSummary', async (req, res) => {
         const h1bSummary = summarize(h1bRecords)
         res.status(202).json(h1bSummary)
     }catch(e){
+        logger.error('Route /h1bSummary: ' + e);
         res.status(500).send("Invalid request")
     }
 })
@@ -157,6 +162,7 @@ h1bRecordRouter.post('/h1b', (req, res) => {
         logger.info('H1bRecord: ' + h1bRecord)
         res.send(h1bRecord)
     }).catch((error) => {
+        logger.error('Route post /h1b: ' + e);
         res.send(error)
     })
 })

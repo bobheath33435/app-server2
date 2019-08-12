@@ -9,12 +9,16 @@ const WORKSITE_STATE = 'WORKSITE_STATE'
 const WAGE_LEVEL = "WAGE_LEVEL"
 const TOTAL_WORKERS = "TOTAL_WORKERS"
 const TOTAL_LCAS = "TOTAL_LCAS"
+const ANNUALIZED_WAGE_RATE_OF_PAY = "ANNUALIZED_WAGE_RATE_OF_PAY"
+const ANNUALIZED_PREVAILING_WAGE = "ANNUALIZED_PREVAILING_WAGE"
 
 const LEVEL_1 = "Level I"
 const LEVEL_2 = "Level II"
 const LEVEL_3 = "Level III"
 const LEVEL_4 = "Level IV"
 const UNSPECIFIED = "Level Unspecified"
+
+salaryLevels = [0, .1, .25, .5, .75, .9, 1]
 
 // H1B Record Schema
 const h1bRecordSchema = mongoose.Schema({
@@ -236,6 +240,12 @@ const h1bRecordSchema = mongoose.Schema({
     type: String,
     default: ""
   },
+  ANNUALIZED_PREVAILING_WAGE: {
+    type: Number
+  },
+  ANNUALIZED_WAGE_RATE_OF_PAY: {
+    type: Number
+  },
   NEW_EMPLOYMENT: {
     type: Number,
     default: 0
@@ -305,5 +315,8 @@ module.exports = { YEAR,
   LEVEL_3,
   LEVEL_4,
   UNSPECIFIED,
+  ANNUALIZED_PREVAILING_WAGE,
+  ANNUALIZED_WAGE_RATE_OF_PAY,
+  salaryLevels,
   h1bRecordSchema
 }
