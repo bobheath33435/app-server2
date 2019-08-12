@@ -1,6 +1,7 @@
 const log = console.log;
 const chalk = require('chalk')
 const expect = require('chai').expect
+const _ = require('lodash')
 const { summarize, createKey } = require('../src/utilities/summarize')
 const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT,
     WORKSITE_COUNTY, WORKSITE_STATE, TOTAL_WORKERS, TOTAL_LCAS, LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4,
@@ -54,7 +55,7 @@ describe('Test summarize', () => {
     
     it('1) summarize should summarize h1bRecords', () => {
         const summary = summarize(h1bRecords)
-        // log(summary)
+        log("summary: " + JSON.stringify(summary, undefined, 2))
         expect(13).to.equal(summary[LEVEL_1])
         expect(20).to.equal(summary[LEVEL_2])
         expect(5).to.equal(summary[LEVEL_3])
@@ -62,6 +63,16 @@ describe('Test summarize', () => {
         expect(23).to.equal(summary[UNSPECIFIED])
         expect(9).to.equal(summary[TOTAL_LCAS])
         expect(68).to.equal(summary[TOTAL_WORKERS])
+        delete summary[LEVEL_1]
+        delete summary[LEVEL_2]
+        delete summary[LEVEL_3]
+        delete summary[LEVEL_4]
+        delete summary[UNSPECIFIED]
+        delete summary[TOTAL_LCAS]
+        delete summary[TOTAL_WORKERS]
+        expect(_.isEmpty(summary)).to.be.true
+        log("summary: " + JSON.stringify(summary, undefined, 2))
+
     })
         
 })

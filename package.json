@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
+    "start:test": "mocha test/ --recursive --exit",
     "dev": "nodemon src/index.js",
-    "test": "mocha"
+    "test-watch": "nodemon 'npm run start:test'",
+    "test": "mocha test/ --recursive --exit"
   },
   "keywords": [],
   "author": "Robert Heath",
