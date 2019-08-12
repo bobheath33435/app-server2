@@ -92,18 +92,34 @@ describe('Test summarize', () => {
         expect(10000).to.equal(summary.percentiles['100%'])
 
         
-        expect(13).to.equal(summary[LEVEL_1])
-        expect(20).to.equal(summary[LEVEL_2])
-        expect(5).to.equal(summary[LEVEL_3])
-        expect(7).to.equal(summary[LEVEL_4])
-        expect(23).to.equal(summary[UNSPECIFIED])
+        expect(13).to.equal(summary.wageLevels.workers[LEVEL_1])
+        expect(2).to.equal(summary.wageLevels.lcas[LEVEL_1])
+        expect(20).to.equal(summary.wageLevels.workers[LEVEL_2])
+        expect(2).to.equal(summary.wageLevels.lcas[LEVEL_2])
+        expect(5).to.equal(summary.wageLevels.workers[LEVEL_3])
+        expect(1).to.equal(summary.wageLevels.lcas[LEVEL_3])
+        expect(7).to.equal(summary.wageLevels.workers[LEVEL_4])
+        expect(1).to.equal(summary.wageLevels.lcas[LEVEL_4])
+        expect(23).to.equal(summary.wageLevels.workers[UNSPECIFIED])
+        expect(1).to.equal(summary.wageLevels.lcas[UNSPECIFIED])
         expect(9).to.equal(summary[TOTAL_LCAS])
         expect(68).to.equal(summary[TOTAL_WORKERS])
-        delete summary[LEVEL_1]
-        delete summary[LEVEL_2]
-        delete summary[LEVEL_3]
-        delete summary[LEVEL_4]
-        delete summary[UNSPECIFIED]
+        delete summary.wageLevels.workers[LEVEL_1]
+        delete summary.wageLevels.workers[LEVEL_2]
+        delete summary.wageLevels.workers[LEVEL_3]
+        delete summary.wageLevels.workers[LEVEL_4]
+        delete summary.wageLevels.workers[UNSPECIFIED]
+        expect(_.isEmpty(summary.wageLevels.workers)).to.be.true
+        delete summary.wageLevels.workers
+        delete summary.wageLevels.lcas[LEVEL_1]
+        delete summary.wageLevels.lcas[LEVEL_2]
+        delete summary.wageLevels.lcas[LEVEL_3]
+        delete summary.wageLevels.lcas[LEVEL_4]
+        delete summary.wageLevels.lcas[UNSPECIFIED]
+        expect(_.isEmpty(summary.wageLevels.lcas)).to.be.true
+        delete summary.wageLevels.lcas
+        expect(_.isEmpty(summary.wageLevels)).to.be.true
+        delete summary.wageLevels
         delete summary[TOTAL_LCAS]
         delete summary[TOTAL_WORKERS]
         delete summary['wageArray']

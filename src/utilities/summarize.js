@@ -21,31 +21,43 @@ const summarize = (h1bRecords) => {
 
     logger.trace('running summarize');
     var summaryRecord = {}
+    summaryRecord.wageLevels = { "workers": {}, "lcas": {}}
     summaryRecord[TOTAL_WORKERS] = 0
     summaryRecord[TOTAL_LCAS] = h1bRecords.length
-    summaryRecord[LEVEL_1] = 0
-    summaryRecord[LEVEL_2] = 0
-    summaryRecord[LEVEL_3] = 0
-    summaryRecord[LEVEL_4] = 0
-    summaryRecord[UNSPECIFIED] = 0
+    summaryRecord.wageLevels.workers[LEVEL_1] = 0
+    summaryRecord.wageLevels.workers[LEVEL_2] = 0
+    summaryRecord.wageLevels.workers[LEVEL_3] = 0
+    summaryRecord.wageLevels.workers[LEVEL_4] = 0
+    summaryRecord.wageLevels.workers[UNSPECIFIED] = 0
+    summaryRecord.wageLevels.lcas[LEVEL_1] = 0
+    summaryRecord.wageLevels.lcas[LEVEL_2] = 0
+    summaryRecord.wageLevels.lcas[LEVEL_3] = 0
+    summaryRecord.wageLevels.lcas[LEVEL_4] = 0
+    summaryRecord.wageLevels.lcas[UNSPECIFIED] = 0
     summaryRecord.wageArray = []
     summaryRecord.occupations = {}
 
     h1bRecords.forEach( (h1bRecord, index ) => {
+        debugger
         if(undefined != h1bRecord[TOTAL_WORKERS]){
             summaryRecord[TOTAL_WORKERS] += h1bRecord[TOTAL_WORKERS]
         }
     
         if(LEVEL_1 == h1bRecord[WAGE_LEVEL]){
-            summaryRecord[LEVEL_1] += h1bRecord[TOTAL_WORKERS]
+            summaryRecord.wageLevels.workers[LEVEL_1] += h1bRecord[TOTAL_WORKERS]
+            summaryRecord.wageLevels.lcas[LEVEL_1] += 1
         }else if(LEVEL_2 == h1bRecord[WAGE_LEVEL]){
-            summaryRecord[LEVEL_2] += h1bRecord[TOTAL_WORKERS]
+            summaryRecord.wageLevels.workers[LEVEL_2] += h1bRecord[TOTAL_WORKERS]
+            summaryRecord.wageLevels.lcas[LEVEL_2] += 1
         }else if(LEVEL_3 == h1bRecord[WAGE_LEVEL]){
-            summaryRecord[LEVEL_3] += h1bRecord[TOTAL_WORKERS]
+            summaryRecord.wageLevels.workers[LEVEL_3] += h1bRecord[TOTAL_WORKERS]
+            summaryRecord.wageLevels.lcas[LEVEL_3] += 1
         }else if(LEVEL_4 == h1bRecord[WAGE_LEVEL]){
-            summaryRecord[LEVEL_4] += h1bRecord[TOTAL_WORKERS]
+            summaryRecord.wageLevels.workers[LEVEL_4] += h1bRecord[TOTAL_WORKERS]
+            summaryRecord.wageLevels.lcas[LEVEL_4] += 1
         }else if(undefined != h1bRecord[TOTAL_WORKERS]){
-            summaryRecord[UNSPECIFIED] += h1bRecord[TOTAL_WORKERS]
+            summaryRecord.wageLevels.workers[UNSPECIFIED] += h1bRecord[TOTAL_WORKERS]
+            summaryRecord.wageLevels.lcas[UNSPECIFIED] += 1
         }
         if(0 <= h1bRecord[TOTAL_WORKERS]
                 && undefined != h1bRecord[ANNUALIZED_WAGE_RATE_OF_PAY]){
