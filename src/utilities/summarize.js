@@ -19,9 +19,18 @@ log4js.configure({
 const modelMap = require('../models/dbRecords')
 const logger = log4js.getLogger('h1bData');
 
-const summarize = (h1bRecords) => {
+// Summarize data from h1bRecords
 
+const summarize = (h1bRecords) => {
     logger.trace('running summarize');
+    var summaryRecord = summarizeMajor(h1bRecords)
+    summaryRecord = summarizeMinor(h1bRecords, summaryRecord)
+    return summaryRecord
+}
+
+const summarizeMajor = (h1bRecords) => {
+
+    logger.trace('running summarize major');
     var summaryRecord = {}
     summaryRecord.wageLevels = { "workers": {}, "lcas": {}}
     summaryRecord[TOTAL_WORKERS] = 0
@@ -114,8 +123,6 @@ const summarize = (h1bRecords) => {
     Object.assign(summaryRecord.wageArray, findLevels(summaryRecord.wageArray))
     summaryRecord.wageArray = summaryRecord.wageArray.sort((a, b) => a - b)
     summaryRecord.percentiles = findLevels(summaryRecord.wageArray)
-    logger.trace("summaryRecord: " + JSON.stringify(summaryRecord, undefined, 2))
-    logger.trace("percentiles: " + JSON.stringify(summaryRecord.percentiles, undefined, 2))
     var socCodes = Object.getOwnPropertyNames(summaryRecord.occupations)
     socCodes = socCodes.sort()
     logger.trace(chalk.bgRed.bold("properties: ", socCodes))
@@ -132,6 +139,13 @@ const summarize = (h1bRecords) => {
         }
     })
     summaryRecord.occupations = occupations
+    logger.info("summaryRecord: " + JSON.stringify(summaryRecord, undefined, 2))
+    logger.info("percentiles: " + JSON.stringify(summaryRecord.percentiles, undefined, 2))
+    return summaryRecord
+}
+
+const summarizeMinor = (h1bRecords, summaryRecord) => {
+    logger.trace('running summarize minor');
     return summaryRecord
 }
 
