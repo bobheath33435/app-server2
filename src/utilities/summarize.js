@@ -117,16 +117,21 @@ const summarize = (h1bRecords) => {
     logger.trace("summaryRecord: " + JSON.stringify(summaryRecord, undefined, 2))
     logger.trace("percentiles: " + JSON.stringify(summaryRecord.percentiles, undefined, 2))
     var socCodes = Object.getOwnPropertyNames(summaryRecord.occupations)
+    socCodes = socCodes.sort()
     logger.trace(chalk.bgRed.bold("properties: ", socCodes))
+    var occupations = {}
     socCodes.forEach((socCode) => {
         logger.trace(chalk.bgRed.bold(socCode))
         const occupation = summaryRecord.occupations[socCode]
+        occupations[socCode] = occupation
+        delete summaryRecord.occupations[socCode]
         const data = occupation.data
         if(undefined != data && undefined != data.wageArray){
             data.wageArray = data.wageArray.sort((a, b) => a - b)
             data.percentiles = findLevels(data.wageArray)
         }
     })
+    summaryRecord.occupations = occupations
     return summaryRecord
 }
 
