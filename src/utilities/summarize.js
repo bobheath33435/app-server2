@@ -53,17 +53,21 @@ const summarize = (h1bRecords) => {
         }
 
         const socCode = h1bRecord.SOC_CODE
-        var occupations = summaryRecord.occupations
-        var occupation = occupations[socCode]
-        if(undefined == occupation){
-            occupation  = {}
-            occupations[socCode] = occupation
-            occupation.data = {"wageArray": [], percentiles: {}}
+        if(undefined != socCode){
+            var occupations = summaryRecord.occupations
+            var occupation = occupations[socCode]
+            var props = Object.getOwnPropertyNames(summaryRecord.occupations)
+            logger.trace(chalk.bgRed.bold("properties: ", props))
+            if(undefined == occupation){
+                occupation  = {}
+                occupations[socCode] = occupation
+                occupation.data = {"wageArray": [], percentiles: {}}
+            }
+            const arr = Array(h1bRecord[TOTAL_WORKERS])
+                    .fill(h1bRecord[ANNUALIZED_WAGE_RATE_OF_PAY])
+    
+            occupation.data.wageArray = occupation.data.wageArray.concat(arr)    
         }
-        const arr = Array(h1bRecord[TOTAL_WORKERS])
-                .fill(h1bRecord[ANNUALIZED_WAGE_RATE_OF_PAY])
-
-        occupation.data.wageArray = occupation.data.wageArray.concat(arr)
     
         if(LEVEL_1 == h1bRecord[WAGE_LEVEL]){
             summaryRecord.wageLevels.workers[LEVEL_1] += h1bRecord[TOTAL_WORKERS]
@@ -108,9 +112,21 @@ const summarize = (h1bRecords) => {
         }
     })
     Object.assign(summaryRecord.wageArray, findLevels(summaryRecord.wageArray))
+    summaryRecord.wageArray = summaryRecord.wageArray.sort((a, b) => a - b)
     summaryRecord.percentiles = findLevels(summaryRecord.wageArray)
     logger.trace("summaryRecord: " + JSON.stringify(summaryRecord, undefined, 2))
     logger.trace("percentiles: " + JSON.stringify(summaryRecord.percentiles, undefined, 2))
+    var socCodes = Object.getOwnPropertyNames(summaryRecord.occupations)
+    logger.trace(chalk.bgRed.bold("properties: ", socCodes))
+    socCodes.forEach((socCode) => {
+        logger.trace(chalk.bgRed.bold(socCode))
+        const occupation = summaryRecord.occupations[socCode]
+        const data = occupation.data
+        if(undefined != data && undefined != data.wageArray){
+            data.wageArray = data.wageArray.sort((a, b) => a - b)
+            data.percentiles = findLevels(data.wageArray)
+        }
+    })
     return summaryRecord
 }
 
