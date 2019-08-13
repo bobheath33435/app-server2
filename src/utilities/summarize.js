@@ -139,8 +139,8 @@ const summarizeMajor = (h1bRecords) => {
         }
     })
     summaryRecord.occupations = occupations
-    logger.info("summaryRecord: " + JSON.stringify(summaryRecord, undefined, 2))
-    logger.info("percentiles: " + JSON.stringify(summaryRecord.percentiles, undefined, 2))
+    logger.trace("summaryRecord: " + JSON.stringify(summaryRecord, undefined, 2))
+    logger.trace("percentiles: " + JSON.stringify(summaryRecord.percentiles, undefined, 2))
     return summaryRecord
 }
 

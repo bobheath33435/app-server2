@@ -165,7 +165,7 @@ describe('Test summarize', () => {
         delete occupations[occRecords[0]].data.wageArray
         var percentiles = Object.getOwnPropertyNames(data.percentiles)
         expect(7).to.equal(percentiles.length)
-        log(chalk.bgRed(percentiles))
+        logger.trace(chalk.bgRed(percentiles))
         expect('0%').to.equal(percentiles[0])
         expect('10%').to.equal(percentiles[1])
         expect('25%').to.equal(percentiles[2])
