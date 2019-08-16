@@ -49,6 +49,13 @@ describe('Test createKey', () => {
 
 describe('Test summarize', () => {
     logger.trace('testing summarize');
+    var query = {
+        "YEAR": "123",
+        "EMPLOYER": "HIWAY DEPT",
+        "WORKSITE_CITY": "Boise",
+        "WORKSITE_COUNTY": "Orange",
+        "WORKSITE_STATE": "Shock"
+    }
     var h1bRecords = [
         {WAGE_LEVEL: LEVEL_1, TOTAL_WORKERS: 2, NEW_EMPLOYMENT: 5, CHANGE_PREVIOUS_EMPLOYMENT: 1,
             ANNUALIZED_WAGE_RATE_OF_PAY: 150, SOC_CODE: "123"},
@@ -72,7 +79,17 @@ describe('Test summarize', () => {
     })
     
     it('1) summarize should summarize h1bRecords', () => {
-        const summary = summarize(h1bRecords)
+        const summary = summarize(h1bRecords, query)
+        expect("123").to.equal(summary['YEAR'])
+        delete summary['YEAR']
+        expect("HIWAY DEPT").to.equal(summary['EMPLOYER'])
+        delete summary['EMPLOYER']
+        expect("Boise").to.equal(summary['WORKSITE_CITY'])
+        delete summary['WORKSITE_CITY']
+        expect("Orange").to.equal(summary['WORKSITE_COUNTY'])
+        delete summary['WORKSITE_COUNTY']
+        expect("Shock").to.equal(summary['WORKSITE_STATE'])
+        delete summary['WORKSITE_STATE']
         expect(68).to.equal(summary.wageArray.length)
         logger.trace("summary: " + JSON.stringify(summary, undefined, 2))
         var count = countItems(summary.wageArray, 150)
@@ -157,6 +174,9 @@ describe('Test summarize', () => {
         expect(occRecords[2]).equals("xyz")
 
         var data = occupations[occRecords[0]].data
+        var socCode = data["SOC_CODE"]
+        expect("123").to.equal(socCode)
+        delete occupations[occRecords[0]].data["SOC_CODE"]
         var wageArray = data.wageArray
         expect(42).to.equal(wageArray.length)
         expect(23).to.equal(countItems(wageArray, 10000))
@@ -183,6 +203,9 @@ describe('Test summarize', () => {
         delete occupations[occRecords[0]].data.percentiles
         
         data = occupations[occRecords[1]].data
+        var socCode = data["SOC_CODE"]
+        expect("abc").to.equal(socCode)
+        delete occupations[occRecords[1]].data["SOC_CODE"]
         wageArray = data.wageArray
         expect(14).to.equal(wageArray.length)
         expect(3).to.equal(countItems(wageArray, 500))
@@ -207,6 +230,9 @@ describe('Test summarize', () => {
         delete occupations[occRecords[1]].data.percentiles
         
         data = occupations[occRecords[2]].data
+        var socCode = data["SOC_CODE"]
+        expect("xyz").to.equal(socCode)
+        delete occupations[occRecords[2]].data["SOC_CODE"]
         wageArray = data.wageArray
         expect(12).to.equal(wageArray.length)
         expect(5).to.equal(countItems(wageArray, 600))
