@@ -16,7 +16,7 @@ log4js.configure({
     categories: { default: { appenders: ['h1bData'], level: 'info' } }
 });
 const modelMap = require('../models/dbRecords')
-const { summarize, createKey } = require('../utilities/summarize')
+const { summarize, createKey, summaryMap } = require('../utilities/summarize')
 const logger = log4js.getLogger('h1bData');
 
 h1bRecordRouter.get('/h1b', async (req, res) => {
@@ -101,25 +101,37 @@ h1bRecordRouter.get('/h1bWsCd', async (req, res) => {
 h1bRecordRouter.get('/h1bWsState', async (req, res) => {
     try{
         logger.info('Processing get worksite state');
-        log(req.body)
+        logger.info(req.body)
         const year = req.body[YEAR];
-        log('Year: ' + year)
+        logger.info('Year: ' + year)
         const wsState = req.body[WORKSITE_STATE];
-        log('Worksite State: ' + wsState)
+        logger.isInfoEnabled('Worksite State: ' + wsState)
 
-        log(chalk.bgRed.white(createKey(req.body)))
+        const query = req.body
+        const key = createKey(query)
+        logger.info(chalk.bgRed.white(key))
+
+        var h1bSummary = {"data": {}}
+        if(true == summaryMap[key]){
+            logger.info("Sending summary data")
+            const summaryModel = modelMap['summary']
+            h1bSummary = await summaryModel.find({ "key": key })
+            h1bSummary = h1bSummary[0]['summary']
+        }else{
+            logger.info("Sending read data")
+            const h1bModel = modelMap[year]
+            if(undefined === h1bModel){
+                return res.status(500).send("Invalid year")
+            }
+            if(undefined === wsState){
+                return res.status(500).send("Invalid worksite state")
+            }
+        
+            const h1bRecords = await h1bModel.find({WORKSITE_STATE: wsState })
+            logger.trace(h1bRecords)
+            h1bSummary = summarize(h1bRecords, query)    
+        }
      
-        const h1bModel = modelMap[year]
-        if(undefined === h1bModel){
-            return res.status(500).send("Invalid year")
-        }
-        if(undefined === wsState){
-            return res.status(500).send("Invalid worksite state")
-        }
-    
-        const h1bRecords = await h1bModel.find({WORKSITE_STATE: wsState })
-        // log(h1bRecords)
-        const h1bSummary = summarize(h1bRecords)
         res.status(201).json(h1bSummary)
     }catch(e){
         logger.error('Route /h1bWsState: ' + e);

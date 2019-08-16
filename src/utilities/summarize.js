@@ -2,6 +2,8 @@ const log4js = require('log4js')
 const chalk = require('chalk')
 const _ = require('lodash')
 
+var summaryMap = {}
+
 const log = console.log;
 const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT,
         WORKSITE_COUNTY, WORKSITE_STATE, TOTAL_WORKERS, TOTAL_LCAS, SOC_CODE, 
@@ -226,4 +228,25 @@ const countItems = (array, search) => {
     return total
 }
 
-module.exports = { summarize, createKey, findLevels, countItems }
+const readSummarizedQueries = async() => {
+    const projection = { _id: 0, "key": 1 }
+    const summaryModel = modelMap['summary']
+    const summaryQuery = {}
+
+    const keys = await summaryModel.find(summaryQuery, projection)
+    keys.forEach((key) => {
+        summaryMap[key['key']] = true
+    })
+    
+    logger.trace(keys)
+    logger.trace(summaryMap)
+}
+
+
+module.exports = { summarize,
+                   createKey,
+                   findLevels,
+                   countItems,
+                   readSummarizedQueries,
+                   summaryMap
+                 }
