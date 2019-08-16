@@ -86,7 +86,7 @@ const summarizeMajor = (h1bRecords, query) => {
 
         const socCode = h1bRecord.SOC_CODE
         if(undefined != socCode){
-            const socKey = _.replace(h1bRecord.SOC_CODE, /\./, '-')
+            const socKey = _.replace(h1bRecord.SOC_CODE, /\./g, '-')
             var occupations = summaryRecord.occupations
             var occupation = occupations[socCode]
             var props = Object.getOwnPropertyNames(summaryRecord.occupations)
