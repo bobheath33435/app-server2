@@ -84,6 +84,7 @@ const processState = ( async(year, stateRecord) => {
         logger.trace(chalk.bgBlue('Save summary started'))
         const summaryModel = modelMap['summary']
         const h1bSummary = summaryModel(summaryRecord)
+        logger.info(chalk.bgBlue('Save summary start'))
         await h1bSummary.save()
         logger.info(chalk.bgBlue('Save summary complete'))
         // return Promise.resolve()

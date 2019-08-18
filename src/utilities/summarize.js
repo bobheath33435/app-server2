@@ -29,6 +29,7 @@ const summarize = (h1bRecords, query) => {
     logger.trace('running summarize');
     var summaryRecord = summarizeMajor(h1bRecords, query)
     summaryRecord = summarizeMinor(h1bRecords, summaryRecord)
+    logger.trace('completed running summarize');
     return summaryRecord
 }
 
@@ -174,42 +175,50 @@ const summarizeMajor = (h1bRecords, query) => {
 const summarizeMinor = (h1bRecords, summaryRecord) => {
     logger.trace('running summarize minor');
     var latLngMap = {}
-    h1bRecords.forEach((h1bRecord, index) => {
-        var key = h1bRecord[WORKSITE_LATITUDE] + '_' + h1bRecord[WORKSITE_LONGITUDE]
-        key = key.replace(/[\s\.,]+/g, '')
-        const latLngMap = summaryRecord.latLngMap
-        var latLngItem = latLngMap[key]
-        if(undefined == latLngItem){
-            latLngItem = { "latitude": h1bRecord[WORKSITE_LATITUDE],
-                           "longitude": h1bRecord[WORKSITE_LONGITUDE], 
-                           "h1bInstances" : {} }
-            latLngMap[key] = latLngItem
-        }
-        debugger
-        var h1bInstKey = h1bRecord[EMPLOYER_NAME] + h1bRecord[WORKSITE_ADDR1]
-        const addr2 = h1bRecord[WORKSITE_ADDR2]
-        h1bInstKey += (undefined == addr2) ? "" : addr2
-        h1bInstKey = h1bInstKey.replace(/[\s\.,]+/g, '')
-        var h1bInstance = latLngItem.h1bInstances[h1bInstKey]
-        if(undefined == h1bInstance){
-            h1bInstance = _.pick(h1bRecord,
-                EMPLOYER_NAME,
-                WORKSITE_ADDR1, 
-                WORKSITE_ADDR2, 
-                WORKSITE_CITY,
-                WORKSITE_COUNTY,
-                WORKSITE_STATE) 
-            h1bInstance.instanceArray = []
-            latLngItem.h1bInstances[h1bInstKey] = h1bInstance
-        }
-
-        var workerData = _.pick(h1bRecord,
-                                CASE_NUMBER,
-                                SOC_CODE,
-                                TOTAL_WORKERS,
-                                ANNUALIZED_WAGE_RATE_OF_PAY)
-        h1bInstance.instanceArray.push(workerData)      
-    })
+    var currentH1bRecord = {}
+    try{
+        h1bRecords.forEach((h1bRecord, index) => {
+            currentH1bRecord = h1bRecord
+            var key = h1bRecord[WORKSITE_LATITUDE] + '_' + h1bRecord[WORKSITE_LONGITUDE]
+            key = key.replace(/[\s\.,]+/g, '')
+            const latLngMap = summaryRecord.latLngMap
+            var latLngItem = latLngMap[key]
+            if(undefined == latLngItem){
+                latLngItem = { "latitude": h1bRecord[WORKSITE_LATITUDE],
+                               "longitude": h1bRecord[WORKSITE_LONGITUDE], 
+                               "h1bInstances" : {} }
+                latLngMap[key] = latLngItem
+            }
+            debugger
+            var h1bInstKey = h1bRecord[EMPLOYER_NAME] + h1bRecord[WORKSITE_ADDR1]
+            const addr2 = h1bRecord[WORKSITE_ADDR2]
+            h1bInstKey += (undefined == addr2) ? "" : addr2
+            h1bInstKey = h1bInstKey.replace(/[\s\.,]+/g, '')
+            var h1bInstance = latLngItem.h1bInstances[h1bInstKey]
+            if(undefined == h1bInstance){
+                h1bInstance = _.pick(h1bRecord,
+                    EMPLOYER_NAME,
+                    WORKSITE_ADDR1, 
+                    WORKSITE_ADDR2, 
+                    WORKSITE_CITY,
+                    WORKSITE_COUNTY,
+                    WORKSITE_STATE) 
+                h1bInstance.instanceArray = []
+                latLngItem.h1bInstances[h1bInstKey] = h1bInstance
+            }
+    
+            var workerData = _.pick(h1bRecord,
+                                    CASE_NUMBER,
+                                    SOC_CODE,
+                                    TOTAL_WORKERS,
+                                    ANNUALIZED_WAGE_RATE_OF_PAY)
+            h1bInstance.instanceArray.push(workerData)      
+        })    
+    }catch(e){
+        logger.error(chalk.bgRed("Error building latitude longitude map: " + e))
+        logger.errorr(chalk.bgRed(`JSON: ${JSON.stringify(currentH1bRecord)}`))
+    }
+    logger.trace('completed running summarize minor');
     return summaryRecord
 }
 
