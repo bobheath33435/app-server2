@@ -6,7 +6,8 @@ var summaryMap = {}
 
 const log = console.log;
 const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT,
-        WORKSITE_COUNTY, WORKSITE_STATE, TOTAL_WORKERS, TOTAL_LCAS, SOC_CODE, 
+        WORKSITE_LATITUDE, WORKSITE_LONGITUDE, WORKSITE_ADDR1, WORKSITE_ADDR2,
+        WORKSITE_CITY, WORKSITE_COUNTY, WORKSITE_STATE, TOTAL_WORKERS, TOTAL_LCAS, SOC_CODE, 
         LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4,
         NEW_EMPLOYMENT, CONTINUED_EMPLOYMENT, CHANGE_PREVIOUS_EMPLOYMENT,
         NEW_CONCURRENT_EMPLOYMENT, CHANGE_EMPLOYER, AMENDED_PETITION,
@@ -59,6 +60,7 @@ const summarizeMajor = (h1bRecords, query) => {
     summaryRecord[TOTAL_LCAS] = h1bRecords.length
     summaryRecord[TOTAL_WORKERS] = 0
     summaryRecord.categories = {}
+    summaryRecord.latLngMap = {}
     summaryRecord.occupations = {}
     summaryRecord.percentiles = {}
     summaryRecord.wageArray = []
@@ -81,7 +83,6 @@ const summarizeMajor = (h1bRecords, query) => {
     summaryRecord.categories[AMENDED_PETITION] = 0
 
     h1bRecords.forEach( (h1bRecord, index ) => {
-        debugger
         if(undefined != h1bRecord[TOTAL_WORKERS]){
             summaryRecord[TOTAL_WORKERS] += h1bRecord[TOTAL_WORKERS]
         }
@@ -172,6 +173,43 @@ const summarizeMajor = (h1bRecords, query) => {
 
 const summarizeMinor = (h1bRecords, summaryRecord) => {
     logger.trace('running summarize minor');
+    var latLngMap = {}
+    h1bRecords.forEach((h1bRecord, index) => {
+        var key = h1bRecord[WORKSITE_LATITUDE] + '_' + h1bRecord[WORKSITE_LONGITUDE]
+        key = key.replace(/[\s\.,]+/g, '')
+        const latLngMap = summaryRecord.latLngMap
+        var latLngItem = latLngMap[key]
+        if(undefined == latLngItem){
+            latLngItem = { "latitude": h1bRecord[WORKSITE_LATITUDE],
+                           "longitude": h1bRecord[WORKSITE_LONGITUDE], 
+                           "h1bInstances" : {} }
+            latLngMap[key] = latLngItem
+        }
+        debugger
+        var h1bInstKey = h1bRecord[EMPLOYER_NAME] + h1bRecord[WORKSITE_ADDR1]
+        const addr2 = h1bRecord[WORKSITE_ADDR2]
+        h1bInstKey += (undefined == addr2) ? "" : addr2
+        h1bInstKey = h1bInstKey.replace(/[\s\.,]+/g, '')
+        var h1bInstance = latLngItem.h1bInstances[h1bInstKey]
+        if(undefined == h1bInstance){
+            h1bInstance = _.pick(h1bRecord,
+                EMPLOYER_NAME,
+                WORKSITE_ADDR1, 
+                WORKSITE_ADDR2, 
+                WORKSITE_CITY,
+                WORKSITE_COUNTY,
+                WORKSITE_STATE) 
+            h1bInstance.instanceArray = []
+            latLngItem.h1bInstances[h1bInstKey] = h1bInstance
+        }
+
+        var workerData = _.pick(h1bRecord,
+                                CASE_NUMBER,
+                                SOC_CODE,
+                                TOTAL_WORKERS,
+                                ANNUALIZED_WAGE_RATE_OF_PAY)
+        h1bInstance.instanceArray.push(workerData)      
+    })
     return summaryRecord
 }
 
@@ -244,6 +282,7 @@ const readSummarizedQueries = async() => {
 
 
 module.exports = { summarize,
+                   summarizeMajor,
                    createKey,
                    findLevels,
                    countItems,

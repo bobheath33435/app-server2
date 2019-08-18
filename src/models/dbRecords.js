@@ -21,7 +21,6 @@ mongoose.connect(connectURL, {
     useCreateIndex: true
 })
 logger.info('After connect');
-debugger
 const user = mongoose.model('users', userSchema)
 const summary = mongoose.model('summary', summarySchema)
 const h1B2010 = mongoose.model('H1bRecord10', h1bRecordSchema)

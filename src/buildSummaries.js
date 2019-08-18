@@ -2,7 +2,23 @@ const mongoose = require('mongoose')
 const log4js = require('log4js')
 const chalk = require('chalk')
 const log = console.log;
-const states = ["AL", "CA", "FL", "NC", "WV", "WY"]
+const states = [{id: "AL",
+                 summarizeType: "FULL"}, 
+                {id: "CA",
+                 summarizeType: "BRIEF"}, 
+                {id: "FL",
+                 summarizeType: "FULL"}, 
+                {id: "NC",
+                 summarizeType: "FULL"}, 
+                {id: "NY",
+                 summarizeType: "FULL"}, 
+                {id: "TX",
+                 summarizeType: "FULL"}, 
+                {id: "WV",
+                 summarizeType: "FULL"},
+                {id: "WY",
+                 summarizeType: "FULL"}]
+
 const years = [2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010]
 
 const waitFor = async(num) => {
@@ -32,13 +48,15 @@ log4js.configure({
     categories: { default: { appenders: ['h1bData'], level: 'info' } }
 });
 const modelMap = require('./models/dbRecords')
-const { summarize, createKey } = require('./utilities/summarize')
+const { summarize, summarizeMajor, createKey } = require('./utilities/summarize')
 
 const logger = log4js.getLogger('h1bData');
 
-const processState = ( async(year, worksiteState) => {
+const processState = ( async(year, stateRecord) => {
+    const worksiteState = stateRecord.id
+    const summarizeType = stateRecord.summarizeType
     try{
-        logger.info(chalk.bgHex("#0aee0a").black("Process States Year: " + year + " - State: " + worksiteState))
+        logger.info(chalk.bgHex("#0aee0a").black("Process States Year: " + year + " - State: " + worksiteState + " - Type: " + summarizeType))
         const h1bModel = modelMap[year]
         const query = {
             "YEAR": year,
@@ -51,7 +69,12 @@ const processState = ( async(year, worksiteState) => {
         logger.trace(chalk.bgBlue('Read data started. query: ' + JSON.stringify(query)))
         const h1bRecords = await h1bModel.find(query)
         logger.trace(chalk.bgBlue('Read data complete'))
-        const h1bObject = summarize(h1bRecords, query)
+        var h1bObject = {}
+        if("FULL" == summarizeType){
+            h1bObject = summarize(h1bRecords, query)
+        }else{
+            h1bObject = summarizeMajor(h1bRecords, query)
+        }
         logger.trace(chalk.bgBlue('Data summarized'))
         logger.trace(JSON.stringify(h1bObject, undefined, 2))
         var summaryRecord = {
@@ -67,20 +90,24 @@ const processState = ( async(year, worksiteState) => {
         logger.trace(chalk.bgBlue('End of block'))
     
     }catch(e){
-        log(chalk.bgRed('Process State failed: ' + e))
-        throw e
+        logger.error(chalk.bgRed(`Process State, ${worksiteState}, failed: ` + e))
+        throw(e)
     }
     return Promise.resolve
 })
 
 const processStates = async (year) => {
     try{
-        await asyncForEach(states, async(worksiteState) => {
-            await processState(year, worksiteState)
+        await asyncForEach(states, async(stateRecord) => {
+           try{
+                await processState(year, stateRecord)
+            }catch(e){
+                logger.error(chalk.bgRed(`Processing ${stateRecord.id} failed: ` + e))
+                logger.error(chalk.bgRed('Continuning to other states.'))
+            }
         })
     }catch(e){
-        logger.error(chalk.bgRed('Process States FAILED'))
-        throw(e)
+        logger.error(chalk.bgRed('Process States FAILED.'))
         // return Promise.reject(e)
     }
     logger.trace(chalk.bgBlue('End of method'))
@@ -92,11 +119,16 @@ const processYears = (async () => {
         await asyncForEach(years, async(year) => {
             logger.info("Process Year: " + year)
             currentYear = year
-            await processStates(year)
+            try{
+                await processStates(year)
+            }catch(e){
+                log(chalk.bgRed(`Processing ${year} failed: ` + e))
+                logger.error(chalk.bgRed('Continuning to other years.'))
+            }
+            
         })
     }catch(e){
         logger.error(chalk.bgRed('Process Years FAILED'))
-        throw(e)
         // return Promise.reject(e)
     }
     logger.info(chalk.bgBlue('End of building summaries'))
