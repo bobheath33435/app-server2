@@ -245,6 +245,11 @@ const createKey = (queryIn) => {
         delete query[WORKSITE_COUNTY]
     }
 
+    if(undefined != query[WORKSITE_CONGRESS_DISTRICT]){
+        key += "_" + query[WORKSITE_CONGRESS_DISTRICT]
+        delete query[WORKSITE_CONGRESS_DISTRICT]
+    }
+
     if(!_.isEmpty(query))
         return null
     return _.replace(key, / /g, '_')

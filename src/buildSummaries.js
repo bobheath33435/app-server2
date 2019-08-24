@@ -1,6 +1,15 @@
 const mongoose = require('mongoose')
 const log4js = require('log4js')
 const chalk = require('chalk')
+const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT,
+    WORKSITE_LATITUDE, WORKSITE_LONGITUDE, WORKSITE_ADDR1, WORKSITE_ADDR2,
+    WORKSITE_CITY, WORKSITE_COUNTY, WORKSITE_STATE, TOTAL_WORKERS, TOTAL_LCAS, SOC_CODE, 
+    LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4,
+    NEW_EMPLOYMENT, CONTINUED_EMPLOYMENT, CHANGE_PREVIOUS_EMPLOYMENT,
+    NEW_CONCURRENT_EMPLOYMENT, CHANGE_EMPLOYER, AMENDED_PETITION,
+    UNSPECIFIED, ANNUALIZED_PREVAILING_WAGE, ANNUALIZED_WAGE_RATE_OF_PAY,
+    salaryLevels, h1bRecord } 
+        = require('./models/h1bRecordSchema')
 const log = console.log;
 const californiaCounties = [
     "Marin", "Orange", "Santa Clara"
@@ -222,7 +231,13 @@ const asyncForEach = (async (array, callback) => {
     for (let index = 0; index < array.length; index++) {
       await callback(array[index], index, array);
     }
-  })
+})
+
+const asyncForLoop = (async (count, callback) => {
+    for (let index = 0; index < count; index++) {
+      await callback(index);
+    }
+})
 
 const start = async () => {
     await asyncForEach([1, 2, 3], async (num) => {
@@ -245,40 +260,43 @@ const logger = log4js.getLogger('h1bData');
 const processState = ( async(year, stateRecord) => {
     const worksiteState = stateRecord.id
     const summarizeType = stateRecord.summarizeType
+    const congDistCount = stateRecord.congressionalDistricts
     try{
-        logger.info(chalk.bgHex("#0aee0a").black("Process States Year: " + year + " - State: " + worksiteState + " - Type: " + summarizeType))
-        const h1bModel = modelMap[year]
-        const query = {
-            "YEAR": year,
-            "WORKSITE_STATE": worksiteState
-        }
-        logger.trace(chalk.bgRed('query: ' + JSON.stringify(query)))
-        key = createKey(query)
-        logger.info(chalk.bgRed("Key: " + key + ' -- query: ' + JSON.stringify(query)))
+        logger.info(chalk.bgHex("#0aee0a").black("Process State Year: " + year + " - State: " + worksiteState + " - Type: " + summarizeType))
+        // const h1bModel = modelMap[year]
+        // const query = {
+        //     "YEAR": year,
+        //     "WORKSITE_STATE": worksiteState
+        // }
+        // logger.trace(chalk.bgRed('query: ' + JSON.stringify(query)))
+        // key = createKey(query)
+        // logger.info(chalk.bgRed("Key: " + key + ' -- query: ' + JSON.stringify(query)))
     
-        logger.trace(chalk.bgBlue('Read data started. query: ' + JSON.stringify(query)))
-        const h1bRecords = await h1bModel.find(query)
-        logger.trace(chalk.bgBlue('Read data complete'))
-        var h1bObject = {}
-        if("FULL" == summarizeType){
-            h1bObject = summarize(h1bRecords, query)
-        }else{
-            h1bObject = summarizeMajor(h1bRecords, query)
-        }
-        logger.trace(chalk.bgBlue('Data summarized'))
-        logger.trace(JSON.stringify(h1bObject, undefined, 2))
-        var summaryRecord = {
-            "key": key,
-            "summary": h1bObject
-        }
-        logger.trace(chalk.bgBlue('Save summary started'))
-        const summaryModel = modelMap['summary']
-        const h1bSummary = summaryModel(summaryRecord)
-        logger.trace(chalk.bgBlue('Save summary start'))
-        await h1bSummary.save()
-        logger.trace(chalk.bgBlue('Save summary complete'))
-        // return Promise.resolve()
-        logger.trace(chalk.bgBlue('End of block'))
+        // logger.trace(chalk.bgBlue('Read data started. query: ' + JSON.stringify(query)))
+        // const h1bRecords = await h1bModel.find(query)
+        // logger.trace(chalk.bgBlue('Read data complete'))
+        // var h1bObject = {}
+        // if("FULL" == summarizeType){
+        //     h1bObject = summarize(h1bRecords, query)
+        // }else{
+        //     h1bObject = summarizeMajor(h1bRecords, query)
+        // }
+        // logger.trace(chalk.bgBlue('Data summarized'))
+        // logger.trace(JSON.stringify(h1bObject, undefined, 2))
+        // var summaryRecord = {
+        //     "key": key,
+        //     "summary": h1bObject
+        // }
+        // logger.trace(chalk.bgBlue('Save summary started'))
+        // const summaryModel = modelMap['summary']
+        // const h1bSummary = summaryModel(summaryRecord)
+        // logger.trace(chalk.bgBlue('Save summary start'))
+        // await h1bSummary.save()
+        // logger.trace(chalk.bgBlue('Save summary complete'))
+        // // return Promise.resolve()
+        // logger.trace(chalk.bgBlue('End of block'))
+        debugger
+        await processCongDistricts(year, worksiteState, congDistCount)
     
     }catch(e){
         logger.error(chalk.bgRed(`Process State, ${worksiteState}, failed: ` + e))
@@ -327,6 +345,45 @@ const processCounty = ( async(year, state, county) => {
     return Promise.resolve
 })
 
+const processCongDistrict = ( async(year, state, index) => {
+    try{
+        logger.info(chalk.bgHex("#0aee0a").black("Process States Year: " + year + " - State: " + state +
+                         " - Congressional District: " + index))
+        const h1bModel = modelMap[year]
+        const query = {}
+        query[YEAR] = year
+        query[WORKSITE_STATE] = state
+        query[WORKSITE_CONGRESS_DISTRICT] = index
+        logger.trace(chalk.bgRed('query: ' + JSON.stringify(query)))
+        const key = createKey(query)
+        logger.info(chalk.bgRed("Key: " + key + ' -- query: ' + JSON.stringify(query)))
+    
+        logger.trace(chalk.bgBlue('Read data started. query: ' + JSON.stringify(query)))
+        const h1bRecords = await h1bModel.find(query)
+        logger.trace(chalk.bgBlue('Read data complete'))
+        var h1bObject = summarize(h1bRecords, query)
+        logger.trace(chalk.bgBlue('Data summarized'))
+        logger.trace(JSON.stringify(h1bObject, undefined, 2))
+        var summaryRecord = {
+            "key": key,
+            "summary": h1bObject
+        }
+        logger.trace(chalk.bgBlue('Save summary started'))
+        const summaryModel = modelMap['summary']
+        const h1bSummary = summaryModel(summaryRecord)
+        logger.trace(chalk.bgBlue('Save summary start'))
+        await h1bSummary.save()
+        logger.trace(chalk.bgBlue('Save summary complete'))
+        // return Promise.resolve()
+        logger.trace(chalk.bgBlue('End of block'))
+    
+    }catch(e){
+        logger.error(chalk.bgRed(`Process Congressional District, ${index}, ${state}, failed: ` + e))
+        throw(e)
+    }
+    return Promise.resolve
+})
+
 const processStates = async (year) => {
     try{
         await asyncForEach(states, async(stateRecord) => {
@@ -363,6 +420,24 @@ const processCounties = async (year, state, counties) => {
     return Promise.resolve
 }
 
+const processCongDistricts = async (year, state, congDistCount) => {
+    try{
+        await asyncForLoop(congDistCount, async(index) => {
+           try{
+                const congDistrict = index + 1
+                await processCongDistrict(year, state, congDistrict)
+            }catch(e){
+                logger.error(chalk.bgRed(`Processing Congressional District ${congDistrict}, ${state} failed: ` + e))
+                logger.error(chalk.bgRed('Continuning to other counties.'))
+            }
+        })
+    }catch(e){
+        logger.error(chalk.bgRed(`Process ${state} Counties FAILED.`))
+        // return Promise.reject(e)
+    }
+    logger.trace(chalk.bgBlue('End of method'))
+    return Promise.resolve
+}
 const processYears = (async () => {
     try{
         await asyncForEach(years, async(year) => {
@@ -391,7 +466,6 @@ const bldSummaries = async () => {
     // start()
     logger.info("Started")
     await processYears()
-    // await processState(2017, "WV")
 
     setTimeout( () => {
         log("Timer expired")
