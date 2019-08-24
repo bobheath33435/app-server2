@@ -105,32 +105,33 @@ h1bRecordRouter.get('/h1bWsState', async (req, res) => {
         const year = req.body[YEAR];
         logger.info('Year: ' + year)
         const wsState = req.body[WORKSITE_STATE];
-        logger.info('Worksite State: ' + wsState)
-
-        const query = req.body
-        const key = createKey(query)
-        logger.info(chalk.bgRed.white(key))
-
-        var h1bSummary = {"data": {}}
-        if(true == summaryMap[key]){
-            logger.info("Sending summary data")
-            const summaryModel = modelMap['summary']
-            h1bSummary = await summaryModel.find({ "key": key })
-            h1bSummary = h1bSummary[0]['summary']
-        }else{
-            logger.info("Sending read data")
-            const h1bModel = modelMap[year]
-            if(undefined === h1bModel){
-                return res.status(500).send("Invalid year")
-            }
-            if(undefined === wsState){
-                return res.status(500).send("Invalid worksite state")
-            }
-        
-            const h1bRecords = await h1bModel.find({WORKSITE_STATE: wsState })
-            logger.trace(h1bRecords)
-            h1bSummary = summarize(h1bRecords, query)    
+        if(_.isEmpty(wsState)){
+            return res.status(500).send("Invalid worksite state")
         }
+        logger.info('Worksite State: ' + wsState)
+        const h1bSummary = await performQuery(req.body)
+
+        // const query = req.body
+        // const key = createKey(query)
+        // logger.info(chalk.bgRed.white(key))
+
+        // var h1bSummary = {"data": {}}
+        // if(true == summaryMap[key]){
+        //     logger.info("Sending summary data")
+        //     const summaryModel = modelMap['summary']
+        //     h1bSummary = await summaryModel.find({ "key": key })
+        //     h1bSummary = h1bSummary[0]['summary']
+        // }else{
+        //     logger.info("Sending read data")
+        //     const h1bModel = modelMap[year]
+        //     if(undefined === h1bModel){
+        //         return res.status(500).send("Invalid year")
+        //     }
+        
+        //     const h1bRecords = await h1bModel.find({WORKSITE_STATE: wsState })
+        //     logger.trace(h1bRecords)
+        //     h1bSummary = summarize(h1bRecords, query)
+        // }
      
         res.status(201).json(h1bSummary)
     }catch(e){
@@ -143,25 +144,62 @@ h1bRecordRouter.get('/h1bSummary', async (req, res) => {
     try{
         logger.info('Processing summary');
         log(chalk.bgYellow.red(JSON.stringify(req.body)))
-        const year = req.body[YEAR];
-        log(chalk.bgGreenBright.red('Year: ' + year))
-        const caseNumber = req.body[CASE_NUMBER];
-        log('Case Number: ' + caseNumber)
-     
-        const h1bModel = modelMap[year]
-        if(undefined === h1bModel){
-            return res.status(500).send("Invalid year")
-        }
-        debugger
-    
-        const h1bRecords = await h1bModel.find(req.body)
-        const h1bSummary = summarize(h1bRecords)
+        const h1bSummary = await performQuery(req.body)
+        // var query = _.cloneDeep(req.body)
+        // const year = query[YEAR];
+        // const key = createKey(query)
+        // logger.info(chalk.bgRed.white(key))
+        // log(chalk.bgGreenBright.red('Year: ' + year))
+        // var h1bSummary = {"data": {}}
+        // if(true == summaryMap[key]){
+        //     logger.info("Sending summary data")
+        //     const summaryModel = modelMap['summary']
+        //     h1bSummary = await summaryModel.find({ "key": key })
+        //     h1bSummary = h1bSummary[0]['summary']
+        // }else{
+        //     logger.info("Sending read data")
+        //     const h1bModel = modelMap[year]
+        //     if(undefined === h1bModel){
+        //         return res.status(500).send("Invalid year")
+        //     }
+        //     if(undefined === wsState){
+        //         return res.status(500).send("Invalid worksite state")
+        //     }
+        
+        //     const h1bRecords = await h1bModel.find({WORKSITE_STATE: wsState })
+        //     logger.trace(h1bRecords)
+        //     h1bSummary = summarize(h1bRecords, query)
+        // }
         res.status(202).json(h1bSummary)
     }catch(e){
         logger.error('Route /h1bSummary: ' + e);
         res.status(500).send("Invalid request")
     }
 })
+
+const performQuery = async (query) => {
+    const year = query[YEAR];
+    const key = createKey(query)
+    logger.info(chalk.bgRed.white('Key: ' + key))
+    logger.info(chalk.bgGreenBright.red('Year: ' + year))
+    var h1bSummary = {"data": {}}
+    if(true == summaryMap[key]){
+        logger.info("Sending summary data")
+        const summaryModel = modelMap['summary']
+        h1bSummary = await summaryModel.find({ "key": key })
+        h1bSummary = h1bSummary[0]['summary']
+    }else{
+        logger.info("Sending read data")
+        const h1bModel = modelMap[year]
+        if(undefined === h1bModel){
+            return res.status(500).send("Invalid year")
+        }    
+        const h1bRecords = await h1bModel.find({WORKSITE_STATE: wsState })
+        logger.trace(h1bRecords)
+        h1bSummary = summarize(h1bRecords, query)
+    }
+    return h1bSummary
+}
 
 h1bRecordRouter.post('/h1b', (req, res) => {
     logger.info('Processing post');
