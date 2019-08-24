@@ -38,25 +38,29 @@ const summarizeMajor = (h1bRecords, query) => {
     logger.trace('running summarize major');
     var summaryRecord = {}
     logger.trace(query)
-    const year = query['YEAR']
-    const employer = query['EMPLOYER']
-    const city = query['WORKSITE_CITY']
-    const county = query["WORKSITE_COUNTY"]
-    const state = query['WORKSITE_STATE']
-    if(undefined != year){
-        summaryRecord['YEAR'] = year
+    const year = query[YEAR]
+    const employer = query[EMPLOYER_NAME]
+    const city = query[WORKSITE_CITY]
+    const county = query[WORKSITE_COUNTY]
+    const state = query[WORKSITE_STATE]
+    const congDistrict = query[WORKSITE_CONGRESS_DISTRICT]
+    if(_.isNumber(year)){
+        summaryRecord[YEAR] = year
     }
-    if(undefined != employer){
-        summaryRecord['EMPLOYER'] = employer
+    if(!_.isEmpty(employer)){
+        summaryRecord[EMPLOYER_NAME] = employer
     }
-    if(undefined != county){
-        summaryRecord['WORKSITE_CITY'] = city
+    if(!_.isEmpty(county)){
+        summaryRecord[WORKSITE_CITY] = city
     }
-    if(undefined != county){
-        summaryRecord['WORKSITE_COUNTY'] = county
+    if(!_.isEmpty(county)){
+        summaryRecord[WORKSITE_COUNTY] = county
     }
-    if(undefined != state){
-        summaryRecord['WORKSITE_STATE'] = state
+    if(!_.isEmpty(state)){
+        summaryRecord[WORKSITE_STATE] = state
+    }
+    if(_.isNumber(congDistrict)){
+        summaryRecord[WORKSITE_CONGRESS_DISTRICT] = congDistrict
     }
     summaryRecord[TOTAL_LCAS] = h1bRecords.length
     summaryRecord[TOTAL_WORKERS] = 0
@@ -189,7 +193,6 @@ const summarizeMinor = (h1bRecords, summaryRecord) => {
                                "h1bInstances" : {} }
                 latLngMap[key] = latLngItem
             }
-            debugger
             var h1bInstKey = h1bRecord[EMPLOYER_NAME] + h1bRecord[WORKSITE_ADDR1]
             const addr2 = h1bRecord[WORKSITE_ADDR2]
             h1bInstKey += (undefined == addr2) ? "" : addr2
