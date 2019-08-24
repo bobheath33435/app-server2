@@ -11,7 +11,9 @@ const states = [
                  congressionalDistricts: 1
                 }, 
                 {id: "AL",
-                 summarizeType: "FULL"}, 
+                 summarizeType: "FULL",
+                 congressionalDistricts: 10
+                }, 
                 {id: "AR",
                  summarizeType: "FULL",
                  congressionalDistricts: 7
@@ -34,7 +36,7 @@ const states = [
                  congressionalDistricts: 6
                 }, 
                 {id: "DE",
-                 summarizeType: "BRIEF",
+                 summarizeType: "FULL",
                  congressionalDistricts: 1
                 }, 
                 {id: "FL",
@@ -126,7 +128,7 @@ const states = [
                  congressionalDistricts: 4
                 }, 
                 {id: "NJ",
-                 summarizeType: "FULL",
+                 summarizeType: "BRIEF",
                  congressionalDistricts: 15
                 }, 
                 {id: "NM",
@@ -174,7 +176,7 @@ const states = [
                  congressionalDistricts: 13
                 }, 
                 {id: "TX",
-                 summarizeType: "FULL",
+                 summarizeType: "BRIEF",
                  congressionalDistricts: 36
                 }, 
                 {id: "UT",
