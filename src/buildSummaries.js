@@ -2,22 +2,210 @@ const mongoose = require('mongoose')
 const log4js = require('log4js')
 const chalk = require('chalk')
 const log = console.log;
-const states = [{id: "AL",
+const californiaCounties = [
+    "Marin", "Orange", "Santa Clara"
+]
+const states = [
+                {id: "AK",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 1
+                }, 
+                {id: "AL",
                  summarizeType: "FULL"}, 
+                {id: "AR",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 7
+                }, 
+                {id: "AZ",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 9
+                }, 
                 {id: "CA",
-                 summarizeType: "BRIEF"}, 
+                 summarizeType: "BRIEF",
+                 counties: californiaCounties,
+                 congressionalDistricts: 53
+                }, 
+                {id: "CO",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 7
+                }, 
+                {id: "CT",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 6
+                }, 
+                {id: "DE",
+                 summarizeType: "BRIEF",
+                 congressionalDistricts: 1
+                }, 
                 {id: "FL",
-                 summarizeType: "FULL"}, 
+                 summarizeType: "FULL",
+                 congressionalDistricts: 27
+                }, 
+                {id: "GA",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 14
+                }, 
+                {id: "HI",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 2
+                }, 
+                {id: "ID",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 2
+                }, 
+                {id: "IL",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 26
+                }, 
+                {id: "IN",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 13
+                }, 
+                {id: "IO",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 11
+                }, 
+                {id: "KS",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 8
+                }, 
+                {id: "KY",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 13
+                }, 
+                {id: "LA",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 8
+                }, 
+                {id: "MA",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 20
+                }, 
+                {id: "MD",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 8
+                }, 
+                {id: "ME",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 8
+                }, 
+                {id: "MI",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 19
+                }, 
+                {id: "MN",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 10
+                }, 
+                {id: "MO",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 16
+                }, 
+                {id: "MS",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 8
+                }, 
+                {id: "MT",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 2
+                }, 
                 {id: "NC",
-                 summarizeType: "BRIEF"}, 
+                 summarizeType: "FULL",
+                 congressionalDistricts: 13
+                }, 
+                {id: "ND",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 3
+                }, 
+                {id: "NE",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 6
+                }, 
+                {id: "NH",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 4
+                }, 
+                {id: "NJ",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 15
+                }, 
+                {id: "NM",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 3
+                }, 
+                {id: "NV",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 4
+                }, 
                 {id: "NY",
-                 summarizeType: "BRIEF"}, 
+                 summarizeType: "BRIEF",
+                 congressionalDistricts: 45
+                }, 
+                {id: "OH",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 24
+                }, 
+                {id: "OK",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 8
+                }, 
+                {id: "OR",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 5
+                }, 
+                {id: "PA",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 36
+                }, 
+                {id: "RI",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 3
+                }, 
+                {id: "SC",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 9
+                }, 
+                {id: "SD",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 3
+                }, 
+                {id: "TN",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 13
+                }, 
                 {id: "TX",
-                 summarizeType: "FULL"}, 
+                 summarizeType: "FULL",
+                 congressionalDistricts: 36
+                }, 
+                {id: "UT",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 4
+                }, 
+                {id: "VA",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 23
+                }, 
+                {id: "VT",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 6
+                }, 
+                {id: "WA",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 10
+                }, 
                 {id: "WV",
-                 summarizeType: "FULL"},
+                 summarizeType: "FULL",
+                 congressionalDistricts: 6
+                }, 
+                {id: "WI",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 11
+                }, 
                 {id: "WY",
-                 summarizeType: "FULL"}]
+                 summarizeType: "FULL",
+                 congressionalDistricts: 1
+                }, 
+            ]
 
 const years = [2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010]
 
@@ -84,14 +272,54 @@ const processState = ( async(year, stateRecord) => {
         logger.trace(chalk.bgBlue('Save summary started'))
         const summaryModel = modelMap['summary']
         const h1bSummary = summaryModel(summaryRecord)
-        logger.info(chalk.bgBlue('Save summary start'))
+        logger.trace(chalk.bgBlue('Save summary start'))
         await h1bSummary.save()
-        logger.info(chalk.bgBlue('Save summary complete'))
+        logger.trace(chalk.bgBlue('Save summary complete'))
         // return Promise.resolve()
         logger.trace(chalk.bgBlue('End of block'))
     
     }catch(e){
         logger.error(chalk.bgRed(`Process State, ${worksiteState}, failed: ` + e))
+        throw(e)
+    }
+    return Promise.resolve
+})
+
+const processCounty = ( async(year, state, county) => {
+    try{
+        county = county.toUpperCase()
+        logger.info(chalk.bgHex("#0aee0a").black("Process States Year: " + year + " - State: " + state + " - County: " + county))
+        const h1bModel = modelMap[year]
+        const query = {
+            "YEAR": year,
+            "WORKSITE_STATE": state,
+            "WORKSITE_COUNTY": county
+        }
+        logger.trace(chalk.bgRed('query: ' + JSON.stringify(query)))
+        key = createKey(query)
+        logger.info(chalk.bgRed("Key: " + key + ' -- query: ' + JSON.stringify(query)))
+    
+        logger.trace(chalk.bgBlue('Read data started. query: ' + JSON.stringify(query)))
+        const h1bRecords = await h1bModel.find(query)
+        logger.trace(chalk.bgBlue('Read data complete'))
+        var h1bObject = summarize(h1bRecords, query)
+        logger.trace(chalk.bgBlue('Data summarized'))
+        logger.trace(JSON.stringify(h1bObject, undefined, 2))
+        var summaryRecord = {
+            "key": key,
+            "summary": h1bObject
+        }
+        logger.trace(chalk.bgBlue('Save summary started'))
+        const summaryModel = modelMap['summary']
+        const h1bSummary = summaryModel(summaryRecord)
+        logger.trace(chalk.bgBlue('Save summary start'))
+        await h1bSummary.save()
+        logger.trace(chalk.bgBlue('Save summary complete'))
+        // return Promise.resolve()
+        logger.trace(chalk.bgBlue('End of block'))
+    
+    }catch(e){
+        logger.error(chalk.bgRed(`Process County, ${county} County, ${state}, failed: ` + e))
         throw(e)
     }
     return Promise.resolve
@@ -115,6 +343,24 @@ const processStates = async (year) => {
     return Promise.resolve
 }
 
+const processCounties = async (year, state, counties) => {
+    try{
+        await asyncForEach(counties, async(county) => {
+           try{
+                await processCounty(year, state, county)
+            }catch(e){
+                logger.error(chalk.bgRed(`Processing ${county} County, ${state} failed: ` + e))
+                logger.error(chalk.bgRed('Continuning to other counties.'))
+            }
+        })
+    }catch(e){
+        logger.error(chalk.bgRed(`Process ${state} Counties FAILED.`))
+        // return Promise.reject(e)
+    }
+    logger.trace(chalk.bgBlue('End of method'))
+    return Promise.resolve
+}
+
 const processYears = (async () => {
     try{
         await asyncForEach(years, async(year) => {
@@ -122,6 +368,7 @@ const processYears = (async () => {
             currentYear = year
             try{
                 await processStates(year)
+                await processCounties(year, 'CA', californiaCounties)
             }catch(e){
                 log(chalk.bgRed(`Processing ${year} failed: ` + e))
                 logger.error(chalk.bgRed('Continuning to other years.'))

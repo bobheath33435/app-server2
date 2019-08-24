@@ -105,7 +105,7 @@ h1bRecordRouter.get('/h1bWsState', async (req, res) => {
         const year = req.body[YEAR];
         logger.info('Year: ' + year)
         const wsState = req.body[WORKSITE_STATE];
-        logger.isInfoEnabled('Worksite State: ' + wsState)
+        logger.info('Worksite State: ' + wsState)
 
         const query = req.body
         const key = createKey(query)
