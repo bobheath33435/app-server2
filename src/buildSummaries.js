@@ -11,16 +11,88 @@ const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT
     salaryLevels, h1bRecord } 
         = require('./models/h1bRecordSchema')
 const log = console.log;
+const alaskaCounties = ["Aleutians East", "Aleutians West", "Anchorage", "Bethel", "Bristol Bay", "Denali", 
+                            "Dillingham", "Fairbanks North Star", 
+                            "Haines", "Juneau",  
+                            "Kenai Peninsula", "Kodiak Island", "Lake and Peninsula", "Nome", "North SLope", 
+                            "Northwest Arctic", "Sitka", "Yakutat", "Wade Hampton"]
+const alabamaCounties = ["Autauga", "Baldwin", "Barbour", "Bibb", "Blount", 
+                            "Bullock", "Butler", "Calhoun", "Chambers",
+                            "Cherokee", "Chilton", "Choctaw", "Clarke", "Clay", "Cleburne",
+                            "Coffee", "Colbert", "Conecuh", "Coosa", "Covington", "Crenshaw",
+                            "Cullman", "Dale", "Dallas", "DeKalb", "Elmore", "Escambia",
+                            "Etowah", "Fayette", "Franklin", "Geneva", "Greene", "Hale",
+                            "Henry", "Houston", "Jackson", "Jefferson", "Lamar", "Lauderdale",
+                            "Lawrence", "Lee", "Limestone", "Lowndes", "Macon", "Madison",
+                            "Marengo", "Marion", "Marshall", "Mobile", "Monroe", "Montgomery",
+                            "Morgan", "Perry", "Pickens", "Pike", "Randolph", "Russell",
+                            "St. Clair", "Shelby", "Sumter", "Talladega", "Tallapoosa",
+                            "Tuscaloosa", "Walker", "Washington", "Wilcox", "Winston"
+                        ]
 const californiaCounties = [
-    "Marin", "Orange", "Santa Clara"
+    "Alameda", "Alpine", "Amador", "Butte", "Calaveras", "Colusa", "Contra Costa",
+    "Del Norte", "El Dorado", "Fresno", "Glenn", "Humboldt", "Imperial", "Inyo",
+    "Kern", "Kings", "Lake", "Lassen", "Los Angeles", "Madera", "Marin", "Mariposa",
+    "Mendocino", "Merced", "Modoc", "Mono", "Monterey", "Napa", "Nevada", "Orange", 
+    "Placer", "Plumas", "Riverside", "Sacramento", "San Benito", "San Bernardino",
+    "San Diego", "San Francisco", "San Joaquin", "San Luis Obispo", "San Mateo", 
+    "Santa Barbara", "Santa Clara", "Santa Cruz", "Shasta", "Sierra", "Siskiyou",
+    "Solano", "Sonoma", "Stanislaus", "Sutter", "Tehama", "Trinity", "Tulare", "Tuolumne",
+    "Ventura", "Yolo", "Yuba"
+]
+const newJerseyCounties = [ 
+    "Atlantic", "Bergen", "Burlington", "Camden", "Cape May",
+    "Cumberland", "Essex", "Gloucester", "Hudson", "Hunterdon", "Mercer", "Middlesex",
+    "Monmouth", "Morris", "Ocean", "Passaic", "Salem", "Somerset", "Sussex", "Union", "Warren"
+]
+const newYorkCounties = [ 
+    "Albany", "Allegany", "Bronx", "Broome", "Cattaraugus", "Cayuga",
+    "Chautauqua", "Chemung", "Chenango", "Clinton", "Columbia", "Cortland", "Delaware",
+    "Dutchess", "Erie", "Essex", "Franklin", "Fulton", "Genesee", "Greene", "Hamilton",
+    "Herkimer", "Jefferson", "Kings", "Lewis", "Livingston", "Madison", "Monroe",
+    "Montgomery", "Nassau", "New York", "Niagara", "Oneida", "Onondaga", "Ontario",
+    "Orange", "Orleans", "Oswego", "Otsego", "Putnam", "Queens", "Rensselaer", "Richmond",
+    "Rockland", "St. Lawrence", "Saratoga", "Schenectady", "Schoharie", "Schuyler", "Seneca",
+    "Steuben", "Suffolk", "Sullivan", "Tioga", "Tompkins", "Ulster", "Warren", "Washington",
+    "Wayne", "Westchester", "Wyoming", "Yates"
+]
+const northCarolinaCounties = [
+    "Alamance", "Alexander", "Alleghany", "Anson", "Ashe", "Avery", "Beaufort", "Bertie",
+    "Bladen", "Brunswick", "Buncombe", "Burke", "Cabarrus", "Caldwell", "Camden", "Carteret",
+    "Caswell", "Catawba", "Chatham", "Cherokee", "Chowan", "Clay", "Cleveland", "Columbus",
+    "Craven", "Cumberland", "Currituck", "Dare", "Davidson", "Davie", "Durham", "Edgecombe",
+    "Forsyth", "Franklin", "Gaston", "Gates", "Graham", "Granville", "Greene", "Guilford",
+    "Halifax", "Harnett", "Haywood", "Henderson", "Hertford", "Hoke", "Hyde", "Iredell",
+    "Jackson", "Johnston", "Jones", "Lee", "Lenoir", "Lincoln", "McDowell",
+    "Macon", "Madison", "Martin", "Mecklenburg", "Mitchell", "Montgomery", 
+    "Moore", "Nash", "New Hanover", "Northampton", "Onslow", "Orange", "Pamlico",
+    "Pasquotank", "Pender", "Perquimans", "Person", "Pitt", "Polk", "Randolph",
+    "Richmond", "Robeson", "Rockingham", "Rowan", "Rutherford ", "Sampson",
+    "Scotland", "Stanly", "Stokes", "Surry", "Swain", "Transylvania", "Tyrrell",
+    "Union", "Vance", "Wake", "Warren", "Washington", "Watauga", "Wayne", "Wilkes",
+    "Wilson", "Yadkin", "Yancey"
+]
+const texasCounties = [
+    "Anderson", "Andrews", "Angelina", "Aransas", "Archer", "Armstrong", "Atascosa",
+    "Austin", "Bailey", "Bandera", "Bastrop", "Baylor", "Bee", "Bell", "Bexar", "Blanco",
+    "Borden", "Bosque", "Bowie", "Brazoria", "Brazos", "Brewster", "Briscoe", "Brooks", "Brown",
+    "Burleson", "Burnet", "Caldwell", "Calhoun", "Callahan", "Cameron", "Camp", "Carson",
+    "Cass", "Castro", "Chambers", "Cherokee", "Childress", "Clay", "Cochran", "Coke",
+    "Coleman", "Collin", "Collingsworth", "Colorado", "Comal", "Comanche", "Concho",
+    "Cooke", "Coryell", "Cottle", "Crane", "Crockett", "Crosby", "Culberson", "Dallam",
+    "Dallas", "Dawson", "Deaf Smith", "Delta", "Denton", "DeWitt", "Dickens", "Dimmit",
+    "Donley", "Duval", "Eastland", "Ector", "Edwards", "Ellis", "El Paso", "Erath", "Falls",
+    "Fannin", "Fayette", "Fisher"
 ]
 const states = [
                 {id: "AK",
                  summarizeType: "FULL",
+                 counties: alaskaCounties,
                  congressionalDistricts: 1
                 }, 
                 {id: "AL",
                  summarizeType: "FULL",
+                 counties: alabamaCounties,
                  congressionalDistricts: 10
                 }, 
                 {id: "AR",
@@ -43,6 +115,10 @@ const states = [
                 {id: "CT",
                  summarizeType: "FULL",
                  congressionalDistricts: 6
+                }, 
+                {id: "DC",
+                 summarizeType: "FULL",
+                 congressionalDistricts: 1
                 }, 
                 {id: "DE",
                  summarizeType: "FULL",
@@ -122,6 +198,7 @@ const states = [
                 }, 
                 {id: "NC",
                  summarizeType: "FULL",
+                 counties: northCarolinaCounties,
                  congressionalDistricts: 13
                 }, 
                 {id: "ND",
@@ -138,6 +215,7 @@ const states = [
                 }, 
                 {id: "NJ",
                  summarizeType: "BRIEF",
+                 counties: newJerseyCounties,
                  congressionalDistricts: 15
                 }, 
                 {id: "NM",
@@ -150,6 +228,7 @@ const states = [
                 }, 
                 {id: "NY",
                  summarizeType: "BRIEF",
+                 counties: newYorkCounties,
                  congressionalDistricts: 45
                 }, 
                 {id: "OH",
@@ -186,6 +265,7 @@ const states = [
                 }, 
                 {id: "TX",
                  summarizeType: "BRIEF",
+                 counties: texasCounties,
                  congressionalDistricts: 36
                 }, 
                 {id: "UT",
@@ -266,27 +346,15 @@ const processState = ( async(year, stateRecord) => {
         const query = {}
         query[YEAR] = year
         query[WORKSITE_STATE] = worksiteState
-        const h1bRecords = await queryDB(query)
-        var h1bObject = {}
-        if("FULL" == summarizeType){
-            h1bObject = summarize(h1bRecords, query)
-        }else{
-            h1bObject = summarizeMajor(h1bRecords, query)
-        }
-        // logger.trace(chalk.bgBlue('Data summarized'))
-        // logger.trace(JSON.stringify(h1bObject, undefined, 2))
-        // var summaryRecord = {
-        //     "key": key,
-        //     "summary": h1bObject
+        await queryAndSave(query, summarizeType)
+        // const h1bRecords = await queryDB(query)
+        // var h1bObject = {}
+        // if("FULL" == summarizeType){
+        //     h1bObject = summarize(h1bRecords, query)
+        // }else{
+        //     h1bObject = summarizeMajor(h1bRecords, query)
         // }
-        // logger.trace(chalk.bgBlue('Save summary started'))
-        // const summaryModel = modelMap['summary']
-        // const h1bSummary = summaryModel(summaryRecord)
-        // logger.trace(chalk.bgBlue('Save summary start'))
-        // await h1bSummary.save()
-        // logger.trace(chalk.bgBlue('Save summary complete'))
-        // return Promise.resolve()
-        await saveSummary(h1bObject)
+        // await saveSummary(h1bObject)
         logger.trace(chalk.bgBlue('End of block'))
         await processCongDistricts(year, worksiteState, congDistCount)
     
@@ -324,6 +392,12 @@ const saveSummary = async(h1bObject) => {
     logger.trace(chalk.bgBlue('Save summary complete'))
 }
 
+const queryAndSave = async (query, summarizeType) => {
+    const h1bRecords = await queryDB(query)
+    const h1bObject = ("BRIEF" == summarizeType) ? summarizeMajor(h1bRecords, query) : summarize(h1bRecords, query)
+    await saveSummary(h1bObject)
+}
+
 const processCounty = ( async(year, state, county) => {
     try{
         county = county.toUpperCase()
@@ -333,28 +407,16 @@ const processCounty = ( async(year, state, county) => {
         query[YEAR] = year
         query[WORKSITE_STATE] = state
         query[WORKSITE_COUNTY] = county
-        logger.trace(chalk.bgRed('query: ' + JSON.stringify(query)))
-        key = createKey(query)
-        logger.info(chalk.bgRed("Key: " + key + ' -- query: ' + JSON.stringify(query)))
+        await queryAndSave(query)
+        // logger.trace(chalk.bgRed('query: ' + JSON.stringify(query)))
+        // key = createKey(query)
+        // logger.info(chalk.bgRed("Key: " + key + ' -- query: ' + JSON.stringify(query)))
     
-        logger.trace(chalk.bgBlue('Read data started. query: ' + JSON.stringify(query)))
-        const h1bRecords = await h1bModel.find(query)
-        logger.trace(chalk.bgBlue('Read data complete'))
-        var h1bObject = summarize(h1bRecords, query)
-        // logger.trace(chalk.bgBlue('Data summarized'))
-        // logger.trace(JSON.stringify(h1bObject, undefined, 2))
-        // var summaryRecord = {
-        //     "key": key,
-        //     "summary": h1bObject
-        // }
-        // logger.trace(chalk.bgBlue('Save summary started'))
-        // const summaryModel = modelMap['summary']
-        // const h1bSummary = summaryModel(summaryRecord)
-        // logger.trace(chalk.bgBlue('Save summary start'))
-        // await h1bSummary.save()
-        // logger.trace(chalk.bgBlue('Save summary complete'))
-        // // return Promise.resolve()
-        await saveSummary(h1bObject)
+        // logger.trace(chalk.bgBlue('Read data started. query: ' + JSON.stringify(query)))
+        // const h1bRecords = await h1bModel.find(query)
+        // logger.trace(chalk.bgBlue('Read data complete'))
+        // var h1bObject = summarize(h1bRecords, query)
+        // await saveSummary(h1bObject)
         logger.trace(chalk.bgBlue('End of block'))
     
     }catch(e){
@@ -373,7 +435,8 @@ const processCongDistrict = ( async(year, state, index) => {
         query[YEAR] = year
         query[WORKSITE_STATE] = state
         query[WORKSITE_CONGRESS_DISTRICT] = index
-        const h1bRecords = await queryDB(query)
+        await queryAndSave(query)
+        // const h1bRecords = await queryDB(query)
         // logger.trace(chalk.bgRed('query: ' + JSON.stringify(query)))
         // const key = createKey(query)
         // logger.info(chalk.bgRed("Key: " + key + ' -- query: ' + JSON.stringify(query)))
@@ -381,8 +444,8 @@ const processCongDistrict = ( async(year, state, index) => {
         // logger.trace(chalk.bgBlue('Read data started. query: ' + JSON.stringify(query)))
         // const h1bRecords = await h1bModel.find(query)
         // logger.trace(chalk.bgBlue('Read data complete'))
-        var h1bObject = summarize(h1bRecords, query)
-        await saveSummary(h1bObject)
+        //var h1bObject = summarize(h1bRecords, query)
+        //await saveSummary(h1bObject)
         // logger.trace(chalk.bgBlue('Data summarized'))
         // logger.trace(JSON.stringify(h1bObject, undefined, 2))
         // var summaryRecord = {
@@ -466,7 +529,13 @@ const processYears = (async () => {
             currentYear = year
             try{
                 await processStates(year)
+                await processCounties(year, 'AK', alaskaCounties)
+                await processCounties(year, 'AL', alabamaCounties)
                 await processCounties(year, 'CA', californiaCounties)
+                await processCounties(year, 'NC', northCarolinaCounties)
+                await processCounties(year, 'NJ', newJerseyCounties)
+                await processCounties(year, 'NY', newYorkCounties)
+                await processCounties(year, 'TX', texasCounties)
             }catch(e){
                 logger.error(chalk.bgRed(`Processing ${year} failed: ` + e))
                 logger.error(chalk.bgRed('Continuning to other years.'))
