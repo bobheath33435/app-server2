@@ -83,8 +83,17 @@ const floridaCities = [
     "Boca Raton", "Davie", "Daytona Beach", "Deerfield Beach", "Delray Beach", "Fort Lauderdale", "Hialeah",
     "Jacksonville", 
     "Juno Beach", "Kendall", "Key West", "Kissimmee", "Lake Buena Vista", "Lake Mary", "Melbourne", "Miami", 
-    "Miami Beach", "Orlando", "Palm Beach", "Palm Beach Gardens", "Panama City", "Pensacola", "Tallahassee", "Tampa",
+    "Miami Beach", "Orlando", "Palm Beach", "Palm Beach Gardens", "Panama City", "Pensacola", 
+    "Sarasota", "Tallahassee", "Tampa",
     "West Palm Beach"
+]
+const marylandCounties = [ 
+    "Allegany", "Anne Arundel", "Baltimore", "Calvert", "Caroline", "Carroll", "Cecil", "Charles",
+    "Dorchester", "Frederic", "Garrett", "Hartford", "Howard", "Kent", "Montgomery", "Prince Georges",
+    "Queen Annes", "Saint Marys", "Somerset", "Talbot", "Washington", "Wicomico", "Worcester"
+]
+const marylandCities = [ 
+    "Annapolis", "Baltimore", "Chevy Chase", "Cumberland", "Rockville", "Salisbury", "Silver Spring", "Towson"
 ]
 const newJerseyCounties = [ 
     "Atlantic", "Bergen", "Burlington", "Camden", "Cape May",
@@ -127,6 +136,22 @@ const northCarolinaCounties = [
 const northCarolinaCities = [
     "Asheville", "Boone", "Cary", "Charlotte", "Durham", "Greensboro", "High Point",
     "Raleigh", "Research Triangle Park", "Wilmington", "Wilson", "Winston Salem"
+]
+const ohioCounties = [
+    "Adams", "Allen", "Ashland", "Ashtabula", "Athens", "Auglaize", "Belmont", "Brown",
+    "Butler", "Carroll", "Champaign", "Clark", "Clermont", "Clinton", "Columbiana",
+    "Coshocton", "Crawford", "Cuyahoga", "Darke", "Defiance", "Delaware", "Erie", "Fairfield",
+    "Fayette", "Franklin", "Fulton", "Gallia", "Geauga", "Greene", "Guernsey", "Hamilton",
+    "Hancock", "Hardin", "Harrison", "Henry", "Highland", "Hocking", "Holmes", "Huron",
+    "Jackson", "Jefferson", "Knox", "Lake", "Lawrence", "Licking", "Logan", "Lorain", "Lucas",
+    "Madison", "Mahoning", "Marion", "Median", "Meigs", "Mercer", "Miami", "Monroe", "Montgomery",
+    "Morgan", "Morrow", "Muskingum", "Noble", "Ottawa", "Paulding", "Perry", "Pickaway", "Pike",
+    "Portage", "Preble", "Putnam", "Richland", "Ross", "Sandusky", "Scioto", "Senaca", "Shelby",
+    "Stark", "Summit", "Trumbull", "Tuscarawas", "Union", "Van Wert", "Vinton", "Warren",
+    "Washington", "Wayne", "Williams", "Wood", "Wyandot"
+]
+const ohioCities = [
+    "Cincinnati", "Cleveland", "Columbus", "Dayton", "Toledo", "Youngstown"
 ]
 const texasCounties = [
     "Anderson", "Andrews", "Angelina", "Aransas", "Archer", "Armstrong", "Atascosa",
@@ -267,6 +292,8 @@ const states = [
                 }, 
                 {id: "MD",
                  summarizeType: "FULL",
+                 counties: marylandCounties,
+                 cities: marylandCities,
                  congressionalDistricts: 8
                 }, 
                 {id: "ME",
@@ -333,6 +360,8 @@ const states = [
                 }, 
                 {id: "OH",
                  summarizeType: "FULL",
+                 counties: ohioCounties,
+                 cities: ohioCities,
                  congressionalDistricts: 24
                 }, 
                 {id: "OK",
