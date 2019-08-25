@@ -33,10 +33,10 @@ const alabamaCounties = ["Autauga", "Baldwin", "Barbour", "Bibb", "Blount",
                             "Tuscaloosa", "Walker", "Washington", "Wilcox", "Winston"
                         ]
 const alabamaCities = [
-    "Birmingham", "Montgomery", "Mobile"
+    "Birmingham", "Huntsville", "Montgomery", "Mobile", "Tuscaloosa"
 ]
 const arizonaCities = [
-    "Chandler", "Mesa", "Phoenix", "Scottsdale", "Tucson"
+    "Chandler", "Flagstaff", "Mesa", "Phoenix", "Scottsdale", "Sedona", "Tempe", "Tucson"
 ]
 const californiaCounties = [
     "Alameda", "Alpine", "Amador", "Butte", "Calaveras", "Colusa", "Contra Costa",
@@ -50,13 +50,49 @@ const californiaCounties = [
     "Ventura", "Yolo", "Yuba"
 ]
 const californiaCities = [
-    "Anaheim", "Los Angeles", "Mountain View", "Sacramento", "San Diego", "San Francisco", 
-    "San Jose", "Santa Barbara", "Sunnyvale"
+    "Anaheim", "Fresno", "Hayward", "Los Angeles", "Los Gatos", "Milpitas", "Mountain View", "Oakland",
+    "Palm Springs", "Palo Alto", "Pasadena",
+    "Redding", "Sacramento", "San Diego", "San Francisco", 
+    "San Jose", "San Mateo", "Santa Barbara", "Santa Clara", "Santa Monica", "Santa Rosa",
+    "San Luis Obispo", "Sunnyvale"
+]
+const coloradoCounties = [
+    "Adams", "Alamosa", "Arapahoe", "Archuleta", "Baca", "Bent", "Boulder", "Broomfield",
+    "Chaffee", "Cheyenne", "Clear Creek", "Conejos", "Costilla", "Crowley", "Custer", "Delta",
+    "Denver", "Dolores", "Douglas", "Eagle", "El Paso", "Elbert", "Fremont", "Garfield", "Gilpin",
+    "Grand", "Gunnison", "Hinsdale", "Huerfano", "Jackson", "Jefferson", "Kit Carson", "La Plata",
+    "Lake", "Larimer", "Las Animas", "Lincoln", "Logan", "Mesa", "Mineral", "Moffat", "Montezuma",
+    "Montrose", "Morgan", "Otero", "Ouray", "Park", "Phillips", "Pitkin", "Prowers", "Pueblo",
+    "Rio Blanco", "Rio Grande", "Routt", "Saguache", "San Juan", "San Miguel", "Sedgwick",
+    "Summitt", "Teller", "Washington", "Weld", "Yuma"
+]
+const coloradoCities = [
+    "Boulder", "Colorado Springs", "Denver", "Fort Collins"
+]
+const floridaCounties = [
+    "Alachua", "Baker", "Bay", "Bradford", "Brevard", "Broward", "Calhoun", "Charlotte", "Citrus",
+    "Clay", "Collier", "Columbia", "DeSota", "Dixie", "Duval", "Escambia", "Flagler", "Franklin",
+    "Gadsden", "Gilchrist", "Glades", "Gulf", "Hamilton", "Hardee", "Hendry", "Hernando", "Highlands",
+    "Hillsborough", "Holmes", "Indian River", "Jackson", "Jefferson", "Lafayette", "Lake", "Lee", "Leon",
+    "Levy", "Liberty", "Madison", "Manatee", "Marion", "Martin", "Dade", "Miami-Dade", "Monroe", "Nassau",
+    "Okaloosa", "Okeechobee", "Orange", "Osceola", "Palm Beach", "Pasco", "Pinellas", "Polk", "Putnam",
+    "St. Johns", "Santa Rosa", "Sarasota", "Seminole", "Sumter", "Suwannee", "Taylor", "Union", "Volusia",
+    "Wakulla", "Walton", "Washington"
+]
+const floridaCities = [
+    "Boca Raton", "Davie", "Daytona Beach", "Deerfield Beach", "Delray Beach", "Fort Lauderdale", "Hialeah",
+    "Jacksonville", 
+    "Juno Beach", "Kendall", "Key West", "Kissimmee", "Lake Buena Vista", "Lake Mary", "Melbourne", "Miami", 
+    "Miami Beach", "Orlando", "Palm Beach", "Palm Beach Gardens", "Panama City", "Pensacola", "Tallahassee", "Tampa",
+    "West Palm Beach"
 ]
 const newJerseyCounties = [ 
     "Atlantic", "Bergen", "Burlington", "Camden", "Cape May",
     "Cumberland", "Essex", "Gloucester", "Hudson", "Hunterdon", "Mercer", "Middlesex",
     "Monmouth", "Morris", "Ocean", "Passaic", "Salem", "Somerset", "Sussex", "Union", "Warren"
+]
+const newJerseyCities = [ 
+    "Edison", "Newark", "New Brunswick"
 ]
 const newYorkCounties = [ 
     "Albany", "Allegany", "Bronx", "Broome", "Cattaraugus", "Cayuga",
@@ -68,6 +104,9 @@ const newYorkCounties = [
     "Rockland", "St. Lawrence", "Saratoga", "Schenectady", "Schoharie", "Schuyler", "Seneca",
     "Steuben", "Suffolk", "Sullivan", "Tioga", "Tompkins", "Ulster", "Warren", "Washington",
     "Wayne", "Westchester", "Wyoming", "Yates"
+]
+const newYorkCities = [ 
+    "Albany", "Binghamton", "Bronx", "Brooklyn", "Buffalo", "New York", "White Plains"
 ]
 const northCarolinaCounties = [
     "Alamance", "Alexander", "Alleghany", "Anson", "Ashe", "Avery", "Beaufort", "Bertie",
@@ -85,6 +124,10 @@ const northCarolinaCounties = [
     "Union", "Vance", "Wake", "Warren", "Washington", "Watauga", "Wayne", "Wilkes",
     "Wilson", "Yadkin", "Yancey"
 ]
+const northCarolinaCities = [
+    "Asheville", "Boone", "Cary", "Charlotte", "Durham", "Greensboro", "High Point",
+    "Raleigh", "Research Triangle Park", "Wilmington", "Wilson", "Winston Salem"
+]
 const texasCounties = [
     "Anderson", "Andrews", "Angelina", "Aransas", "Archer", "Armstrong", "Atascosa",
     "Austin", "Bailey", "Bandera", "Bastrop", "Baylor", "Bee", "Bell", "Bexar", "Blanco",
@@ -96,11 +139,39 @@ const texasCounties = [
     "Dallas", "Dawson", "Deaf Smith", "Delta", "Denton", "DeWitt", "Dickens", "Dimmit",
     "Donley", "Duval", "Eastland", "Ector", "Edwards", "Ellis", "El Paso", "Erath", "Falls",
     "Fannin", "Fayette", "Fisher", "Floyd", "Foard", "Fort Bend", "Franklin", "Freestone",
-    "Frio", "Gaines", "Galveston", "Garza", "Gillespie", "Glasscock", "Goliad"< "Gonzales",
-    "Gray", "Grayson", "Gregg", "Grimes", "Guadalupe", "Hale", "Hall", "Hamilton", "Hansford"
+    "Frio", "Gaines", "Galveston", "Garza", "Gillespie", "Glasscock", "Goliad", "Gonzales",
+    "Gray", "Grayson", "Gregg", "Grimes", "Guadalupe", "Hale", "Hall", "Hamilton", "Hansford",
+    "Hardeman", "Hardin", "Harris", "Harrison", "Hartley", "Haskell", "Hays", "Hemphill",
+    "Henderson", "Hidalgo", "Hill", "Hockley", "Hood", "Hopkins", "Houston", "Howard",
+    "Hudspeth", "Hunt", "Hutchinson", "Irion", "Jack", "Jackson", "Jasper", "Jeff Davis",
+    "Jefferson", "Jim Hogg", "Jim Wells", "Johnson", "Jones", "Karnes", "Kaufman", "Kendall",
+    "Kenedy", "Kent", "Kerr", "Kimble", "King", "Kinney", "Kleberg", "Knox", "Lamar", "Lamb",
+    "Lampasas", "La Salle", "Lavaca", "Lee", "Leon", "Liberty", "Limestone", "Libscomb", "Live Oak",
+    "Llano", "Loving", "Lubbock", "Lynn", "McCulloch", "McLennan", "McMullen", "Madison", "Marion",
+    "Martin", "Mason", "Matagorda", "Maverick", "Medina", "Menard", "Midland", "Milam", "Mills",
+    "Mitchell", "Montague", "Montgomery", "Moore", "Morris", "Motley", "Nacogdoches", "Navarro",
+    "Newton", "Nolan", "Nueces", "Ochiltree", "Oldham", "Orange", "Palo Pinto", "Panola", "Parker",
+    "Parmer", "Pecos", "Polk", "Potter", "Presidio", "Rains", "Randall", "Reagan", "Real", "Red River",
+    "Reeves", "Refugio", "Roberto", "Robertson", "Rockwell", "Runnels", "Rusk", "Sabine", "San Augustine",
+    "San Jacinto", "San Patricio", "San Saba", "Schleicher", "Scurry", "Shackelford", "Shelby", "Sherman",
+    "Smith", "Somervell", "Starr", "Stephens", "Sterling", "Stonewall", "Sutton", "Swisher", "Tarrant",
+    "Taylor", "Terrell", "Terry", "Throckmorton", "Titus", "Tom Green", "Travis", "Tritiny", "Tyler",
+    "Upshur", "Upton", "Uvalde", "Val Verde", "Van Zandt", "Victoria", "Walker", "Waller", "Ward",
+    "Washington", "Webb", "Wharton", "Wheeler", "Wichita", "Wilbarger", "Willacy", "Williamson",
+    "Wilson", "Winkler", "Wise", "Wood", "Yoakum", "Young", "Zapata", "Zavala"
 ]
 const texasCities = [
-    "Austin", "Dallas", "El Paso", "Fort Worth", "Houston", "Lubbock"
+    "Austin", "Dallas", "El Paso", "Fort Worth", "Galveston", "Houston", "Lubbock", "Plano", 
+    "Richardson", "San Antonio"
+]
+const utahCounties = [
+    "Beaver", "Box Elder", "Cache", "Carbon", "Daggett", "Davis", "Duchesne", "Emery", "Garfield",
+    "Grand", "Iron", "Juab", "Kane", "Millard", "Morgan", "Piute", "Rich", "Salt Lake", "San Juan",
+    "Sanpete", "Sevier", "Summit", "Tooele", "Uintah", "Utah", "Wasatch", "Washington", "Wayne",
+    "Weber"
+]
+const utahCities = [
+    "Ogden", "Provo", "Salt Lake City"
 ]
 const states = [
                 {id: "AK",
@@ -132,6 +203,8 @@ const states = [
                 }, 
                 {id: "CO",
                  summarizeType: "FULL",
+                 counties: coloradoCounties,
+                 cities: coloradoCities,
                  congressionalDistricts: 7
                 }, 
                 {id: "CT",
@@ -148,6 +221,8 @@ const states = [
                 }, 
                 {id: "FL",
                  summarizeType: "FULL",
+                 counties: floridaCounties,
+                 cities: floridaCities,
                  congressionalDistricts: 27
                 }, 
                 {id: "GA",
@@ -221,6 +296,7 @@ const states = [
                 {id: "NC",
                  summarizeType: "FULL",
                  counties: northCarolinaCounties,
+                 cities: northCarolinaCities,
                  congressionalDistricts: 13
                 }, 
                 {id: "ND",
@@ -238,6 +314,7 @@ const states = [
                 {id: "NJ",
                  summarizeType: "BRIEF",
                  counties: newJerseyCounties,
+                 cities: newJerseyCities,
                  congressionalDistricts: 15
                 }, 
                 {id: "NM",
@@ -251,6 +328,7 @@ const states = [
                 {id: "NY",
                  summarizeType: "BRIEF",
                  counties: newYorkCounties,
+                 cities: newYorkCities,
                  congressionalDistricts: 45
                 }, 
                 {id: "OH",
@@ -293,6 +371,8 @@ const states = [
                 }, 
                 {id: "UT",
                  summarizeType: "FULL",
+                 counties:utahCounties,
+                 cities: utahCities,
                  congressionalDistricts: 4
                 }, 
                 {id: "VA",
