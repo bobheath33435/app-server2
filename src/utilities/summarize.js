@@ -50,7 +50,7 @@ const summarizeMajor = (h1bRecords, query) => {
     if(!_.isEmpty(employer)){
         summaryRecord[EMPLOYER_NAME] = employer
     }
-    if(!_.isEmpty(county)){
+    if(!_.isEmpty(city)){
         summaryRecord[WORKSITE_CITY] = city
     }
     if(!_.isEmpty(county)){
@@ -238,6 +238,11 @@ const createKey = (queryIn) => {
     if(undefined != query[WORKSITE_STATE]){
         key += "_" + query[WORKSITE_STATE]
         delete query[WORKSITE_STATE]
+    }
+
+    if(undefined != query[WORKSITE_CITY]){
+        key += "_" + query[WORKSITE_CITY]
+        delete query[WORKSITE_CITY]
     }
 
     if(undefined != query[WORKSITE_COUNTY]){

@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 const log4js = require('log4js')
 const chalk = require('chalk')
+const _ = require('lodash')
+
 const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT,
     WORKSITE_LATITUDE, WORKSITE_LONGITUDE, WORKSITE_ADDR1, WORKSITE_ADDR2,
     WORKSITE_CITY, WORKSITE_COUNTY, WORKSITE_STATE, TOTAL_WORKERS, TOTAL_LCAS, SOC_CODE, 
@@ -16,6 +18,7 @@ const alaskaCounties = ["Aleutians East", "Aleutians West", "Anchorage", "Bethel
                             "Haines", "Juneau",  
                             "Kenai Peninsula", "Kodiak Island", "Lake and Peninsula", "Nome", "North SLope", 
                             "Northwest Arctic", "Sitka", "Yakutat", "Wade Hampton"]
+const alaskaCities = ["Anchorage", "Fairbanks", "Nome"]
 const alabamaCounties = ["Autauga", "Baldwin", "Barbour", "Bibb", "Blount", 
                             "Bullock", "Butler", "Calhoun", "Chambers",
                             "Cherokee", "Chilton", "Choctaw", "Clarke", "Clay", "Cleburne",
@@ -29,6 +32,12 @@ const alabamaCounties = ["Autauga", "Baldwin", "Barbour", "Bibb", "Blount",
                             "St. Clair", "Shelby", "Sumter", "Talladega", "Tallapoosa",
                             "Tuscaloosa", "Walker", "Washington", "Wilcox", "Winston"
                         ]
+const alabamaCities = [
+    "Birmingham", "Montgomery", "Mobile"
+]
+const arizonaCities = [
+    "Chandler", "Mesa", "Phoenix", "Scottsdale", "Tucson"
+]
 const californiaCounties = [
     "Alameda", "Alpine", "Amador", "Butte", "Calaveras", "Colusa", "Contra Costa",
     "Del Norte", "El Dorado", "Fresno", "Glenn", "Humboldt", "Imperial", "Inyo",
@@ -39,6 +48,10 @@ const californiaCounties = [
     "Santa Barbara", "Santa Clara", "Santa Cruz", "Shasta", "Sierra", "Siskiyou",
     "Solano", "Sonoma", "Stanislaus", "Sutter", "Tehama", "Trinity", "Tulare", "Tuolumne",
     "Ventura", "Yolo", "Yuba"
+]
+const californiaCities = [
+    "Anaheim", "Los Angeles", "Mountain View", "Sacramento", "San Diego", "San Francisco", 
+    "San Jose", "Santa Barbara", "Sunnyvale"
 ]
 const newJerseyCounties = [ 
     "Atlantic", "Bergen", "Burlington", "Camden", "Cape May",
@@ -82,17 +95,24 @@ const texasCounties = [
     "Cooke", "Coryell", "Cottle", "Crane", "Crockett", "Crosby", "Culberson", "Dallam",
     "Dallas", "Dawson", "Deaf Smith", "Delta", "Denton", "DeWitt", "Dickens", "Dimmit",
     "Donley", "Duval", "Eastland", "Ector", "Edwards", "Ellis", "El Paso", "Erath", "Falls",
-    "Fannin", "Fayette", "Fisher"
+    "Fannin", "Fayette", "Fisher", "Floyd", "Foard", "Fort Bend", "Franklin", "Freestone",
+    "Frio", "Gaines", "Galveston", "Garza", "Gillespie", "Glasscock", "Goliad"< "Gonzales",
+    "Gray", "Grayson", "Gregg", "Grimes", "Guadalupe", "Hale", "Hall", "Hamilton", "Hansford"
+]
+const texasCities = [
+    "Austin", "Dallas", "El Paso", "Fort Worth", "Houston", "Lubbock"
 ]
 const states = [
                 {id: "AK",
                  summarizeType: "FULL",
                  counties: alaskaCounties,
+                 cities: alaskaCities,
                  congressionalDistricts: 1
                 }, 
                 {id: "AL",
                  summarizeType: "FULL",
                  counties: alabamaCounties,
+                 cities: alabamaCities,
                  congressionalDistricts: 10
                 }, 
                 {id: "AR",
@@ -101,11 +121,13 @@ const states = [
                 }, 
                 {id: "AZ",
                  summarizeType: "FULL",
+                 cities: arizonaCities,
                  congressionalDistricts: 9
                 }, 
                 {id: "CA",
                  summarizeType: "BRIEF",
                  counties: californiaCounties,
+                 cities: californiaCities,
                  congressionalDistricts: 53
                 }, 
                 {id: "CO",
@@ -266,6 +288,7 @@ const states = [
                 {id: "TX",
                  summarizeType: "BRIEF",
                  counties: texasCounties,
+                 cities: texasCities,
                  congressionalDistricts: 36
                 }, 
                 {id: "UT",
@@ -341,6 +364,8 @@ const processState = ( async(year, stateRecord) => {
     const worksiteState = stateRecord.id
     const summarizeType = stateRecord.summarizeType
     const congDistCount = stateRecord.congressionalDistricts
+    const counties = stateRecord.counties
+    const cities = stateRecord.cities
     try{
         logger.info(chalk.bgHex("#0aee0a").black("Process State Year: " + year + " - State: " + worksiteState + " - Type: " + summarizeType))
         const query = {}
@@ -357,7 +382,12 @@ const processState = ( async(year, stateRecord) => {
         // await saveSummary(h1bObject)
         logger.trace(chalk.bgBlue('End of block'))
         await processCongDistricts(year, worksiteState, congDistCount)
-    
+        if(!_.isEmpty(counties)){
+            await processCounties(year, worksiteState, counties)
+        }   
+        if(!_.isEmpty(cities)){
+            await processCities(year, worksiteState, cities)
+        }   
     }catch(e){
         logger.error(chalk.bgRed(`Process State, ${worksiteState}, failed: ` + e))
         throw(e)
@@ -401,8 +431,7 @@ const queryAndSave = async (query, summarizeType) => {
 const processCounty = ( async(year, state, county) => {
     try{
         county = county.toUpperCase()
-        logger.info(chalk.bgHex("#0aee0a").black("Process County Year: " + year + " - State: " + state + " - County: " + county))
-        const h1bModel = modelMap[year]
+        logger.info(chalk.bgHex("#ca4e0a").white.bold("Process County Year: " + year + " - State: " + state + " - County: " + county))
         const query = {}
         query[YEAR] = year
         query[WORKSITE_STATE] = state
@@ -426,9 +455,27 @@ const processCounty = ( async(year, state, county) => {
     return Promise.resolve
 })
 
+const processCity = ( async(year, state, city) => {
+    try{
+        city = city.toUpperCase()
+        logger.info(chalk.bgHex("#0a9999").white.bold("Process City Year: " + year + " - State: " + state + " - City: " + city))
+        const query = {}
+        query[YEAR] = year
+        query[WORKSITE_STATE] = state
+        query[WORKSITE_CITY] = city
+        await queryAndSave(query)
+        logger.trace(chalk.bgBlue('End of block'))
+    
+    }catch(e){
+        logger.error(chalk.bgRed(`Process City, ${city}, ${state}, failed: ` + e))
+        throw(e)
+    }
+    return Promise.resolve
+})
+
 const processCongDistrict = ( async(year, state, index) => {
     try{
-        logger.info(chalk.bgHex("#0aee0a").black("Process Congress District Year: " + year + " - State: " + state +
+        logger.info(chalk.bgHex("#1133aa").white.bold("Process Congress District Year: " + year + " - State: " + state +
                          " - Congressional District: " + index))
         const h1bModel = modelMap[year]
         const query = {}
@@ -504,6 +551,24 @@ const processCounties = async (year, state, counties) => {
     return Promise.resolve
 }
 
+const processCities = async (year, state, cities) => {
+    try{
+        await asyncForEach(cities, async(city) => {
+           try{
+                await processCity(year, state, city)
+            }catch(e){
+                logger.error(chalk.bgRed(`Processing the city ${city}, ${state} failed: ` + e))
+                logger.error(chalk.bgRed('Continuning to other cities.'))
+            }
+        })
+    }catch(e){
+        logger.error(chalk.bgRed(`Process ${state} Cities FAILED.`))
+        // return Promise.reject(e)
+    }
+    logger.trace(chalk.bgBlue('End of method'))
+    return Promise.resolve
+}
+
 const processCongDistricts = async (year, state, congDistCount) => {
     try{
         await asyncForLoop(congDistCount, async(index) => {
@@ -529,13 +594,13 @@ const processYears = (async () => {
             currentYear = year
             try{
                 await processStates(year)
-                await processCounties(year, 'AK', alaskaCounties)
-                await processCounties(year, 'AL', alabamaCounties)
-                await processCounties(year, 'CA', californiaCounties)
-                await processCounties(year, 'NC', northCarolinaCounties)
-                await processCounties(year, 'NJ', newJerseyCounties)
-                await processCounties(year, 'NY', newYorkCounties)
-                await processCounties(year, 'TX', texasCounties)
+                // await processCounties(year, 'AK', alaskaCounties)
+                // await processCounties(year, 'AL', alabamaCounties)
+                // await processCounties(year, 'CA', californiaCounties)
+                // await processCounties(year, 'NC', northCarolinaCounties)
+                // await processCounties(year, 'NJ', newJerseyCounties)
+                // await processCounties(year, 'NY', newYorkCounties)
+                // await processCounties(year, 'TX', texasCounties)
             }catch(e){
                 logger.error(chalk.bgRed(`Processing ${year} failed: ` + e))
                 logger.error(chalk.bgRed('Continuning to other years.'))
@@ -562,7 +627,7 @@ const bldSummaries = async () => {
     }, 0)
     logger.info(chalk.bgRed.bold("Build complete"))
     process.exit()
- }
+}
 
 bldSummaries();
 
