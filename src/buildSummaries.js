@@ -147,6 +147,34 @@ const georgiaCities = [
     "Alpharetta", "Augusta", "Atlanta", "College Park", "Columbus", "Kennesaw", "Macon", "Marietta",
     "Savannah", "Valdosta"
 ]
+const idahoCounties = [ 
+    "Ada", "Adams", "Bannock", "Bear Lake", "Benewah", "Bingham", "Blaine", "Boise", "Bonner",
+    "Bonneville", "Boundary", "Butte", "Camas", "Canyon", "Caribou", "Cassia", "Clark",
+    "Clearwater", "Custer", "Elmore", "Franklin", "Fremont", "Gem", "Gooding", "Idaho",
+    "Jefferson", "Jerome", "Koortenai", "Latah", "Lemhi", "Lewis", "Lincoln", "Madison",
+    "Minidoka", "Nez Perce", "Oneida", "Owyhee", "Payette", "Power", "Shoshone", "Teton",
+    "Twin Falls", "Valley", "Washington" 
+]
+const idahoCities = [ 
+    "Coeur d'Alene", "Boise", "Idaho Falls"
+]
+const illinoisCounties = [ 
+    "Adams", "Alexander", "Bond", "Boone", "Brown", "Bureau", "Calhoun", "Carroll", "Cass",
+    "Champaign", "Christian", "Clark", "Clay", "Clinton", "Coles", "Cook", "Crawford", "Cumberland",
+    "DeKalb", "DeWitt", "Douglas", "DuPage", "Edgar", "Edwards", "Effingham", "Fayette", "Ford",
+    "Franklin", "Fulton", "Gallatin", "Greene", "Grundy", "Hamilton", "Hancock", "Hardin", "Henderson",
+    "Henry", "Iroquois", "Jackson", "Jasper", "Jefferson", "Jersey", "Jo Daviess", "Johnson", "Kane",
+    "Kankakee", "Kendall", "Knox", "Lake", "LaSalle", "Lawrence", "Lee", "Livingston", "Logan", "Macon",
+    "Macoupin", "Madison", "Marion", "Marshall", "Mason", "Massac", "McDonough", "McHenry", "McLean",
+    "Menard", "Mercer", "Monroe", "Montgomery", "Morgan", "Moultrie", "Ogle", "Peoria", "Perry", "Piatt",
+    "Pike", "Pope", "Pulaski", "Putnam", "Randolph", "Richland", "Rock Island", "Saline", "Sangamon",
+    "Schuyler", "Scott", "Shelby", "St. Clair", "Stark", "Stephenson", "Tazewell", "Union", "Vermilion",
+    "Wabash", "Warren", "Washington", "Wayne", "White", "Whiteside", "Will", "Williamside", "Winnebago",
+    "Woodford"
+]
+const illinoisCities = [
+    "Bloomington", "Chicago", "Decatur", "Joliet", "Peoria", "Springfield", "Urbana"
+]
 const kansasCounties = [ 
     "Allen", "Anderson", "Atchison", "Barber", "Barton", "Bourbon", "Brown",
     "Butler", "Chase", "Chautauqua", "Cherokee", "Cheyenne", "Clark", "Clay", "Cloud",
@@ -189,6 +217,22 @@ const massachusettsCounties = [
 ]
 const massachusettsCities = [ 
     "Boston", "Cambridge", "Lowell", "Springfield", "Worcester", "West Springfield"
+]
+const michiganCounties = [ 
+    "Alcona", "Alger", "Allegan", "Alpena", "Antrim", "Arenac", "Baraga", "Barry", "Bay",
+    "Benzie", "Barrien", "Branch", "Calhoun", "Cass", "Charlevoix", "Cheboygan", "Chippewa",
+    "Clare", "Clinton", "Crawford", "Delta", "Dickinson", "Eaton", "Emmet", "Genesee",
+    "Gladwn", "Gogebic", "Grand Traverse", "Gratiot", "Hillsdale", "Houghton", "Huron",
+    "Ingham", "Ionia", "Iosco", "Iron", "Isabella", "Jackson", "Kalamazoo", "Kalkaska",
+    "Kent", "Keweenaw", "Lake", "Lapeer", "Leelanau", "Lenawee", "Livingston", "Luce",
+    "Mackinac", "Macomb", "Manistee", "Marquette", "Mason", "Mecosta", "Menominee",
+    "Midland", "Missaukee", "Monroe", "Montcalm", "Montmorency", "Muskegon", "Newaygo",
+    "Oakland", "Oceana", "Ogemaw", "Ontonagon", "Osceola", "Oscoda", "Otsego", "Ottawa",
+    "Presque Isle", "Roscommon", "Saginaw", "St. Clair", "St. Joseph", "Sanilac", 
+    "Schoolcraft", "Shiawassee", "Tuscola", "Van Buren", "Washtenaw", "Wayne"
+]
+const michiganCities = [ 
+    "Ann Arbor", "Dearborn", "Detroit", "East Lansing", "Kalamazoo", "Lansing", "Saginaw"
 ]
 const newJerseyCounties = [ 
     "Atlantic", "Bergen", "Burlington", "Camden", "Cape May",
@@ -428,10 +472,14 @@ const states = [
                 }, 
                 {id: "ID",
                  summarizeType: "FULL",
+                 counties: idahoCounties,
+                 cities: idahoCities,
                  congressionalDistricts: 2
                 }, 
                 {id: "IL",
                  summarizeType: "FULL",
+                 counties: illinoisCounties,
+                 cities: illinoisCities,
                  congressionalDistricts: 26
                 }, 
                 {id: "IN",
@@ -476,6 +524,8 @@ const states = [
                 }, 
                 {id: "MI",
                  summarizeType: "FULL",
+                 counties: michiganCounties,
+                 cities: michiganCities,
                  congressionalDistricts: 19
                 }, 
                 {id: "MN",
