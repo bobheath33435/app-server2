@@ -175,6 +175,25 @@ const illinoisCounties = [
 const illinoisCities = [
     "Bloomington", "Chicago", "Decatur", "Joliet", "Peoria", "Springfield", "Urbana"
 ]
+const indianaCounties = [ 
+    "Adams", "Allen", "Bartholomew", "Benton", "Blackford", "Boone", "Brown", "Carroll",
+    "Cass", "Clark", "Clay", "Clinton", "Crawford", "Daviess", "Dearborn", "Decatur",
+    "DeKalb", "Delaware", "Dubois", "Elkhart", "Fayette", "Floyd", "Fountain", "Franklin",
+    "Fulton", "Gibson", "Grant", "Greene", "Hamilton", "Hancock", "Harrison", "Hendricks",
+    "Henry", "Howard", "Huntington", "Jackson", "Jasper", "Jay", "Jefferson", "Jennings",
+    "Johnson", "Knox", "Kosciusko", "LaGrange", "Lake", "LaPorte", "Lawrence", "Madison",
+    "Marion", "Marshall", "Martin", "Miami", "Monroe", "Montgomery", "Morgan", "Newton",
+    "Noble", "Ohio", "Orange", "Owen", "Parke", "Perry", "Pike", "Porter", "Posey",
+    "Pulaski", "Putnam", "Randolph", "Ripley", "Rush", "St. Joseph", "Scott", "Shelby",
+    "Spencer", "Starke", "Steuben", "Sullivan", "Switzerland", "Tippecanoe", "Tipton",
+    "Union", "Vanderburgh", "Vermillion", "Vigo", "Wabash", "Warren", "Warrick",
+    "Washington", "Wayne", "Wells", "White", "Whitley"
+]
+const indianaCities = [ 
+    "Bloomington", "Evansville", "Fort Wayne", "Gary",
+    "Indianapolis", "Kokomo", "Lafayette", "Marion", "Muncie", "New Albany", 
+    "South Bend", "Terre Haute"
+]
 const kansasCounties = [ 
     "Allen", "Anderson", "Atchison", "Barber", "Barton", "Bourbon", "Brown",
     "Butler", "Chase", "Chautauqua", "Cherokee", "Cheyenne", "Clark", "Clay", "Cloud",
@@ -303,6 +322,16 @@ const ohioCounties = [
 const ohioCities = [
     "Cincinnati", "Cleveland", "Columbus", "Dayton", "Toledo", "Youngstown"
 ]
+const oregonCounties = [
+    "Baker", "Benton", "Clackamas", "Clatsop", "Columbia", "Coos", "Crook", "Curry",
+    "Deschutes", "Douglas", "Gilliam", "Grant", "Harney", "Hood River", "Jackson",
+    "Jefferson", "Josephine", "Klamath", "Lake", "Lane", "Lincoln", "Linn", "Malheur",
+    "Marion", "Morrow", "Multnomah", "Polk", "Sherman", "Tillamook", "Umatilla", "Union",
+    "Wallowa", "Wasco", "Washington", "Wheeler", "Yamhill"
+]
+const oregonCities = [
+    "Corvallis", "Eugene", "Hillsboro", "Medford", "Portland", "Salem"
+]
 const pennsylvaniaCounties = [
     "Adams", "Allegheny", "Armstrong", "Beaver", "Bedford", "Berks", "Blair", "Bradford",
     "Bucks", "Butler", "Cambria", "Cameron", "Carbon", "Centre", "Chester", "Clarion",
@@ -317,6 +346,12 @@ const pennsylvaniaCounties = [
 const pennsylvaniaCities = [
     "ALlentown", "Bethlehem", "Erie", "Harrisburg", "Lancaster", "Philadelphia", "Pittsburgh",
     "Reading", "Scranton", "State College", "York", "Wilkes-Barre"
+]
+const rhodeIslandCounties = [
+    "Bristol", "Kent", "Newport", "Providence", "Washington"
+]
+const rhodeIslandCities = [
+    "Bristol", "Newport", "Providence"
 ]
 const southCarolinaCounties = [
     "Abbeville", "Aiken", "Allendale", "Anderson", "Bamberg", "Barnwell", "Beaufort", "Berkeley",
@@ -392,6 +427,18 @@ const virginiaCounties = [
 const virginiaCities = [
     "Alexandria", "Arlington", "Charlottesville", "Chesapeake", "Fairfax", "Falls Church", "Herndon", 
     "Norfolk", "Richmond", "Roanoke"
+]
+const westVirginaCounties = [
+    "Barbour", "Berkeley", "Boone", "Braxton", "Brooke", "Cabell", "Calhoun", "Clay", "Doddridge",
+    "Fayette", "Gilmer", "Grant", "Greenbrier", "Hampshire", "Hancock", "Hardy", "Harrison",
+    "Jackson", "Jefferson", "Kanawha", "Lewis", "Lincoln", "Logan", "Marion", "Marshall",
+    "Mason", "McDowell", "Mercer", "Mineral", "Mingo", "Monongalia", "Monroe", "Morgan",
+    "Nicholas", "Ohio", "Pendleton", "Pleasants", "Pocahontas", "Preston", "Putnam", "Raleigh",
+    "Randolph", "Ritchie", "Roane", "Summers", "Taylor", "Tucker", "Tyler", "Upshur", "Wayne",
+    "Webster", "Wetzel", "Wirt", "Wood", "Wyoming"
+]
+const westVirginaCities = [
+    "Beckley", "Charleston", "Fayetteville", "Huntington", "Morgantown", "Wheeling"
 ]
 const wyomingCounties = [
     "Albany", "Big Horn", "Campbell", "Carbon", "Converse", "Crook", "Fremont", "Goshen", "Hot Springs",
@@ -484,6 +531,8 @@ const states = [
                 }, 
                 {id: "IN",
                  summarizeType: "FULL",
+                 counties: indianaCounties,
+                 cities: indianaCities,
                  congressionalDistricts: 13
                 }, 
                 {id: "IO",
@@ -596,6 +645,8 @@ const states = [
                 }, 
                 {id: "OR",
                  summarizeType: "FULL",
+                 counties: oregonCounties,
+                 cities: oregonCities,
                  congressionalDistricts: 5
                 }, 
                 {id: "PA",
@@ -606,6 +657,8 @@ const states = [
                 }, 
                 {id: "RI",
                  summarizeType: "FULL",
+                 counties: rhodeIslandCounties,
+                 cities: rhodeIslandCities,
                  congressionalDistricts: 3
                 }, 
                 {id: "SC",
@@ -650,6 +703,8 @@ const states = [
                 }, 
                 {id: "WV",
                  summarizeType: "FULL",
+                 counties: westVirginaCounties,
+                 cities: westVirginaCities,
                  congressionalDistricts: 6
                 }, 
                 {id: "WI",
