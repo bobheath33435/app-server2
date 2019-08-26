@@ -147,6 +147,12 @@ const georgiaCities = [
     "Alpharetta", "Augusta", "Atlanta", "College Park", "Columbus", "Kennesaw", "Macon", "Marietta",
     "Savannah", "Valdosta"
 ]
+const hawaiiCounties = [ 
+    "Hawaii", "Honolulu", "Kalawao", "Kauai", "Maui"
+]
+const hawaiiCities = [ 
+    "Honolulu", "Lihue"
+]
 const idahoCounties = [ 
     "Ada", "Adams", "Bannock", "Bear Lake", "Benewah", "Bingham", "Blaine", "Boise", "Bonner",
     "Bonneville", "Boundary", "Butte", "Camas", "Canyon", "Caribou", "Cassia", "Clark",
@@ -213,6 +219,27 @@ const kansasCounties = [
 const kansasCities = [ 
     "Kansas City", "Lawrence", "Olathe", "Overland Park", "Topeka", "Wichita"
 ]
+const kentuckyCounties = [ 
+    "Adair", "Allen", "Anderson", "Ballard", "Barren", "Bath", "Bell", "Boone", "Bourbon",
+    "Boyd", "Boyle", "Bracken", "Breathitt", "Breckinridge", "Bullitt", "Butler", "Caldwell",
+    "Calloway", "Campbell", "Carlisle", "Carroll", "Carter", "Casey", "Christian", "Clark",
+    "Clay", "Clinton", "Crittenden", "Cumberland", "Daviess", "Edmonson", "Elliott", "Estill",
+    "Fayette", "Fleming", "Floyd", "Franklin", "Fulton", "Gallatin", "Garrard", "Grant",
+    "Graves", "Grayson", "Green", "Greenup", "Hancock", "Hardin", "Harlan", "Harrison", "Hart",
+    "Henderson", "Henry", "Hickman", "Hopkins", "Jackson", "Jefferson", "Jessamine", "Johnson",
+    "Kenton", "Knott", "Knox", "LaRue", "Laurel", "Lawrence", "Lee", "Leslie", "Letcher",
+    "Lewis", "Lincoln", "Livingston", "Logan", "Lyon", "McCracken", "McCreary", "McLean",
+    "Madison", "Magoffin", "Marion", "Marshall", "Martin", "Mason", "Meade", "Menifee",
+    "Mercer", "Metcalfe", "Monroe", "Montgomery", "Morgan", "Muhlenberg", "Nelson", "Nicholas",
+    "Ohio", "Oldham", "Owen", "Owsley", "Pendleton", "Perry", "Pike", "Powell", "Pulaski",
+    "Robertson", "Rockcastle", "Rowan", "Russell", "Scott", "Shelby", "Simpson", "Spencer",
+    "Taylor", "Todd", "Trigg", "Trimble", "Union", "Warren", "Washington", "Wayne", "Webster",
+    "Whitley", "Wolfe", "Woodford"
+]
+const kentuckyCities = [ 
+    "Bowling Green", "Danville", "Frankfurt", "Georgetown", "Lexington", "Louisville", "Peducha",
+    "Richmond"
+]
 const marylandCounties = [ 
     "Allegany", "Anne Arundel", "Baltimore", "Calvert", "Caroline", "Carroll", "Cecil", "Charles",
     "Dorchester", "Frederic", "Garrett", "Hartford", "Howard", "Kent", "Montgomery", "Prince Georges",
@@ -247,11 +274,52 @@ const michiganCounties = [
     "Mackinac", "Macomb", "Manistee", "Marquette", "Mason", "Mecosta", "Menominee",
     "Midland", "Missaukee", "Monroe", "Montcalm", "Montmorency", "Muskegon", "Newaygo",
     "Oakland", "Oceana", "Ogemaw", "Ontonagon", "Osceola", "Oscoda", "Otsego", "Ottawa",
-    "Presque Isle", "Roscommon", "Saginaw", "St. Clair", "St. Joseph", "Sanilac", 
+    "Presque Isle", "Roscommon", "Saginaw", "Saint Clair", "St Clair", "St. Clair",
+    "Saint Joseph", "St Joseph", "St. Joseph", "Sanilac", 
     "Schoolcraft", "Shiawassee", "Tuscola", "Van Buren", "Washtenaw", "Wayne"
 ]
 const michiganCities = [ 
     "Ann Arbor", "Dearborn", "Detroit", "East Lansing", "Kalamazoo", "Lansing", "Saginaw"
+]
+const minnesotaCounties = [ 
+    "Adkin", "Anoka", "Becker", "Beltrami", "Benton", "Big Stone", "Blue Earth", "Brown",
+    "Carlton", "Carver", "Cass", "Chippewa", "Chisago", "Clay", "Clearwater", "Cook",
+    "Cottonwood", "Crow", "Dakota", "Dodge", "Douglas", "Faribault", "Fillmore", "Freeborn",
+    "Goodhue", "Grant", "Hennepin", "Houston", "Hubbard", "Isanti", "Itasca", "Jackson",
+    "Kanabec", "Kandiyohi", "Kittson", "Koochiching", "Lac qui Parie", "Lake", "Lake of the Woods",
+    "Le Sueur", "Lincoln", "Lyon", "McLeod", "Mahnomen", "Marshall", "Martin", "Meeker",
+    "Mille Lacs", "Morrison", "Mower", "Murray", "Nicollet", "Nobles", "Norman", "Olmsted",
+    "Otter Tail", "Pennington", "Pine", "Pipestone", "Polk", "Pope", "Ramsey", "Red Lake",
+    "Redwood", "Renville", "Rice", "Rock", "Roseau", "Saint Louis", "St. Louis", "St Louis",
+    "Scott",
+    "Sherburne", "Sibley", "Stearns", "Steele", "Stevens", "Swift", "Todd", "Traverse",
+    "Wabasha", "Wadena", "Waseca", "Washington", "Watonwan", "Wilkin", "Winona", "Wright",
+    "Yellow Medicine"
+]
+const minnesotaCities = [ 
+    "Duluth", "Minneapolis", "Rochester", "St. Cloud", "St Cloud", "Saint Cloud", 
+    "St. Paul", "St Paul", "Saint Paul"
+]
+const missouriCounties = [ 
+    "Adair", "Andrew", "Atchison", "Audrain", "Barry", "Barton", "Bates", "Benton", "Bollinger",
+    "Boone", "Buchanan", "Butler", "Caldwell", "Callaway", "Camden", "Cape Girardeau", "Carroll",
+    "Carter", "Cass", "Cedar", "Chariton", "Christian", "Clark", "Clay", "Clinton", "Cole",
+    "Cooper", "Crawford", "Dade", "Dallas", "Daviess", "DeKalb", "Dent", "Douglas", "Ducklin",
+    "Franklin", "Gasconade", "Gentry", "Greene", "Grundy", "Harrison", "Henry", "Hickory",
+    "Holt", "Howard", "Howell", "Iron", "Jackson", "Jasper", "Jefferson", "Johnson", "Knox",
+    "Laclede", "Lafayette", "Lawrence", "Lewis", "Lincoln", "Linn", "Livingston", "Macon",
+    "Madison", "Maries", "Marion", "McDonald", "Mercer", "Miller", "Mississippi", "Moniteau",
+    "Monroe", "Montgomery", "Morgan", "New Madrid", "Newton", "Nodaway", "Oregon", "Osage",
+    "Ozark", "Permiscot", "Perry", "Pettis", "Phelps", "Pike", "Platte", "Polk", "Pulaski",
+    "Putnam", "Ralls", "Randolph", "Ray", "Reynolds", "Ripley", "Saint Charles", "St Charles",
+    "St. Charles", "Saint Clair", "St Clair", "St. Clair", "Saint Francois", "St Francois",
+    "St. Francois", "Saint Louis", "St Louis", "St. Louis", "Ste. Genevieve", "Saline", "Schuyler", "Scotland", "Scott",
+    "Shannon", "Shelby", "Stoddard", "Stone", "Sullivan", "Taney", "Texas", "Vernon", "Warren",
+    "Washington", "Wayne", "Webster", "Worth", "Wright"
+]
+const missouriCities = [ 
+    "Independence", "Jefferson City", "Kansas City", "Lees Summit", "St. Louis", "Saint Louis",
+    "St Louis", "Springfield"
 ]
 const newJerseyCounties = [ 
     "Atlantic", "Bergen", "Burlington", "Camden", "Cape May",
@@ -285,6 +353,14 @@ const newYorkCounties = [
 const newYorkCities = [ 
     "Albany", "Binghamton", "Bronx", "Brooklyn", "Buffalo", "New York", "White Plains"
 ]
+const nevadaCounties = [
+    "Carson City", "Churchill", "Clark", "Douglas", "Elko", "Esmeralda", "Eureka",
+    "Humboldt", "Lander", "Lincoln", "Lyon", "Mineral", "Nye", "Pershing", "Storey",
+    "Washoe", "White Pine"
+]
+const nevadaCities = [
+    "Las Vegas", "Reno"
+]
 const northCarolinaCounties = [
     "Alamance", "Alexander", "Alleghany", "Anson", "Ashe", "Avery", "Beaufort", "Bertie",
     "Bladen", "Brunswick", "Buncombe", "Burke", "Cabarrus", "Caldwell", "Camden", "Carteret",
@@ -303,8 +379,9 @@ const northCarolinaCounties = [
 ]
 const northCarolinaCities = [
     "Asheville", "Boone", "Cary", "Charlotte", "Durham", "Fayetteville", "Greensboro",
-    "High Point",
-    "Raleigh", "Research Triangle Park", "Wilmington", "Wilson", "Winston Salem"
+    "Greenville", "High Point", "Jacksonville", "New Bern",
+    "Raleigh", "Research Triangle Park", "Wilmington", "Wilson", "Winston Salem",
+    "Winston-Salem"
 ]
 const ohioCounties = [
     "Adams", "Allen", "Ashland", "Ashtabula", "Athens", "Auglaize", "Belmont", "Brown",
@@ -321,6 +398,21 @@ const ohioCounties = [
 ]
 const ohioCities = [
     "Cincinnati", "Cleveland", "Columbus", "Dayton", "Toledo", "Youngstown"
+]
+const oklahomaCounties = [
+    "Adair", "Alfalfa", "Atoka", "Beaver", "Beckham", "Blaine", "Bryan", "Caddo",
+    "Canadian", "Carter", "Cherokee", "Choctaw", "Cimarron", "Cleveland", "Coal", "Comanche",
+    "Cotton", "Craig", "Creek", "Custer", "Delaware", "Dewey", "Ellis", "Garfield",
+    "Garvin", "Grady", "Grant", "Greer", "Harmon", "Harper", "Haskell", "Hughes",
+    "Jackson", "Jefferson", "Johnston", "Kay", "Kingfisher", "Kiowa", "Latimer",
+    "La Flore", "Lincoln", "Logan", "Love", "Major", "Marshall", "Mayes", "McClain",
+    "McCurtain", "McIntosh", "Murray", "Muskogee", "Noble", "Nowata", "Okfuskee",
+    "Oklahoma", "Okmulgee", "Osage", "Ottawa", "Pawnee", "Payne", "Pittsburg", "Pontotoc",
+    "Pottawatomie", "Pushmataha", "Roger Mills", "Rogers", "Seminole", "Sequoyah", "Stephens",
+    "Texas", "Tillman", "Tulsa", "Wagoner", "Washington", "Washita", "Woods", "Woodward"
+]
+const oklahomaCities = [
+    "Oklahoma City", "Stillwater", "Tulsa"
 ]
 const oregonCounties = [
     "Baker", "Benton", "Clackamas", "Clatsop", "Columbia", "Coos", "Crook", "Curry",
@@ -425,8 +517,9 @@ const virginiaCounties = [
     "Westmoreland", "Wise", "Wythe", "York"
 ]
 const virginiaCities = [
-    "Alexandria", "Arlington", "Charlottesville", "Chesapeake", "Fairfax", "Falls Church", "Herndon", 
-    "Norfolk", "Richmond", "Roanoke"
+    "Alexandria", "Arlington", "Blacksburg", "Charlottesville", "Chesapeake", "Danville",
+    "Fairfax", "Falls Church", "Hampton", "Harrisonburg", "Herndon", "Lynchburg", "Manassas",
+    "Newport News", "Norfolk", "Reston", "Richmond", "Roanoke", "Virginia Beach"
 ]
 const westVirginaCounties = [
     "Barbour", "Berkeley", "Boone", "Braxton", "Brooke", "Cabell", "Calhoun", "Clay", "Doddridge",
@@ -515,6 +608,8 @@ const states = [
                 }, 
                 {id: "HI",
                  summarizeType: "FULL",
+                 counties: hawaiiCounties,
+                 cities: hawaiiCities,
                  congressionalDistricts: 2
                 }, 
                 {id: "ID",
@@ -547,6 +642,8 @@ const states = [
                 }, 
                 {id: "KY",
                  summarizeType: "FULL",
+                 counties: kentuckyCounties,
+                 cities: kentuckyCities,
                  congressionalDistricts: 13
                 }, 
                 {id: "LA",
@@ -579,10 +676,14 @@ const states = [
                 }, 
                 {id: "MN",
                  summarizeType: "FULL",
+                 counties: minnesotaCounties,
+                 cities: minnesotaCities,
                  congressionalDistricts: 10
                 }, 
                 {id: "MO",
                  summarizeType: "FULL",
+                 counties: missouriCounties,
+                 cities: missouriCities,
                  congressionalDistricts: 16
                 }, 
                 {id: "MS",
@@ -625,6 +726,8 @@ const states = [
                 }, 
                 {id: "NV",
                  summarizeType: "FULL",
+                 counties: nevadaCounties,
+                 cities: nevadaCities,
                  congressionalDistricts: 4
                 }, 
                 {id: "NY",
@@ -641,6 +744,8 @@ const states = [
                 }, 
                 {id: "OK",
                  summarizeType: "FULL",
+                 counties: oklahomaCounties,
+                 cities: oklahomaCities,
                  congressionalDistricts: 8
                 }, 
                 {id: "OR",
