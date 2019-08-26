@@ -40,6 +40,22 @@ const arizonaCounties = [
     "Maricopa", "Mohave", "Navajo", "Pima", "Pinal", "Santa Cruz", "Yavapai",
     "Yuma"
 ]
+const arkansasCounties = [ 
+    "Arkansas", "Ashley", "Baxter", "Benton", "Boone", "Bradley", "Calhoun", "Carroll",
+    "Chicot", "Clark", "Clay", "Cleburne", "Cleveland", "Columbia", "Conway", "Craighead",
+    "Crawford", "Crittenden", "Cross", "Dallas", "Desha", "Drew", "Faulkner", "Franklin",
+    "Fulton", "Garland", "Grant", "Greene", "Hempstead", "Hot Spring", "Howard", "Independence",
+    "Izard", "Jackson", "Jefferson", "Johnson", "Lafayette", "Lawrence", "Lee", "Lincoln",
+    "Little River", "Logan", "Lonoke", "Madison", "Marion", "Miller", "Mississippi", "Monroe",
+    "Montgomery", "Nevada", "Newton", "Ouachita", "Perry", "Phillips", "Pike", "Poinsett",
+    "Polk", "Pope", "Prairie", "Pulaski", "Randolph", "St. Francis", "Saline", "Scott", 
+    "Searcy", "Sebastian", "Sevier", "Sharp", "Stone", "Union", "Van Buren", "Washington",
+    "White", "Woodruff", "Yell"
+]
+const arkansasCities = [ 
+    "Bentonville", "Fayetteville", "Fort Smith", "Hot Springs",
+    "Little Rock", "Pine Bluff", "Texarkana", "West Memphis"
+]
 const arizonaCities = [
     "Chandler", "Flagstaff", "Mesa", "Phoenix", "Prescott", "Scottsdale", "Sedona", "Tempe", 
     "Tucson", "Yuma"
@@ -83,6 +99,12 @@ const connecticutCities = [
     "Fairfield", "Hartford", "Litchfield", "Middletown", "New Haven", "New London",
     "Norwalk", "Rockville"
 ]
+const delawareCounties = [
+    "Kent", "New Castle", "Sussex"
+]
+const delawareCities = [
+    "Dover", "Newark", "Wilmington"
+]
 const floridaCounties = [
     "Alachua", "Baker", "Bay", "Bradford", "Brevard", "Broward", "Calhoun", "Charlotte", "Citrus",
     "Clay", "Collier", "Columbia", "DeSota", "Dixie", "Duval", "Escambia", "Flagler", "Franklin",
@@ -125,6 +147,25 @@ const georgiaCities = [
     "Alpharetta", "Augusta", "Atlanta", "College Park", "Columbus", "Kennesaw", "Macon", "Marietta",
     "Savannah", "Valdosta"
 ]
+const kansasCounties = [ 
+    "Allen", "Anderson", "Atchison", "Barber", "Barton", "Bourbon", "Brown",
+    "Butler", "Chase", "Chautauqua", "Cherokee", "Cheyenne", "Clark", "Clay", "Cloud",
+    "Coffey", "Comanche", "Cowley", "Crawford", "Decatur", "Dickinson", "Doniphan",
+    "Douglas", "Edwards", "Elk", "Ellis", "Ellsworth", "Finney", "Ford", "Franklin",
+    "Geary", "Gove", "Graham", "Grant", "Gray", "Greeley", "Greenwood", "Hamilton",
+    "Harper", "Harvey", "Haskell", "Hodgeman", "Jackson", "Jefferson", "Jewell", "Johnson",
+    "Kearny", "Kingman", "Kiowa", "Labette", "Lane", "Leavenworth", "Lincoln", "Linn",
+    "Logan", "Lyon", "Marion", "Marshall", "McPherson", "Meade", "Miami", "Mitchell",
+    "Montgomery", "Morris", "Morton", "Nemaha", "Neosho", "Ness", "Norton", "Osage",
+    "Osborne", "Ottawa", "Pawnee", "Phillips", "Pottawatomie", "Pratt", "Rawlins", "Reno",
+    "Republic", "Rice", "Riley", "Rooks", "Rush", "Russell", "Saline", "Scott", "Sedgwick",
+    "Seward", "Shawnee", "Sheridan", "Sherman", "Smith", "Stafford", "Stanton", "Stevens",
+    "Sumner", "Thomas", "Trego", "Wabaunsee", "Wallace", "Washington", "Wichita", "Wilson",
+    "Woodson", "Wyandotte"
+]
+const kansasCities = [ 
+    "Kansas City", "Lawrence", "Olathe", "Overland Park", "Topeka", "Wichita"
+]
 const marylandCounties = [ 
     "Allegany", "Anne Arundel", "Baltimore", "Calvert", "Caroline", "Carroll", "Cecil", "Charles",
     "Dorchester", "Frederic", "Garrett", "Hartford", "Howard", "Kent", "Montgomery", "Prince Georges",
@@ -133,6 +174,21 @@ const marylandCounties = [
 const marylandCities = [ 
     "Annapolis", "Baltimore", "Chevy Chase", "College Park", "Cumberland", "Rockville", "Salisbury",
     "Silver Spring", "Towson"
+]
+const maineCounties = [ 
+    "Androscoggin", "Aroostook", "Cumberland", "Franklin", "Hancock", "Kennebec", "Knox",
+    "Lincoln", "Oxford", "Penobscot", "Piscataquis", "Sagadahoc", "Somerset", "Waldo",
+    "Washington", "York"
+]
+const maineCities = [ 
+    "Augusta", "Bangor", "Freeport", "Kennebunkport", "Lewiston", "Portland"
+]
+const massachusettsCounties = [ 
+    "Barnstable", "Berkshire", "Bristol", "Dukes", "Essex", "Franklin", "Hampden", "Hampshire",
+    "Middlesex", "Nantucket", "Norfolk", "Plymouth", "Suffolk", "Worcester"
+]
+const massachusettsCities = [ 
+    "Boston", "Cambridge", "Lowell", "Springfield", "Worcester", "West Springfield"
 ]
 const newJerseyCounties = [ 
     "Atlantic", "Bergen", "Burlington", "Camden", "Cape May",
@@ -183,7 +239,8 @@ const northCarolinaCounties = [
     "Wilson", "Yadkin", "Yancey"
 ]
 const northCarolinaCities = [
-    "Asheville", "Boone", "Cary", "Charlotte", "Durham", "Greensboro", "High Point",
+    "Asheville", "Boone", "Cary", "Charlotte", "Durham", "Fayetteville", "Greensboro",
+    "High Point",
     "Raleigh", "Research Triangle Park", "Wilmington", "Wilson", "Winston Salem"
 ]
 const ohioCounties = [
@@ -315,6 +372,8 @@ const states = [
                 }, 
                 {id: "AR",
                  summarizeType: "FULL",
+                 counties: arkansasCounties,
+                 cities: arkansasCities,
                  congressionalDistricts: 7
                 }, 
                 {id: "AZ",
@@ -347,6 +406,8 @@ const states = [
                 }, 
                 {id: "DE",
                  summarizeType: "FULL",
+                 counties: delawareCounties,
+                 cities: delawareCities,
                  congressionalDistricts: 1
                 }, 
                 {id: "FL",
@@ -383,6 +444,8 @@ const states = [
                 }, 
                 {id: "KS",
                  summarizeType: "FULL",
+                 counties: kansasCounties,
+                 cities: kansasCities,
                  congressionalDistricts: 8
                 }, 
                 {id: "KY",
@@ -395,6 +458,8 @@ const states = [
                 }, 
                 {id: "MA",
                  summarizeType: "FULL",
+                 counties: massachusettsCounties,
+                 cities: massachusettsCities,
                  congressionalDistricts: 20
                 }, 
                 {id: "MD",
@@ -404,6 +469,8 @@ const states = [
                  congressionalDistricts: 8
                 }, 
                 {id: "ME",
+                 counties: maineCounties,
+                 cities: maineCities,
                  summarizeType: "FULL",
                  congressionalDistricts: 8
                 }, 
