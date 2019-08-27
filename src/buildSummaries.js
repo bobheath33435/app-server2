@@ -570,7 +570,7 @@ const wyomingCounties = [
 const wyomingCities = [
     "Casper", "Cheyenne", "Jackson", "Laramie"
 ]
-const statesSave = [
+const states = [
     {id: "AK",
      summarizeType: "FULL",
      counties: alaskaCounties,
@@ -856,14 +856,6 @@ const statesSave = [
      cities: wyomingCities,
      congressionalDistricts: 1
     }, 
-]
-const states = [
-    {id: "AK",
-     summarizeType: "FULL",
-     counties: alaskaCounties,
-     cities: alaskaCities,
-     congressionalDistricts: 1
-    }
 ]
 
 const years = [2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010]
