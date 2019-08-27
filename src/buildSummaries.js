@@ -405,7 +405,7 @@ const northCarolinaCounties = [
     "Wilson", "Yadkin", "Yancey"
 ]
 const northCarolinaCities = [
-    "Asheville", "Boone", "Cary", "Charlotte", "Durham", "Fayetteville", "Greensboro",
+    "Asheville", "Boone", "Cary", "Chapel Hill", "Charlotte", "Durham", "Fayetteville", "Greensboro",
     "Greenville", "High Point", "Jacksonville", "New Bern",
     "Raleigh", "Research Triangle Park", "Wilmington", "Wilson", "Winston Salem",
     "Winston-Salem"

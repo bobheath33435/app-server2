@@ -9,7 +9,7 @@ const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT
         WORKSITE_LATITUDE, WORKSITE_LONGITUDE, WORKSITE_ADDR1, WORKSITE_ADDR2,
         WORKSITE_CITY, WORKSITE_COUNTY, WORKSITE_STATE, TOTAL_WORKERS, TOTAL_LCAS, SOC_CODE, 
         LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4,
-        NEW_EMPLOYMENT, CONTINUED_EMPLOYMENT, CHANGE_PREVIOUS_EMPLOYMENT,
+        H1B_DEPENDENT, NEW_EMPLOYMENT, CONTINUED_EMPLOYMENT, CHANGE_PREVIOUS_EMPLOYMENT,
         NEW_CONCURRENT_EMPLOYMENT, CHANGE_EMPLOYER, AMENDED_PETITION,
         UNSPECIFIED, ANNUALIZED_PREVAILING_WAGE, ANNUALIZED_WAGE_RATE_OF_PAY,
         salaryLevels, h1bRecord } 
@@ -214,6 +214,7 @@ const summarizeMinor = (h1bRecords, summaryRecord) => {
                                     CASE_NUMBER,
                                     SOC_CODE,
                                     TOTAL_WORKERS,
+                                    H1B_DEPENDENT,
                                     ANNUALIZED_WAGE_RATE_OF_PAY)
             h1bInstance.instanceArray.push(workerData)      
         })    
