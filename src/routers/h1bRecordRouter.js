@@ -3,6 +3,7 @@ const express = require('express')
 const h1bRecordRouter = express.Router()
 const log4js = require('log4js')
 const chalk = require('chalk')
+const moment = require('moment')
 const log = console.log;
 const _ = require('lodash')
 const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT,
@@ -123,6 +124,7 @@ h1bRecordRouter.get('/h1bSummary', async (req, res) => {
 })
 
 const performQuery = async (query) => {
+    const beginTime = moment()
     const year = query[YEAR];
     const key = createKey(query)
     logger.info(chalk.bgRed.white('Key: ' + key))
@@ -143,6 +145,18 @@ const performQuery = async (query) => {
         logger.trace(h1bRecords)
         h1bSummary = summarize(h1bRecords, query)
     }
+    const endTime = moment()
+    const diff = (endTime - beginTime) / 1000.
+    if(diff > 2.5){
+        logger.warn(chalk.bgRed.white.bold(`Bad Time: ${diff} secs -- query: `)
+                 + chalk.bgRed.white.bold(`${JSON.stringify(query)}`))
+    }else if(diff > 1.0){
+        logger.warn(chalk.bgHex("#cc4400").white.bold(`Warn Time: ${diff} secs -- query: `)
+                 + chalk.bgHex("#cc4400").white.bold(`${JSON.stringify(query)}`))  
+    }else{
+        logger.info(chalk.bgGreen.white.bold(`Good Time: ${diff} secs -- query: `)
+                 + chalk.bgGreen.white.bold(`${JSON.stringify(query)}`))
+    }
     return h1bSummary
 }
 
@@ -161,7 +175,5 @@ h1bRecordRouter.post('/h1b', (req, res) => {
         res.send(error)
     })
 })
-
-
 
 module.exports = h1bRecordRouter

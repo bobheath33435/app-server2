@@ -1,9 +1,18 @@
 const mongoose = require('mongoose')
 const express = require('express')
+const si = require('systeminformation')
+const moment = require('moment')
 const app = express()
 const log4js = require('log4js')
 const chalk = require('chalk')
 const log = console.log
+
+const cb = (obj) => {
+    // logger.info(`System Info: ${JSON.stringify(obj)}`)
+    logger.info(chalk.bgRed.white.bold("Platform:") + ' ' + chalk.green.bold(obj.platform))
+    logger.info(chalk.bgRed.white.bold("Hostname:") + ' ' + chalk.green.bold(obj.hostname))
+}
+si.osInfo(cb)
 
 const { readSummarizedQueries } = require('./utilities/summarize')
 const h1bRecordRouter = require('./routers/h1bRecordRouter')
@@ -17,7 +26,8 @@ log4js.configure({
 const modelMap = require('./models/dbRecords')
 const logger = log4js.getLogger('h1bData');
 const port = 3000
-logger.info('Initialize');
+const beginTime = moment()
+logger.info(chalk.bgRed.white.bold(`Initialize: ${beginTime.format('MMMM Do YYYY, h:mm:ss a')}`));
 
 readSummarizedQueries()
 
@@ -26,6 +36,6 @@ app.use(h1bRecordRouter)
 app.use(usersRouter)
 
 app.listen(port, () => {
-    log(chalk.bgRed.white.bold('Server is up on port') + ' ' + chalk.green.bold(port))
+    logger.info(chalk.bgRed.white.bold('Server is up on port') + ' ' + chalk.green.bold(port))
 })
 

@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 const log4js = require('log4js')
 const chalk = require('chalk')
+const si = require('systeminformation')
+const moment = require('moment')
 const _ = require('lodash')
 
 const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT,
@@ -568,293 +570,301 @@ const wyomingCounties = [
 const wyomingCities = [
     "Casper", "Cheyenne", "Jackson", "Laramie"
 ]
+const statesSave = [
+    {id: "AK",
+     summarizeType: "FULL",
+     counties: alaskaCounties,
+     cities: alaskaCities,
+     congressionalDistricts: 1
+    }, 
+    {id: "AL",
+     summarizeType: "FULL",
+     counties: alabamaCounties,
+     cities: alabamaCities,
+     congressionalDistricts: 7
+    }, 
+    {id: "AR",
+     summarizeType: "FULL",
+     counties: arkansasCounties,
+     cities: arkansasCities,
+     congressionalDistricts: 4
+    }, 
+    {id: "AZ",
+     summarizeType: "FULL",
+     counties: arizonaCounties,
+     cities: arizonaCities,
+     congressionalDistricts: 9
+    }, 
+    {id: "CA",
+     summarizeType: "BRIEF",
+     counties: californiaCounties,
+     cities: californiaCities,
+     congressionalDistricts: 53
+    }, 
+    {id: "CO",
+     summarizeType: "FULL",
+     counties: coloradoCounties,
+     cities: coloradoCities,
+     congressionalDistricts: 7
+    }, 
+    {id: "CT",
+     summarizeType: "FULL",
+     counties: connecticutCounties,
+     cities: connecticutCities,
+     congressionalDistricts: 5
+    }, 
+    {id: "DC",
+     summarizeType: "FULL",
+     cities: dcCities,
+     congressionalDistricts: 1
+    }, 
+    {id: "DE",
+     summarizeType: "FULL",
+     counties: delawareCounties,
+     cities: delawareCities,
+     congressionalDistricts: 1
+    }, 
+    {id: "FL",
+     summarizeType: "FULL",
+     counties: floridaCounties,
+     cities: floridaCities,
+     congressionalDistricts: 27
+    }, 
+    {id: "GA",
+     summarizeType: "FULL",
+     counties: georgiaCounties,
+     cities: georgiaCities,
+     congressionalDistricts: 14
+    }, 
+    {id: "HI",
+     summarizeType: "FULL",
+     counties: hawaiiCounties,
+     cities: hawaiiCities,
+     congressionalDistricts: 2
+    }, 
+    {id: "ID",
+     summarizeType: "FULL",
+     counties: idahoCounties,
+     cities: idahoCities,
+     congressionalDistricts: 2
+    }, 
+    {id: "IL",
+     summarizeType: "FULL",
+     counties: illinoisCounties,
+     cities: illinoisCities,
+     congressionalDistricts: 18
+    }, 
+    {id: "IN",
+     summarizeType: "FULL",
+     counties: indianaCounties,
+     cities: indianaCities,
+     congressionalDistricts: 9
+    }, 
+    {id: "IO",
+     summarizeType: "FULL",
+     congressionalDistricts: 4
+    }, 
+    {id: "KS",
+     summarizeType: "FULL",
+     counties: kansasCounties,
+     cities: kansasCities,
+     congressionalDistricts: 4
+    }, 
+    {id: "KY",
+     summarizeType: "FULL",
+     counties: kentuckyCounties,
+     cities: kentuckyCities,
+     congressionalDistricts: 6
+    }, 
+    {id: "LA",
+     summarizeType: "FULL",
+     congressionalDistricts: 6
+    }, 
+    {id: "MA",
+     summarizeType: "FULL",
+     counties: massachusettsCounties,
+     cities: massachusettsCities,
+     congressionalDistricts: 9
+    }, 
+    {id: "MD",
+     summarizeType: "FULL",
+     counties: marylandCounties,
+     cities: marylandCities,
+     congressionalDistricts: 8
+    }, 
+    {id: "ME",
+     counties: maineCounties,
+     cities: maineCities,
+     summarizeType: "FULL",
+     congressionalDistricts: 2
+    }, 
+    {id: "MI",
+     summarizeType: "FULL",
+     counties: michiganCounties,
+     cities: michiganCities,
+     congressionalDistricts: 14
+    }, 
+    {id: "MN",
+     summarizeType: "FULL",
+     counties: minnesotaCounties,
+     cities: minnesotaCities,
+     congressionalDistricts: 8
+    }, 
+    {id: "MO",
+     summarizeType: "FULL",
+     counties: missouriCounties,
+     cities: missouriCities,
+     congressionalDistricts: 8
+    }, 
+    {id: "MS",
+     summarizeType: "FULL",
+     congressionalDistricts: 4
+    }, 
+    {id: "MT",
+     summarizeType: "FULL",
+     counties: montanaCounties,
+     cities: montanaCities,
+     congressionalDistricts: 1
+    }, 
+    {id: "NC",
+     summarizeType: "FULL",
+     counties: northCarolinaCounties,
+     cities: northCarolinaCities,
+     congressionalDistricts: 13
+    }, 
+    {id: "ND",
+     summarizeType: "FULL",
+     congressionalDistricts: 1
+    }, 
+    {id: "NE",
+     summarizeType: "FULL",
+     congressionalDistricts: 3
+    }, 
+    {id: "NH",
+     summarizeType: "FULL",
+     counties: newHampshireCounties,
+     cities: newHampshireCities,
+     congressionalDistricts: 2
+    }, 
+    {id: "NJ",
+     summarizeType: "BRIEF",
+     counties: newJerseyCounties,
+     cities: newJerseyCities,
+     congressionalDistricts: 12
+    }, 
+    {id: "NM",
+     counties: newMexicoCounties,
+     cities: newMexicoCities,
+     summarizeType: "FULL",
+     congressionalDistricts: 3
+    }, 
+    {id: "NV",
+     summarizeType: "FULL",
+     counties: nevadaCounties,
+     cities: nevadaCities,
+     congressionalDistricts: 4
+    }, 
+    {id: "NY",
+     summarizeType: "BRIEF",
+     counties: newYorkCounties,
+     cities: newYorkCities,
+     congressionalDistricts: 27
+    }, 
+    {id: "OH",
+     summarizeType: "FULL",
+     counties: ohioCounties,
+     cities: ohioCities,
+     congressionalDistricts: 16
+    }, 
+    {id: "OK",
+     summarizeType: "FULL",
+     counties: oklahomaCounties,
+     cities: oklahomaCities,
+     congressionalDistricts: 5
+    }, 
+    {id: "OR",
+     summarizeType: "FULL",
+     counties: oregonCounties,
+     cities: oregonCities,
+     congressionalDistricts: 5
+    }, 
+    {id: "PA",
+     summarizeType: "FULL",
+     counties: pennsylvaniaCounties,
+     cities: pennsylvaniaCities,
+     congressionalDistricts: 18
+    }, 
+    {id: "RI",
+     summarizeType: "FULL",
+     counties: rhodeIslandCounties,
+     cities: rhodeIslandCities,
+     congressionalDistricts: 2
+    }, 
+    {id: "SC",
+     summarizeType: "FULL",
+     counties: southCarolinaCounties,
+     cities: southCarolinaCities,
+     congressionalDistricts: 7
+    }, 
+    {id: "SD",
+     summarizeType: "FULL",
+     congressionalDistricts: 3
+    }, 
+    {id: "TN",
+     summarizeType: "FULL",
+     congressionalDistricts: 9
+    }, 
+    {id: "TX",
+     summarizeType: "BRIEF",
+     counties: texasCounties,
+     cities: texasCities,
+     congressionalDistricts: 36
+    }, 
+    {id: "UT",
+     summarizeType: "FULL",
+     counties:utahCounties,
+     cities: utahCities,
+     congressionalDistricts: 4
+    }, 
+    {id: "VA",
+     summarizeType: "FULL",
+     counties: virginiaCounties,
+     cities: virginiaCities,
+     congressionalDistricts: 23
+    }, 
+    {id: "VT",
+     summarizeType: "FULL",
+     congressionalDistricts: 1
+    }, 
+    {id: "WA",
+     summarizeType: "FULL",
+     congressionalDistricts: 10
+    }, 
+    {id: "WV",
+     summarizeType: "FULL",
+     counties: westVirginaCounties,
+     cities: westVirginaCities,
+     congressionalDistricts: 3
+    }, 
+    {id: "WI",
+     summarizeType: "FULL",
+     congressionalDistricts: 8
+    }, 
+    {id: "WY",
+     summarizeType: "FULL",
+     counties: wyomingCounties,
+     cities: wyomingCities,
+     congressionalDistricts: 1
+    }, 
+]
 const states = [
-                {id: "AK",
-                 summarizeType: "FULL",
-                 counties: alaskaCounties,
-                 cities: alaskaCities,
-                 congressionalDistricts: 1
-                }, 
-                {id: "AL",
-                 summarizeType: "FULL",
-                 counties: alabamaCounties,
-                 cities: alabamaCities,
-                 congressionalDistricts: 7
-                }, 
-                {id: "AR",
-                 summarizeType: "FULL",
-                 counties: arkansasCounties,
-                 cities: arkansasCities,
-                 congressionalDistricts: 4
-                }, 
-                {id: "AZ",
-                 summarizeType: "FULL",
-                 counties: arizonaCounties,
-                 cities: arizonaCities,
-                 congressionalDistricts: 9
-                }, 
-                {id: "CA",
-                 summarizeType: "BRIEF",
-                 counties: californiaCounties,
-                 cities: californiaCities,
-                 congressionalDistricts: 53
-                }, 
-                {id: "CO",
-                 summarizeType: "FULL",
-                 counties: coloradoCounties,
-                 cities: coloradoCities,
-                 congressionalDistricts: 7
-                }, 
-                {id: "CT",
-                 summarizeType: "FULL",
-                 counties: connecticutCounties,
-                 cities: connecticutCities,
-                 congressionalDistricts: 5
-                }, 
-                {id: "DC",
-                 summarizeType: "FULL",
-                 cities: dcCities,
-                 congressionalDistricts: 1
-                }, 
-                {id: "DE",
-                 summarizeType: "FULL",
-                 counties: delawareCounties,
-                 cities: delawareCities,
-                 congressionalDistricts: 1
-                }, 
-                {id: "FL",
-                 summarizeType: "FULL",
-                 counties: floridaCounties,
-                 cities: floridaCities,
-                 congressionalDistricts: 27
-                }, 
-                {id: "GA",
-                 summarizeType: "FULL",
-                 counties: georgiaCounties,
-                 cities: georgiaCities,
-                 congressionalDistricts: 14
-                }, 
-                {id: "HI",
-                 summarizeType: "FULL",
-                 counties: hawaiiCounties,
-                 cities: hawaiiCities,
-                 congressionalDistricts: 2
-                }, 
-                {id: "ID",
-                 summarizeType: "FULL",
-                 counties: idahoCounties,
-                 cities: idahoCities,
-                 congressionalDistricts: 2
-                }, 
-                {id: "IL",
-                 summarizeType: "FULL",
-                 counties: illinoisCounties,
-                 cities: illinoisCities,
-                 congressionalDistricts: 18
-                }, 
-                {id: "IN",
-                 summarizeType: "FULL",
-                 counties: indianaCounties,
-                 cities: indianaCities,
-                 congressionalDistricts: 9
-                }, 
-                {id: "IO",
-                 summarizeType: "FULL",
-                 congressionalDistricts: 4
-                }, 
-                {id: "KS",
-                 summarizeType: "FULL",
-                 counties: kansasCounties,
-                 cities: kansasCities,
-                 congressionalDistricts: 4
-                }, 
-                {id: "KY",
-                 summarizeType: "FULL",
-                 counties: kentuckyCounties,
-                 cities: kentuckyCities,
-                 congressionalDistricts: 6
-                }, 
-                {id: "LA",
-                 summarizeType: "FULL",
-                 congressionalDistricts: 6
-                }, 
-                {id: "MA",
-                 summarizeType: "FULL",
-                 counties: massachusettsCounties,
-                 cities: massachusettsCities,
-                 congressionalDistricts: 9
-                }, 
-                {id: "MD",
-                 summarizeType: "FULL",
-                 counties: marylandCounties,
-                 cities: marylandCities,
-                 congressionalDistricts: 8
-                }, 
-                {id: "ME",
-                 counties: maineCounties,
-                 cities: maineCities,
-                 summarizeType: "FULL",
-                 congressionalDistricts: 2
-                }, 
-                {id: "MI",
-                 summarizeType: "FULL",
-                 counties: michiganCounties,
-                 cities: michiganCities,
-                 congressionalDistricts: 14
-                }, 
-                {id: "MN",
-                 summarizeType: "FULL",
-                 counties: minnesotaCounties,
-                 cities: minnesotaCities,
-                 congressionalDistricts: 8
-                }, 
-                {id: "MO",
-                 summarizeType: "FULL",
-                 counties: missouriCounties,
-                 cities: missouriCities,
-                 congressionalDistricts: 8
-                }, 
-                {id: "MS",
-                 summarizeType: "FULL",
-                 congressionalDistricts: 4
-                }, 
-                {id: "MT",
-                 summarizeType: "FULL",
-                 counties: montanaCounties,
-                 cities: montanaCities,
-                 congressionalDistricts: 1
-                }, 
-                {id: "NC",
-                 summarizeType: "FULL",
-                 counties: northCarolinaCounties,
-                 cities: northCarolinaCities,
-                 congressionalDistricts: 13
-                }, 
-                {id: "ND",
-                 summarizeType: "FULL",
-                 congressionalDistricts: 1
-                }, 
-                {id: "NE",
-                 summarizeType: "FULL",
-                 congressionalDistricts: 3
-                }, 
-                {id: "NH",
-                 summarizeType: "FULL",
-                 counties: newHampshireCounties,
-                 cities: newHampshireCities,
-                 congressionalDistricts: 2
-                }, 
-                {id: "NJ",
-                 summarizeType: "BRIEF",
-                 counties: newJerseyCounties,
-                 cities: newJerseyCities,
-                 congressionalDistricts: 12
-                }, 
-                {id: "NM",
-                 counties: newMexicoCounties,
-                 cities: newMexicoCities,
-                 summarizeType: "FULL",
-                 congressionalDistricts: 3
-                }, 
-                {id: "NV",
-                 summarizeType: "FULL",
-                 counties: nevadaCounties,
-                 cities: nevadaCities,
-                 congressionalDistricts: 4
-                }, 
-                {id: "NY",
-                 summarizeType: "BRIEF",
-                 counties: newYorkCounties,
-                 cities: newYorkCities,
-                 congressionalDistricts: 27
-                }, 
-                {id: "OH",
-                 summarizeType: "FULL",
-                 counties: ohioCounties,
-                 cities: ohioCities,
-                 congressionalDistricts: 16
-                }, 
-                {id: "OK",
-                 summarizeType: "FULL",
-                 counties: oklahomaCounties,
-                 cities: oklahomaCities,
-                 congressionalDistricts: 5
-                }, 
-                {id: "OR",
-                 summarizeType: "FULL",
-                 counties: oregonCounties,
-                 cities: oregonCities,
-                 congressionalDistricts: 5
-                }, 
-                {id: "PA",
-                 summarizeType: "FULL",
-                 counties: pennsylvaniaCounties,
-                 cities: pennsylvaniaCities,
-                 congressionalDistricts: 18
-                }, 
-                {id: "RI",
-                 summarizeType: "FULL",
-                 counties: rhodeIslandCounties,
-                 cities: rhodeIslandCities,
-                 congressionalDistricts: 2
-                }, 
-                {id: "SC",
-                 summarizeType: "FULL",
-                 counties: southCarolinaCounties,
-                 cities: southCarolinaCities,
-                 congressionalDistricts: 7
-                }, 
-                {id: "SD",
-                 summarizeType: "FULL",
-                 congressionalDistricts: 3
-                }, 
-                {id: "TN",
-                 summarizeType: "FULL",
-                 congressionalDistricts: 9
-                }, 
-                {id: "TX",
-                 summarizeType: "BRIEF",
-                 counties: texasCounties,
-                 cities: texasCities,
-                 congressionalDistricts: 36
-                }, 
-                {id: "UT",
-                 summarizeType: "FULL",
-                 counties:utahCounties,
-                 cities: utahCities,
-                 congressionalDistricts: 4
-                }, 
-                {id: "VA",
-                 summarizeType: "FULL",
-                 counties: virginiaCounties,
-                 cities: virginiaCities,
-                 congressionalDistricts: 23
-                }, 
-                {id: "VT",
-                 summarizeType: "FULL",
-                 congressionalDistricts: 1
-                }, 
-                {id: "WA",
-                 summarizeType: "FULL",
-                 congressionalDistricts: 10
-                }, 
-                {id: "WV",
-                 summarizeType: "FULL",
-                 counties: westVirginaCounties,
-                 cities: westVirginaCities,
-                 congressionalDistricts: 3
-                }, 
-                {id: "WI",
-                 summarizeType: "FULL",
-                 congressionalDistricts: 8
-                }, 
-                {id: "WY",
-                 summarizeType: "FULL",
-                 counties: wyomingCounties,
-                 cities: wyomingCities,
-                 congressionalDistricts: 1
-                }, 
-            ]
+    {id: "AK",
+     summarizeType: "FULL",
+     counties: alaskaCounties,
+     cities: alaskaCities,
+     congressionalDistricts: 1
+    }
+]
 
 const years = [2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010]
 
@@ -1117,33 +1127,29 @@ const processCongDistricts = async (year, state, congDistCount) => {
         })
     }catch(e){
         logger.error(chalk.bgRed(`Process ${state} Counties FAILED.`))
-        // return Promise.reject(e)
     }
     logger.trace(chalk.bgBlue('End of method'))
     return Promise.resolve
 }
 const processYears = (async () => {
+    const beginTime = moment()
+    logger.info(chalk.bgRed.white.bold(`Initialize: ${beginTime.format('MMMM Do YYYY, h:mm:ss A')}`));
     try{
         await asyncForEach(years, async(year) => {
             logger.info("Process Year: " + year)
             currentYear = year
             try{
                 await processStates(year)
-                // await processCounties(year, 'AK', alaskaCounties)
-                // await processCounties(year, 'AL', alabamaCounties)
-                // await processCounties(year, 'CA', californiaCounties)
-                // await processCounties(year, 'NC', northCarolinaCounties)
-                // await processCounties(year, 'NJ', newJerseyCounties)
-                // await processCounties(year, 'NY', newYorkCounties)
-                // await processCounties(year, 'TX', texasCounties)
             }catch(e){
                 logger.error(chalk.bgRed(`Processing ${year} failed: ` + e))
                 logger.error(chalk.bgRed('Continuning to other years.'))
             }
-            
+            const timeUnits = 'minutes'
+            var duration = moment().diff(beginTime, timeUnits, true)
+            logger.info(chalk.bgHex('#880066').white.bold(`Elapsed Time: ${duration.toFixed(2)} ${timeUnits}`))               
         })
     }catch(e){
-        logger.error(chalk.bgRed('Process Years FAILED'))
+        logger.error(chalk.bgRed('Process Years FAILED: ' + e))
         // return Promise.reject(e)
     }
     logger.info(chalk.bgBlue('End of building summaries'))
@@ -1154,7 +1160,6 @@ const bldSummaries = async () => {
 
     logger.info('Build summaries');
     // start()
-    logger.info("Started")
     await processYears()
 
     setTimeout( () => {
@@ -1163,6 +1168,13 @@ const bldSummaries = async () => {
     logger.info(chalk.bgRed.bold("Build complete"))
     process.exit()
 }
+
+const cb = (obj) => {
+    // logger.info(`System Info: ${JSON.stringify(obj)}`)
+    logger.info(chalk.bgRed.white.bold("Platform:") + ' ' + chalk.green.bold(obj.platform))
+    logger.info(chalk.bgRed.white.bold("Hostname:") + ' ' + chalk.green.bold(obj.hostname))
+}
+si.osInfo(cb)
 
 bldSummaries();
 
