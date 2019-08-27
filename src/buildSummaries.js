@@ -29,7 +29,8 @@ const alabamaCounties = ["Autauga", "Baldwin", "Barbour", "Bibb", "Blount",
                             "Lawrence", "Lee", "Limestone", "Lowndes", "Macon", "Madison",
                             "Marengo", "Marion", "Marshall", "Mobile", "Monroe", "Montgomery",
                             "Morgan", "Perry", "Pickens", "Pike", "Randolph", "Russell",
-                            "St. Clair", "Shelby", "Sumter", "Talladega", "Tallapoosa",
+                            "St. Clair", "St Clair", "Saint Clair",
+                            "Shelby", "Sumter", "Talladega", "Tallapoosa",
                             "Tuscaloosa", "Walker", "Washington", "Wilcox", "Winston"
                         ]
 const alabamaCities = [
@@ -48,7 +49,8 @@ const arkansasCounties = [
     "Izard", "Jackson", "Jefferson", "Johnson", "Lafayette", "Lawrence", "Lee", "Lincoln",
     "Little River", "Logan", "Lonoke", "Madison", "Marion", "Miller", "Mississippi", "Monroe",
     "Montgomery", "Nevada", "Newton", "Ouachita", "Perry", "Phillips", "Pike", "Poinsett",
-    "Polk", "Pope", "Prairie", "Pulaski", "Randolph", "St. Francis", "Saline", "Scott", 
+    "Polk", "Pope", "Prairie", "Pulaski", "Randolph", "St. Francis", "St Francis", "Saint Francis",
+    "Saline", "Scott", 
     "Searcy", "Sebastian", "Sevier", "Sharp", "Stone", "Union", "Van Buren", "Washington",
     "White", "Woodruff", "Yell"
 ]
@@ -99,6 +101,9 @@ const connecticutCities = [
     "Fairfield", "Hartford", "Litchfield", "Middletown", "New Haven", "New London",
     "Norwalk", "Rockville"
 ]
+const dcCities = [
+    "Washington"
+]
 const delawareCounties = [
     "Kent", "New Castle", "Sussex"
 ]
@@ -112,7 +117,8 @@ const floridaCounties = [
     "Hillsborough", "Holmes", "Indian River", "Jackson", "Jefferson", "Lafayette", "Lake", "Lee", "Leon",
     "Levy", "Liberty", "Madison", "Manatee", "Marion", "Martin", "Dade", "Miami-Dade", "Monroe", "Nassau",
     "Okaloosa", "Okeechobee", "Orange", "Osceola", "Palm Beach", "Pasco", "Pinellas", "Polk", "Putnam",
-    "St. Johns", "Santa Rosa", "Sarasota", "Seminole", "Sumter", "Suwannee", "Taylor", "Union", "Volusia",
+    "St. Johns", "St Johns", "Saint Johns",
+    "Santa Rosa", "Sarasota", "Seminole", "Sumter", "Suwannee", "Taylor", "Union", "Volusia",
     "Wakulla", "Walton", "Washington"
 ]
 const floridaCities = [
@@ -120,7 +126,7 @@ const floridaCities = [
     "Jacksonville", 
     "Juno Beach", "Kendall", "Key West", "Kissimmee", "Lake Buena Vista", "Lake Mary", "Melbourne", "Miami", 
     "Miami Beach", "Orlando", "Palm Beach", "Palm Beach Gardens", "Panama City", "Pensacola", 
-    "Sarasota", "St. Petersburg", "Tallahassee", "Tampa",
+    "Sarasota", "St. Petersburg", "St Petersburg", "Saint Petersburg", "Tallahassee", "Tampa",
     "West Palm Beach"
 ]
 const georgiaCounties = [ 
@@ -190,7 +196,8 @@ const indianaCounties = [
     "Johnson", "Knox", "Kosciusko", "LaGrange", "Lake", "LaPorte", "Lawrence", "Madison",
     "Marion", "Marshall", "Martin", "Miami", "Monroe", "Montgomery", "Morgan", "Newton",
     "Noble", "Ohio", "Orange", "Owen", "Parke", "Perry", "Pike", "Porter", "Posey",
-    "Pulaski", "Putnam", "Randolph", "Ripley", "Rush", "St. Joseph", "Scott", "Shelby",
+    "Pulaski", "Putnam", "Randolph", "Ripley", "Rush", "St. Joseph", "St Joseph",
+    "Saint Joseph", "Scott", "Shelby",
     "Spencer", "Starke", "Steuben", "Sullivan", "Switzerland", "Tippecanoe", "Tipton",
     "Union", "Vanderburgh", "Vermillion", "Vigo", "Wabash", "Warren", "Warrick",
     "Washington", "Wayne", "Wells", "White", "Whitley"
@@ -321,6 +328,26 @@ const missouriCities = [
     "Independence", "Jefferson City", "Kansas City", "Lees Summit", "St. Louis", "Saint Louis",
     "St Louis", "Springfield"
 ]
+const montanaCounties = [ 
+    "Beaverhead", "Big Horn", "Blaine", "Broadwater", "Carbon", "Carter", "Cascade", "Chouteau",
+    "Custer", "Daniels", "Dawson", "Deer Lodge", "Fallon", "Fergus", "Flathead", "Gallatin",
+    "Garfield", "Glacier", "Golden Valley", "Granite", "Hill", "Jefferson", "Judith Basin",
+    "Lake", "Lewis and Clark", "Liberty", "McCone", "Madison", "Meagher", "Mineral", "Missoula",
+    "Musselshell", "Park", "Petroleum", "Phillips", "Pondera", "Powder River", "Powell", "Prairie",
+    "Ravalli", "Richland", "Roosevelt", "Rosebud", "Sanders", "Sheridan", "Silver Bow",
+    "Stillwater", "Sweet Grass", "Teton", "Toole", "Treasure", "Valley", "Wheatland", "Wibaux",
+    "Yellowstone"
+]
+const montanaCities = [ 
+    "Billings", "Bozeman", "Butte", "Great Falls", "Helena", "Missoula"
+]
+const newHampshireCounties = [ 
+    "Belknap", "Carroll", "Cheshire", "Coos", "Grafton", "Hillsborough", "Merrimack",
+    "Rockingham", "Strafford", "Sullivan"
+]
+const newHampshireCities = [ 
+    "Concord", "Manchester", "Nashua", "Portsmouth"
+]
 const newJerseyCounties = [ 
     "Atlantic", "Bergen", "Burlington", "Camden", "Cape May",
     "Cumberland", "Essex", "Gloucester", "Hudson", "Hunterdon", "Mercer", "Middlesex",
@@ -372,7 +399,7 @@ const northCarolinaCounties = [
     "Macon", "Madison", "Martin", "Mecklenburg", "Mitchell", "Montgomery", 
     "Moore", "Nash", "New Hanover", "Northampton", "Onslow", "Orange", "Pamlico",
     "Pasquotank", "Pender", "Perquimans", "Person", "Pitt", "Polk", "Randolph",
-    "Richmond", "Robeson", "Rockingham", "Rowan", "Rutherford ", "Sampson",
+    "Richmond", "Robeson", "Rockingham", "Rowan", "Rutherford", "Sampson",
     "Scotland", "Stanly", "Stokes", "Surry", "Swain", "Transylvania", "Tyrrell",
     "Union", "Vance", "Wake", "Warren", "Washington", "Watauga", "Wayne", "Wilkes",
     "Wilson", "Yadkin", "Yancey"
@@ -552,13 +579,13 @@ const states = [
                  summarizeType: "FULL",
                  counties: alabamaCounties,
                  cities: alabamaCities,
-                 congressionalDistricts: 10
+                 congressionalDistricts: 7
                 }, 
                 {id: "AR",
                  summarizeType: "FULL",
                  counties: arkansasCounties,
                  cities: arkansasCities,
-                 congressionalDistricts: 7
+                 congressionalDistricts: 4
                 }, 
                 {id: "AZ",
                  summarizeType: "FULL",
@@ -582,10 +609,11 @@ const states = [
                  summarizeType: "FULL",
                  counties: connecticutCounties,
                  cities: connecticutCities,
-                 congressionalDistricts: 6
+                 congressionalDistricts: 5
                 }, 
                 {id: "DC",
                  summarizeType: "FULL",
+                 cities: dcCities,
                  congressionalDistricts: 1
                 }, 
                 {id: "DE",
@@ -622,39 +650,39 @@ const states = [
                  summarizeType: "FULL",
                  counties: illinoisCounties,
                  cities: illinoisCities,
-                 congressionalDistricts: 26
+                 congressionalDistricts: 18
                 }, 
                 {id: "IN",
                  summarizeType: "FULL",
                  counties: indianaCounties,
                  cities: indianaCities,
-                 congressionalDistricts: 13
+                 congressionalDistricts: 9
                 }, 
                 {id: "IO",
                  summarizeType: "FULL",
-                 congressionalDistricts: 11
+                 congressionalDistricts: 4
                 }, 
                 {id: "KS",
                  summarizeType: "FULL",
                  counties: kansasCounties,
                  cities: kansasCities,
-                 congressionalDistricts: 8
+                 congressionalDistricts: 4
                 }, 
                 {id: "KY",
                  summarizeType: "FULL",
                  counties: kentuckyCounties,
                  cities: kentuckyCities,
-                 congressionalDistricts: 13
+                 congressionalDistricts: 6
                 }, 
                 {id: "LA",
                  summarizeType: "FULL",
-                 congressionalDistricts: 8
+                 congressionalDistricts: 6
                 }, 
                 {id: "MA",
                  summarizeType: "FULL",
                  counties: massachusettsCounties,
                  cities: massachusettsCities,
-                 congressionalDistricts: 20
+                 congressionalDistricts: 9
                 }, 
                 {id: "MD",
                  summarizeType: "FULL",
@@ -666,33 +694,35 @@ const states = [
                  counties: maineCounties,
                  cities: maineCities,
                  summarizeType: "FULL",
-                 congressionalDistricts: 8
+                 congressionalDistricts: 2
                 }, 
                 {id: "MI",
                  summarizeType: "FULL",
                  counties: michiganCounties,
                  cities: michiganCities,
-                 congressionalDistricts: 19
+                 congressionalDistricts: 14
                 }, 
                 {id: "MN",
                  summarizeType: "FULL",
                  counties: minnesotaCounties,
                  cities: minnesotaCities,
-                 congressionalDistricts: 10
+                 congressionalDistricts: 8
                 }, 
                 {id: "MO",
                  summarizeType: "FULL",
                  counties: missouriCounties,
                  cities: missouriCities,
-                 congressionalDistricts: 16
+                 congressionalDistricts: 8
                 }, 
                 {id: "MS",
                  summarizeType: "FULL",
-                 congressionalDistricts: 8
+                 congressionalDistricts: 4
                 }, 
                 {id: "MT",
                  summarizeType: "FULL",
-                 congressionalDistricts: 2
+                 counties: montanaCounties,
+                 cities: montanaCities,
+                 congressionalDistricts: 1
                 }, 
                 {id: "NC",
                  summarizeType: "FULL",
@@ -702,21 +732,23 @@ const states = [
                 }, 
                 {id: "ND",
                  summarizeType: "FULL",
-                 congressionalDistricts: 3
+                 congressionalDistricts: 1
                 }, 
                 {id: "NE",
                  summarizeType: "FULL",
-                 congressionalDistricts: 6
+                 congressionalDistricts: 3
                 }, 
                 {id: "NH",
                  summarizeType: "FULL",
-                 congressionalDistricts: 4
+                 counties: newHampshireCounties,
+                 cities: newHampshireCities,
+                 congressionalDistricts: 2
                 }, 
                 {id: "NJ",
                  summarizeType: "BRIEF",
                  counties: newJerseyCounties,
                  cities: newJerseyCities,
-                 congressionalDistricts: 15
+                 congressionalDistricts: 12
                 }, 
                 {id: "NM",
                  counties: newMexicoCounties,
@@ -734,19 +766,19 @@ const states = [
                  summarizeType: "BRIEF",
                  counties: newYorkCounties,
                  cities: newYorkCities,
-                 congressionalDistricts: 45
+                 congressionalDistricts: 27
                 }, 
                 {id: "OH",
                  summarizeType: "FULL",
                  counties: ohioCounties,
                  cities: ohioCities,
-                 congressionalDistricts: 24
+                 congressionalDistricts: 16
                 }, 
                 {id: "OK",
                  summarizeType: "FULL",
                  counties: oklahomaCounties,
                  cities: oklahomaCities,
-                 congressionalDistricts: 8
+                 congressionalDistricts: 5
                 }, 
                 {id: "OR",
                  summarizeType: "FULL",
@@ -758,19 +790,19 @@ const states = [
                  summarizeType: "FULL",
                  counties: pennsylvaniaCounties,
                  cities: pennsylvaniaCities,
-                 congressionalDistricts: 36
+                 congressionalDistricts: 18
                 }, 
                 {id: "RI",
                  summarizeType: "FULL",
                  counties: rhodeIslandCounties,
                  cities: rhodeIslandCities,
-                 congressionalDistricts: 3
+                 congressionalDistricts: 2
                 }, 
                 {id: "SC",
                  summarizeType: "FULL",
                  counties: southCarolinaCounties,
                  cities: southCarolinaCities,
-                 congressionalDistricts: 9
+                 congressionalDistricts: 7
                 }, 
                 {id: "SD",
                  summarizeType: "FULL",
@@ -778,7 +810,7 @@ const states = [
                 }, 
                 {id: "TN",
                  summarizeType: "FULL",
-                 congressionalDistricts: 13
+                 congressionalDistricts: 9
                 }, 
                 {id: "TX",
                  summarizeType: "BRIEF",
@@ -800,7 +832,7 @@ const states = [
                 }, 
                 {id: "VT",
                  summarizeType: "FULL",
-                 congressionalDistricts: 6
+                 congressionalDistricts: 1
                 }, 
                 {id: "WA",
                  summarizeType: "FULL",
@@ -810,11 +842,11 @@ const states = [
                  summarizeType: "FULL",
                  counties: westVirginaCounties,
                  cities: westVirginaCities,
-                 congressionalDistricts: 6
+                 congressionalDistricts: 3
                 }, 
                 {id: "WI",
                  summarizeType: "FULL",
-                 congressionalDistricts: 11
+                 congressionalDistricts: 8
                 }, 
                 {id: "WY",
                  summarizeType: "FULL",
