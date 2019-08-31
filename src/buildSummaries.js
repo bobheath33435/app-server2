@@ -1111,14 +1111,6 @@ const processState = ( async(year, stateRecord) => {
         query[YEAR] = year
         query[WORKSITE_STATE] = worksiteState
         await queryAndSave(query, summarizeType)
-        // const h1bRecords = await queryDB(query)
-        // var h1bObject = {}
-        // if("FULL" == summarizeType){
-        //     h1bObject = summarize(h1bRecords, query)
-        // }else{
-        //     h1bObject = summarizeMajor(h1bRecords, query)
-        // }
-        // await saveSummary(h1bObject)
         logger.trace(chalk.bgBlue('End of block'))
         await processCongDistricts(year, worksiteState, congDistCount)
         if(!_.isEmpty(counties)){
@@ -1176,15 +1168,6 @@ const processCounty = ( async(year, state, county) => {
         query[WORKSITE_STATE] = state
         query[WORKSITE_COUNTY] = county
         await queryAndSave(query)
-        // logger.trace(chalk.bgRed('query: ' + JSON.stringify(query)))
-        // key = createKey(query)
-        // logger.info(chalk.bgRed("Key: " + key + ' -- query: ' + JSON.stringify(query)))
-    
-        // logger.trace(chalk.bgBlue('Read data started. query: ' + JSON.stringify(query)))
-        // const h1bRecords = await h1bModel.find(query)
-        // logger.trace(chalk.bgBlue('Read data complete'))
-        // var h1bObject = summarize(h1bRecords, query)
-        // await saveSummary(h1bObject)
         logger.trace(chalk.bgBlue('End of block'))
     
     }catch(e){
@@ -1222,29 +1205,6 @@ const processCongDistrict = ( async(year, state, index) => {
         query[WORKSITE_STATE] = state
         query[WORKSITE_CONGRESS_DISTRICT] = index
         await queryAndSave(query)
-        // const h1bRecords = await queryDB(query)
-        // logger.trace(chalk.bgRed('query: ' + JSON.stringify(query)))
-        // const key = createKey(query)
-        // logger.info(chalk.bgRed("Key: " + key + ' -- query: ' + JSON.stringify(query)))
-    
-        // logger.trace(chalk.bgBlue('Read data started. query: ' + JSON.stringify(query)))
-        // const h1bRecords = await h1bModel.find(query)
-        // logger.trace(chalk.bgBlue('Read data complete'))
-        //var h1bObject = summarize(h1bRecords, query)
-        //await saveSummary(h1bObject)
-        // logger.trace(chalk.bgBlue('Data summarized'))
-        // logger.trace(JSON.stringify(h1bObject, undefined, 2))
-        // var summaryRecord = {
-        //     "key": key,
-        //     "summary": h1bObject
-        // }
-        // logger.trace(chalk.bgBlue('Save summary started'))
-        // const summaryModel = modelMap['summary']
-        // const h1bSummary = summaryModel(summaryRecord)
-        // logger.trace(chalk.bgBlue('Save summary start'))
-        // await h1bSummary.save()
-        // logger.trace(chalk.bgBlue('Save summary complete'))
-        // // return Promise.resolve()
         logger.trace(chalk.bgBlue('End of block'))
     
     }catch(e){

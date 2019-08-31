@@ -43,6 +43,15 @@ describe('Test createKey', () => {
             "WORKSITE_COUNTY": "SANTA CLARA ABC",
             "WORKSITE_CITY": "SAN JOSE"
         })
+        expect('xyz_CA_SAN_JOSE_SANTA_CLARA_ABC').to.equal(key)
+    })             
+    it('5) createKey should create a key with {"YEAR": "xyz", "WORKSITE_STATE": "CA", "WORKSITE_COUNTY": "SANTA CLARA ABC", "WORKSITE_CITY": "SAN JOSE", "EMPLOYER_ADDRESS": "123 MAIN ST"}', () => {
+        const key = createKey({"YEAR": "xyz", 
+            "WORKSITE_STATE": "CA",
+            "WORKSITE_COUNTY": "SANTA CLARA ABC",
+            "WORKSITE_CITY": "SAN JOSE",
+            "EMPLOYER_ADDRESS": "123 MAIN ST"
+        })
         expect(null).to.equal(key)
     })             
 })
@@ -50,8 +59,8 @@ describe('Test createKey', () => {
 describe('Test summarize', () => {
     logger.trace('testing summarize');
     var query = {
-        "YEAR": "123",
-        "EMPLOYER": "HIWAY DEPT",
+        "YEAR": 123,
+        "EMPLOYER_NAME": "HIWAY DEPT",
         "WORKSITE_CITY": "Boise",
         "WORKSITE_COUNTY": "Orange",
         "WORKSITE_STATE": "Shock"
@@ -80,10 +89,10 @@ describe('Test summarize', () => {
     
     it('1) summarize should summarize h1bRecords', () => {
         const summary = summarize(h1bRecords, query)
-        expect("123").to.equal(summary['YEAR'])
+        expect(123).to.equal(summary['YEAR'])
         delete summary['YEAR']
-        expect("HIWAY DEPT").to.equal(summary['EMPLOYER'])
-        delete summary['EMPLOYER']
+        expect("HIWAY DEPT").to.equal(summary['EMPLOYER_NAME'])
+        delete summary['EMPLOYER_NAME']
         expect("Boise").to.equal(summary['WORKSITE_CITY'])
         delete summary['WORKSITE_CITY']
         expect("Orange").to.equal(summary['WORKSITE_COUNTY'])
@@ -269,6 +278,10 @@ describe('Test summarize', () => {
         // occRecords.forEach(occRecord)
 
         delete summary['occupations']
+        // Don't validate latLngMap here
+        delete summary['latLngMap']
+        logger.trace(`${JSON.stringify(summary)}`)
+
         expect(_.isEmpty(summary)).to.be.true
         logger.trace("summary: " + JSON.stringify(summary, undefined, 2))
     })
