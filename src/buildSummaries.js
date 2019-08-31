@@ -76,7 +76,8 @@ const californiaCounties = [
     "Ventura", "Yolo", "Yuba"
 ]
 const californiaCities = [
-    "Anaheim", "Fresno", "Hayward", "Los Angeles", "Los Gatos", "Milpitas", "Mountain View", "Oakland",
+    "Anaheim", "Cupertino", "Fresno", "Hayward", "Los Angeles", "Los Gatos",
+    "Milpitas", "Mountain View", "Oakland",
     "Palm Springs", "Palo Alto", "Pasadena",
     "Redding", "Sacramento", "San Diego", "San Francisco", 
     "San Jose", "San Mateo", "Santa Barbara", "Santa Clara", "Santa Monica", "Santa Rosa",

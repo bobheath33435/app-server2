@@ -9,13 +9,13 @@ const logger = log4js.getLogger('h1bData');
 const chalk = require('chalk')
 const expect = require('chai').expect
 const _ = require('lodash')
-const { summarize, createKey, calculatePercentiles, countItems } 
+const { summarize, createKey, calculatePercentiles, countItems, buildWageArray } 
         = require('../src/utilities/summarize')
 const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT,
     WORKSITE_COUNTY, WORKSITE_STATE, TOTAL_WORKERS, TOTAL_LCAS, LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4,
     NEW_EMPLOYMENT, CONTINUED_EMPLOYMENT, CHANGE_PREVIOUS_EMPLOYMENT,
     NEW_CONCURRENT_EMPLOYMENT, CHANGE_EMPLOYER, AMENDED_PETITION,
-    UNSPECIFIED, h1bRecord } 
+    UNSPECIFIED, ANNUALIZED_WAGE_RATE_OF_PAY, h1bRecord } 
         = require('../src/models/h1bRecordSchema')
 
 describe('Test createKey', () => {
@@ -99,23 +99,29 @@ describe('Test summarize', () => {
         delete summary['WORKSITE_COUNTY']
         expect("Shock").to.equal(summary['WORKSITE_STATE'])
         delete summary['WORKSITE_STATE']
-        expect(68).to.equal(summary.wageArray.length)
+        expect(7).to.equal(summary.wageArray.length)
+        var wageArrayEntries = []
+        h1bRecords.forEach((h1bRecord) => {
+            const entry = _.pick(h1bRecord, TOTAL_WORKERS, ANNUALIZED_WAGE_RATE_OF_PAY)
+            wageArrayEntries.push(entry)
+        })
+        var wageArray = buildWageArray(wageArrayEntries)
         logger.trace("summary: " + JSON.stringify(summary, undefined, 2))
-        var count = countItems(summary.wageArray, 150)
+        var count = countItems(wageArray, 150)
         expect(2).to.equal(count)
         logger.trace("count for 200: " + count)
-        count = countItems(summary.wageArray, 200)
+        count = countItems(wageArray, 200)
         expect(11).to.equal(count)
-        count = countItems(summary.wageArray, 300)
+        count = countItems(wageArray, 300)
         logger.trace("count for 300: " + count)
         expect(17).to.equal(count)
-        count = countItems(summary.wageArray, 600)
+        count = countItems(wageArray, 600)
         expect(5).to.equal(count)
-        count = countItems(summary.wageArray, 500)
+        count = countItems(wageArray, 500)
         expect(3).to.equal(count)
-        count = countItems(summary.wageArray, 400)
+        count = countItems(wageArray, 400)
         expect(7).to.equal(count)
-        count = countItems(summary.wageArray, 10000)
+        count = countItems(wageArray, 10000)
         expect(23).to.equal(count)
 
         expect(150).to.equal(summary.percentiles['0%'])
@@ -186,11 +192,15 @@ describe('Test summarize', () => {
         var socCode = data["SOC_CODE"]
         expect("123").to.equal(socCode)
         delete occupations[occRecords[0]].data["SOC_CODE"]
-        var wageArray = data.wageArray
-        expect(42).to.equal(wageArray.length)
-        expect(23).to.equal(countItems(wageArray, 10000))
-        expect(17).to.equal(countItems(wageArray, 300))
-        expect(2).to.equal(countItems(wageArray, 150))
+        wageArray = data.wageArray.sort((a, b) => a[TOTAL_WORKERS] - b[TOTAL_WORKERS])
+        logger.info(`wageArray - ${JSON.stringify(wageArray)}`)
+        expect(3).to.equal(wageArray.length)
+        expect(2).to.equal(wageArray[0][TOTAL_WORKERS])
+        expect(150).to.equal(wageArray[0][ANNUALIZED_WAGE_RATE_OF_PAY])
+        expect(17).to.equal(wageArray[1][TOTAL_WORKERS])
+        expect(300).to.equal(wageArray[1][ANNUALIZED_WAGE_RATE_OF_PAY])
+        expect(23).to.equal(wageArray[2][TOTAL_WORKERS])
+        expect(10000).to.equal(wageArray[2][ANNUALIZED_WAGE_RATE_OF_PAY])
         delete occupations[occRecords[0]].data.wageArray
         var percentiles = Object.getOwnPropertyNames(data.percentiles)
         expect(7).to.equal(percentiles.length)
@@ -216,9 +226,11 @@ describe('Test summarize', () => {
         expect("abc").to.equal(socCode)
         delete occupations[occRecords[1]].data["SOC_CODE"]
         wageArray = data.wageArray
-        expect(14).to.equal(wageArray.length)
-        expect(3).to.equal(countItems(wageArray, 500))
-        expect(11).to.equal(countItems(wageArray, 200))
+        expect(2).to.equal(wageArray.length)
+        expect(3).to.equal(wageArray[0][TOTAL_WORKERS])
+        expect(500).to.equal(wageArray[0][ANNUALIZED_WAGE_RATE_OF_PAY])
+        expect(11).to.equal(wageArray[1][TOTAL_WORKERS])
+        expect(200).to.equal(wageArray[1][ANNUALIZED_WAGE_RATE_OF_PAY])
         delete occupations[occRecords[1]].data.wageArray
         percentiles = Object.getOwnPropertyNames(data.percentiles)
         expect(7).to.equal(percentiles.length)
@@ -243,9 +255,11 @@ describe('Test summarize', () => {
         expect("xyz").to.equal(socCode)
         delete occupations[occRecords[2]].data["SOC_CODE"]
         wageArray = data.wageArray
-        expect(12).to.equal(wageArray.length)
-        expect(5).to.equal(countItems(wageArray, 600))
-        expect(7).to.equal(countItems(wageArray, 400))
+        expect(2).to.equal(wageArray.length)
+        expect(5).to.equal(wageArray[0][TOTAL_WORKERS])
+        expect(600).to.equal(wageArray[0][ANNUALIZED_WAGE_RATE_OF_PAY])
+        expect(7).to.equal(wageArray[1][TOTAL_WORKERS])
+        expect(400).to.equal(wageArray[1][ANNUALIZED_WAGE_RATE_OF_PAY])
         delete occupations[occRecords[2]].data.wageArray
         percentiles = Object.getOwnPropertyNames(data.percentiles)
         expect(7).to.equal(percentiles.length)
@@ -290,11 +304,13 @@ describe('Test summarize', () => {
 describe('Test calculatePercentiles', () => {
     logger.trace('testing calculatePercentiles');
     it('1) calculatePercentiles should find percentile levels of array of 100 Numbers', () => {
-        var array = []
+        var wageArrayEntries = []
         for(var i = 0; i < 100; ++i){
-            array.push(i)
+            var wageArrayEntry = { TOTAL_WORKERS: 1, ANNUALIZED_WAGE_RATE_OF_PAY: i}
+            wageArrayEntries.push(wageArrayEntry)
         }
-        const levels = calculatePercentiles(array)
+        const levels = calculatePercentiles(wageArrayEntries)
+        logger.trace("levels: " + JSON.stringify(levels, undefined, 2))
         expect(levels['0%']).to.equal(0)
         expect(levels['10%']).to.equal(10)
         expect(levels['25%']).to.equal(25)
@@ -306,11 +322,12 @@ describe('Test calculatePercentiles', () => {
     })
         
     it('2) calculatePercentiles should find percentile levels of array of 9 Numbers', () => {
-        var array = []
+        var wageArrayEntries = []
         for(var i = 0; i < 9; ++i){
-            array.push(i)
+            var wageArrayEntry = { TOTAL_WORKERS: 1, ANNUALIZED_WAGE_RATE_OF_PAY: i}
+            wageArrayEntries.push(wageArrayEntry)
         }
-        const levels = calculatePercentiles(array)
+        const levels = calculatePercentiles(wageArrayEntries)
         expect(levels['0%']).to.equal(0)
         expect(levels['10%']).to.equal(1)
         expect(levels['25%']).to.equal(2)
@@ -321,11 +338,12 @@ describe('Test calculatePercentiles', () => {
     })
         
     it('3) calculatePercentiles should find percentile levels of array of 11 Numbers', () => {
-        var array = []
+        var wageArrayEntries = []
         for(var i = 0; i < 11; ++i){
-            array.push(i)
+            var wageArrayEntry = { TOTAL_WORKERS: 1, ANNUALIZED_WAGE_RATE_OF_PAY: i}
+            wageArrayEntries.push(wageArrayEntry)
         }
-        const levels = calculatePercentiles(array)
+        const levels = calculatePercentiles(wageArrayEntries)
         expect(levels['0%']).to.equal(0)
         expect(levels['10%']).to.equal(1)
         expect(levels['25%']).to.equal(3)

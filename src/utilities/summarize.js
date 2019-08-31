@@ -104,10 +104,10 @@ const summarizeMajor = (h1bRecords, query) => {
                 occupations[socKey] = occupation
                 occupation.data = {"SOC_CODE": socCode, "percentiles": {}, "wageArray": []}
             }
-            const arr = Array(h1bRecord[TOTAL_WORKERS])
-                    .fill(h1bRecord[ANNUALIZED_WAGE_RATE_OF_PAY])
-    
-            occupation.data.wageArray = occupation.data.wageArray.concat(arr)    
+            // const arr = Array(h1bRecord[TOTAL_WORKERS])
+            //         .fill(h1bRecord[ANNUALIZED_WAGE_RATE_OF_PAY])
+            const wageArrayEntry = _.pick(h1bRecord, TOTAL_WORKERS, ANNUALIZED_WAGE_RATE_OF_PAY)    
+            occupation.data.wageArray.push(wageArrayEntry)    
         }
     
         if(LEVEL_1 == h1bRecord[WAGE_LEVEL]){
@@ -149,11 +149,13 @@ const summarizeMajor = (h1bRecords, query) => {
                 && undefined != h1bRecord[ANNUALIZED_WAGE_RATE_OF_PAY]){
             const arr = Array(h1bRecord[TOTAL_WORKERS])
                     .fill(h1bRecord[ANNUALIZED_WAGE_RATE_OF_PAY])
-            summaryRecord.wageArray = summaryRecord.wageArray.concat(arr)
+            // summaryRecord.wageArray = summaryRecord.wageArray.concat(arr)
+            const wageArrayEntry = _.pick(h1bRecord, TOTAL_WORKERS, ANNUALIZED_WAGE_RATE_OF_PAY)    
+            summaryRecord.wageArray.push(wageArrayEntry)    
         }
     })
     Object.assign(summaryRecord.wageArray, calculatePercentiles(summaryRecord.wageArray))
-    summaryRecord.wageArray = summaryRecord.wageArray.sort((a, b) => a - b)
+    // summaryRecord.wageArray = summaryRecord.wageArray.sort((a, b) => a - b)
     summaryRecord.percentiles = calculatePercentiles(summaryRecord.wageArray)
     var socKeys = Object.getOwnPropertyNames(summaryRecord.occupations)
     socKeys = socKeys.sort()
@@ -167,7 +169,7 @@ const summarizeMajor = (h1bRecords, query) => {
         const data = occupation.data
         if(undefined != data && undefined != data.wageArray){
             data.percentiles = calculatePercentiles(data.wageArray)
-            data.wageArray = data.wageArray.sort((a, b) => a - b)
+            // data.wageArray = data.wageArray.sort((a, b) => a - b)
         }
     })
     summaryRecord.occupations = occupations
@@ -261,9 +263,16 @@ const createKey = (queryIn) => {
     return _.replace(key, / /g, '_')
 }
 
-const calculatePercentiles = (salaryArray) => {
+const calculatePercentiles = (wageArrayEntries) => {
     logger.trace('running calculatePercentiles');
-    salaryArray.sort((a, b) => a - b)
+    // var salaryArray = []
+    // wageArrayEntries.forEach((wageArrayEntry) => {
+    //     const arr =  Array(wageArrayEntry[TOTAL_WORKERS])
+    //             .fill(wageArrayEntry[ANNUALIZED_WAGE_RATE_OF_PAY])
+    //     salaryArray = salaryArray.concat(arr)
+    // })
+    // salaryArray.sort((a, b) => a - b)
+    const salaryArray = buildWageArray(wageArrayEntries)
     const length = salaryArray.length
     if(0 == length)
         return {}
@@ -276,6 +285,17 @@ const calculatePercentiles = (salaryArray) => {
         logger.trace(chalk.yellow(index) + ' ' + chalk.red.bold(returnStruct[index]))
     }
     return returnStruct
+}
+
+const buildWageArray = (wageArrayEntries) => {
+    var salaryArray = []
+    wageArrayEntries.forEach((wageArrayEntry) => {
+        const arr =  Array(wageArrayEntry[TOTAL_WORKERS])
+                .fill(wageArrayEntry[ANNUALIZED_WAGE_RATE_OF_PAY])
+        salaryArray = salaryArray.concat(arr)
+    })
+    salaryArray.sort((a, b) => a - b)
+    return salaryArray
 }
 
 const countItems = (array, search) => {
@@ -309,6 +329,7 @@ module.exports = { summarize,
                    createKey,
                    calculatePercentiles,
                    countItems,
+                   buildWageArray,
                    readSummarizedQueries,
                    summaryMap
                  }
