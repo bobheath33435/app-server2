@@ -32,7 +32,7 @@ const NEW_CONCURRENT_EMPLOYMENT = "NEW_CONCURRENT_EMPLOYMENT"
 const CHANGE_EMPLOYER = "CHANGE_EMPLOYER"
 const AMENDED_PETITION = "AMENDED_PETITION"
 
-salaryLevels = [0, .1, .25, .5, .75, .9, 1]
+percentileLevels = [0, .1, .25, .5, .75, .9, 1]
 
 // H1B Record Schema
 const h1bRecordSchema = mongoose.Schema({
@@ -344,6 +344,6 @@ module.exports = { YEAR,
   AMENDED_PETITION,
   ANNUALIZED_PREVAILING_WAGE,
   ANNUALIZED_WAGE_RATE_OF_PAY,
-  salaryLevels,
+  percentileLevels,
   h1bRecordSchema
 }

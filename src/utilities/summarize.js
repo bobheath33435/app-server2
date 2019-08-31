@@ -12,7 +12,7 @@ const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT
         H1B_DEPENDENT, NEW_EMPLOYMENT, CONTINUED_EMPLOYMENT, CHANGE_PREVIOUS_EMPLOYMENT,
         NEW_CONCURRENT_EMPLOYMENT, CHANGE_EMPLOYER, AMENDED_PETITION,
         UNSPECIFIED, ANNUALIZED_PREVAILING_WAGE, ANNUALIZED_WAGE_RATE_OF_PAY,
-        salaryLevels, h1bRecord } 
+        percentileLevels, h1bRecord } 
             = require('../models/h1bRecordSchema')
 
 log4js.configure({
@@ -152,9 +152,9 @@ const summarizeMajor = (h1bRecords, query) => {
             summaryRecord.wageArray = summaryRecord.wageArray.concat(arr)
         }
     })
-    Object.assign(summaryRecord.wageArray, findLevels(summaryRecord.wageArray))
+    Object.assign(summaryRecord.wageArray, calculatePercentiles(summaryRecord.wageArray))
     summaryRecord.wageArray = summaryRecord.wageArray.sort((a, b) => a - b)
-    summaryRecord.percentiles = findLevels(summaryRecord.wageArray)
+    summaryRecord.percentiles = calculatePercentiles(summaryRecord.wageArray)
     var socKeys = Object.getOwnPropertyNames(summaryRecord.occupations)
     socKeys = socKeys.sort()
     logger.trace(chalk.bgRed.bold("properties: ", socKeys))
@@ -166,7 +166,7 @@ const summarizeMajor = (h1bRecords, query) => {
         delete summaryRecord.occupations[socKey]
         const data = occupation.data
         if(undefined != data && undefined != data.wageArray){
-            data.percentiles = findLevels(data.wageArray)
+            data.percentiles = calculatePercentiles(data.wageArray)
             data.wageArray = data.wageArray.sort((a, b) => a - b)
         }
     })
@@ -261,18 +261,18 @@ const createKey = (queryIn) => {
     return _.replace(key, / /g, '_')
 }
 
-const findLevels = (salaryArray) => {
-    logger.trace('running findLevels');
+const calculatePercentiles = (salaryArray) => {
+    logger.trace('running calculatePercentiles');
     salaryArray.sort((a, b) => a - b)
     const length = salaryArray.length
     if(0 == length)
         return {}
 
     var returnStruct = {}
-    for(var i = 0; i < salaryLevels.length; ++i){
-        const salaryLevel = salaryLevels[i]
-        var index = salaryLevel * 100 + '%'
-        returnStruct[index] = salaryArray[Math.round((length - 1) * salaryLevel)]
+    for(var i = 0; i < percentileLevels.length; ++i){
+        const percentileLevel = percentileLevels[i]
+        var index = percentileLevel * 100 + '%'
+        returnStruct[index] = salaryArray[Math.round((length - 1) * percentileLevel)]
         logger.trace(chalk.yellow(index) + ' ' + chalk.red.bold(returnStruct[index]))
     }
     return returnStruct
@@ -307,7 +307,7 @@ const readSummarizedQueries = async() => {
 module.exports = { summarize,
                    summarizeMajor,
                    createKey,
-                   findLevels,
+                   calculatePercentiles,
                    countItems,
                    readSummarizedQueries,
                    summaryMap

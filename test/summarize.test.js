@@ -9,7 +9,7 @@ const logger = log4js.getLogger('h1bData');
 const chalk = require('chalk')
 const expect = require('chai').expect
 const _ = require('lodash')
-const { summarize, createKey, findLevels, countItems } 
+const { summarize, createKey, calculatePercentiles, countItems } 
         = require('../src/utilities/summarize')
 const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT,
     WORKSITE_COUNTY, WORKSITE_STATE, TOTAL_WORKERS, TOTAL_LCAS, LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4,
@@ -287,14 +287,14 @@ describe('Test summarize', () => {
     })
 })
 
-describe('Test findLevels', () => {
-    logger.trace('testing findLevels');
-    it('1) findLevels should find percentile levels of array of 100 Numbers', () => {
+describe('Test calculatePercentiles', () => {
+    logger.trace('testing calculatePercentiles');
+    it('1) calculatePercentiles should find percentile levels of array of 100 Numbers', () => {
         var array = []
         for(var i = 0; i < 100; ++i){
             array.push(i)
         }
-        const levels = findLevels(array)
+        const levels = calculatePercentiles(array)
         expect(levels['0%']).to.equal(0)
         expect(levels['10%']).to.equal(10)
         expect(levels['25%']).to.equal(25)
@@ -305,12 +305,12 @@ describe('Test findLevels', () => {
 
     })
         
-    it('2) findLevels should find percentile levels of array of 9 Numbers', () => {
+    it('2) calculatePercentiles should find percentile levels of array of 9 Numbers', () => {
         var array = []
         for(var i = 0; i < 9; ++i){
             array.push(i)
         }
-        const levels = findLevels(array)
+        const levels = calculatePercentiles(array)
         expect(levels['0%']).to.equal(0)
         expect(levels['10%']).to.equal(1)
         expect(levels['25%']).to.equal(2)
@@ -320,12 +320,12 @@ describe('Test findLevels', () => {
         expect(levels['100%']).to.equal(8)
     })
         
-    it('3) findLevels should find percentile levels of array of 11 Numbers', () => {
+    it('3) calculatePercentiles should find percentile levels of array of 11 Numbers', () => {
         var array = []
         for(var i = 0; i < 11; ++i){
             array.push(i)
         }
-        const levels = findLevels(array)
+        const levels = calculatePercentiles(array)
         expect(levels['0%']).to.equal(0)
         expect(levels['10%']).to.equal(1)
         expect(levels['25%']).to.equal(3)
