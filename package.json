@@ -7,7 +7,7 @@
     "start": "node src/index.js",
     "start:test": "mocha test/ --recursive --exit",
     "dev": "nodemon src/index.js",
-    "test-watch": "nodemon 'npm run start:test'",
+    "test-watch": "nodemon --exec \"npm test\"",
     "test": "mocha test/ --recursive --exit"
   },
   "keywords": [],
@@ -16,7 +16,6 @@
   "dependencies": {
     "chalk": "^2.4.2",
     "express": "^4.17.1",
-    "jsonpack": "^1.1.5",
     "lodash": "^4.17.15",
     "log4js": "^4.5.1",
     "moment": "^2.24.0",

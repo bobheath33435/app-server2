@@ -1,7 +1,6 @@
 const log4js = require('log4js')
 const chalk = require('chalk')
 const _ = require('lodash')
-// const jsonpack = require("jsonpack/main")
 const pako = require("pako")
 
 var summaryMap = {}
