@@ -9,7 +9,8 @@ const logger = log4js.getLogger('h1bData');
 const chalk = require('chalk')
 const expect = require('chai').expect
 const _ = require('lodash')
-const { summarize, createKey, calculatePercentiles, countItems, buildWageArray } 
+const { summarize, createKey, calculatePercentiles, countItems, buildWageArray,
+                compress, decompress } 
         = require('../src/utilities/summarize')
 const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT,
     WORKSITE_COUNTY, WORKSITE_STATE, TOTAL_WORKERS, TOTAL_LCAS, LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4,
@@ -376,5 +377,34 @@ describe('Test countItems', () => {
         var array = undefined
         var count = countItems(array, 7)
         expect(count).to.equal(0)
+    })
+})
+
+describe('Test compress/decompress', () => {
+    logger.trace('testing countItems');
+    it('1) test compress/decompress with String', () => {
+
+        const str = "a string to test"
+        const compressedString = compress(str)
+        const decompessedString = decompress(compressedString)
+        expect(str).to.equal(decompessedString)
+    })
+    it('2) test compress/decompress with array', () => {
+        const array = [5, 6, "XXX", true, {}]
+        const compressedArray = compress(array)
+        const decompessedArray = decompress(compressedArray)
+        expect(array).to.deep.equal(decompessedArray)
+    })
+    it('3) test compress/decompress with number', () => {
+        const number = 999
+        const compressedNumber = compress(number)
+        const decompressedNumber = decompress(compressedNumber)
+        expect(number).to.deep.equal(decompressedNumber)
+    })
+    it('4) test compress/decompress with object', () => {
+        const obj = { "XYZ": 6, "ABC": 123, "ARRAY": [1, 2, "XXX"]}
+        const compressedObject = compress(obj)
+        const decompessedObject = decompress(compressedObject)
+        expect(obj).to.deep.equal(decompessedObject)
     })
 })

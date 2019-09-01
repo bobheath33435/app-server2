@@ -766,7 +766,7 @@ const states = [
      congressionalDistricts: 9
     }, 
     {id: "CA",
-     summarizeType: "BRIEF",
+     summarizeType: "FULL",
      counties: californiaCounties,
      cities: californiaCities,
      congressionalDistricts: 53
@@ -931,7 +931,7 @@ const states = [
      congressionalDistricts: 2
     }, 
     {id: "NJ",
-     summarizeType: "BRIEF",
+     summarizeType: "FULL",
      counties: newJerseyCounties,
      cities: newJerseyCities,
      congressionalDistricts: 12
@@ -949,7 +949,7 @@ const states = [
      congressionalDistricts: 4
     }, 
     {id: "NY",
-     summarizeType: "BRIEF",
+     summarizeType: "FULL",
      counties: newYorkCounties,
      cities: newYorkCities,
      congressionalDistricts: 27
@@ -1008,7 +1008,7 @@ const states = [
      congressionalDistricts: 9
     }, 
     {id: "TX",
-     summarizeType: "BRIEF",
+     summarizeType: "FULL",
      counties: texasCounties,
      cities: texasCities,
      congressionalDistricts: 36
@@ -1096,7 +1096,7 @@ log4js.configure({
     categories: { default: { appenders: ['h1bData'], level: 'info' } }
 });
 const modelMap = require('./models/dbRecords')
-const { summarize, summarizeMajor, createKey } = require('./utilities/summarize')
+const { summarizeAndCompress, createKey } = require('./utilities/summarize')
 
 const logger = log4js.getLogger('h1bData');
 
@@ -1156,7 +1156,8 @@ const saveSummary = async(h1bObject) => {
 
 const queryAndSave = async (query, summarizeType) => {
     const h1bRecords = await queryDB(query)
-    const h1bObject = ("BRIEF" == summarizeType) ? summarizeMajor(h1bRecords, query) : summarize(h1bRecords, query)
+    // const h1bObject = ("BRIEF" == summarizeType) ? summarizeMajor(h1bRecords, query) : summarize(h1bRecords, query)
+    h1bObject = summarizeAndCompress(h1bRecords, query)
     await saveSummary(h1bObject)
 }
 

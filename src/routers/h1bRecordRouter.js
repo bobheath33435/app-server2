@@ -17,7 +17,7 @@ log4js.configure({
     categories: { default: { appenders: ['h1bData'], level: 'info' } }
 });
 const modelMap = require('../models/dbRecords')
-const { summarize, createKey, summaryMap } = require('../utilities/summarize')
+const { summarize, decompressSummaryRecord, createKey, summaryMap } = require('../utilities/summarize')
 const logger = log4js.getLogger('h1bData');
 
 h1bRecordRouter.get('/h1b', async (req, res) => {
@@ -135,6 +135,7 @@ const performQuery = async (query) => {
         const summaryModel = modelMap['summary']
         h1bSummary = await summaryModel.find({ "key": key })
         h1bSummary = h1bSummary[0]['summary']
+        // h1bSummary = decompressSummaryRecord(h1bSummary)
     }else{
         logger.info("Sending read data")
         const h1bModel = modelMap[year]

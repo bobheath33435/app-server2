@@ -1,6 +1,8 @@
 const log4js = require('log4js')
 const chalk = require('chalk')
 const _ = require('lodash')
+// const jsonpack = require("jsonpack/main")
+const pako = require("pako")
 
 var summaryMap = {}
 
@@ -24,6 +26,12 @@ const modelMap = require('../models/dbRecords')
 const logger = log4js.getLogger('h1bData');
 
 // Summarize data from h1bRecords
+
+const summarizeAndCompress = (h1bRecords, query) => {
+    var summaryRecord = summarize(h1bRecords, query)
+    summaryRecord = compressSummaryRecord(summaryRecord)
+    return summaryRecord
+}
 
 const summarize = (h1bRecords, query) => {
     logger.trace('running summarize');
@@ -248,6 +256,97 @@ const summarizeMinor = (h1bRecords, summaryRecord) => {
     return summaryRecord
 }
 
+const compress = (uncompressedData) => {
+    // const compressedData = jsonpack.pack(uncompressedData)
+    const compressedData =
+            pako.deflate(JSON.stringify(uncompressedData), { to: 'string' });
+    return compressedData
+}
+
+const decompress = (compressedData) => {
+    // const decompressedData = jsonpack.unpack(compressedData)
+    const decompressedData = JSON.parse(pako.inflate(compressedData, { to: 'string' }))
+    return decompressedData
+}
+
+const compressSummaryRecord = (summaryRecord) => {
+    summaryRecord = compressWages(summaryRecord)
+    summaryRecord = compressOccupations(summaryRecord)
+    summaryRecord = compressLatLngMap(summaryRecord)
+    return summaryRecord
+}
+
+const decompressSummaryRecord = (summaryRecord) => {
+    summaryRecord = decompressWages(summaryRecord)
+    summaryRecord = decompressOccupations(summaryRecord)
+    summaryRecord = decompressLatLngMap(summaryRecord)
+    return summaryRecord
+}
+
+const compressWages = (summaryRecord) => {
+    const compressedWageMap = compress(summaryRecord.wageMap)
+    delete summaryRecord.wageMap
+    summaryRecord.compressedWageMap = compressedWageMap
+    return summaryRecord
+}
+
+const decompressWages = (summaryRecord) => {
+    const compressedWageMap = summaryRecord.compressedWageMap
+    const wageMap = decompress(compressedWageMap)
+    delete summaryRecord.compressedWageMap
+    summaryRecord.wageMap = wageMap
+    return summaryRecord
+}
+
+const compressOccupations = (summaryRecord) => {
+    const occupationsMap = summaryRecord.occupations
+    const occupationKeys = Object.getOwnPropertyNames(occupationsMap)
+    occupationKeys.forEach((occupationKey) => {
+        var occupation = occupationsMap[occupationKey]
+        const compressedData = compress(occupation.data)
+        delete occupation.data
+        occupation.compressedData = compressedData
+
+    })
+    return summaryRecord
+}
+
+const decompressOccupations = (summaryRecord) => {
+    const occupationsMap = summaryRecord.occupations
+    const occupationKeys = Object.getOwnPropertyNames(occupationsMap)
+    occupationKeys.forEach((occupationKey) => {
+        var occupation = occupationsMap[occupationKey]
+        const data = decompress(occupation.compressedData)
+        delete occupation.compressedData
+        occupation.data = data
+    })
+    return summaryRecord
+}
+
+const compressLatLngMap = (summaryRecord) => {
+    const latLngMap = summaryRecord.latLngMap
+    const latLngMapKeys = Object.getOwnPropertyNames(latLngMap)
+    latLngMapKeys.forEach((latLngMapKey) => {
+        var latLng = latLngMap[latLngMapKey]
+        const compressedData = compress(latLng)
+        delete latLngMap[latLngMapKey]
+        latLngMap[latLngMapKey] = compressedData
+    })
+    return summaryRecord
+}
+
+const decompressLatLngMap = (summaryRecord) => {
+    const latLngMap = summaryRecord.latLngMap
+    const latLngMapKeys = Object.getOwnPropertyNames(latLngMap)
+    latLngMapKeys.forEach((latLngMapKey) => {
+        const compressedData = latLngMap[latLngMapKey]
+        const latLng = decompress(compressedData)
+        delete latLngMap[latLngMapKey]
+        latLngMap[latLngMapKey] = latLng
+    })
+    return summaryRecord
+}
+
 const createKey = (queryIn) => {
     var query = _.clone(queryIn, true)
     logger.trace('running createKey');
@@ -345,8 +444,12 @@ const readSummarizedQueries = async() => {
 }
 
 
-module.exports = { summarize,
-                   summarizeMajor,
+module.exports = { 
+                   summarize,
+                   summarizeAndCompress,
+                   compress,
+                   decompress,
+                   decompressSummaryRecord,
                    createKey,
                    calculatePercentiles,
                    countItems,
