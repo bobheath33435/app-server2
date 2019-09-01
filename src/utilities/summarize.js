@@ -68,7 +68,7 @@ const summarizeMajor = (h1bRecords, query) => {
     summaryRecord.latLngMap = {}
     summaryRecord.occupations = {}
     summaryRecord.percentiles = {}
-    summaryRecord.wageArray = []
+    summaryRecord.wageMap = {}
     summaryRecord.wageLevels = { "workers": {}, "lcas": {}}
     summaryRecord.wageLevels.workers[LEVEL_1] = 0
     summaryRecord.wageLevels.workers[LEVEL_2] = 0
@@ -102,12 +102,20 @@ const summarizeMajor = (h1bRecords, query) => {
             if(undefined == occupation){
                 occupation  = {}
                 occupations[socKey] = occupation
-                occupation.data = {"SOC_CODE": socCode, "percentiles": {}, "wageArray": []}
+                occupation.data = {"SOC_CODE": socCode, "percentiles": {}, "wageMap": {}}
             }
-            // const arr = Array(h1bRecord[TOTAL_WORKERS])
-            //         .fill(h1bRecord[ANNUALIZED_WAGE_RATE_OF_PAY])
-            const wageArrayEntry = _.pick(h1bRecord, TOTAL_WORKERS, ANNUALIZED_WAGE_RATE_OF_PAY)    
-            occupation.data.wageArray.push(wageArrayEntry)    
+            // var wageMap = occupation.data.wageMap
+            // const wages = h1bRecord[ANNUALIZED_WAGE_RATE_OF_PAY]
+            // const count = h1bRecord[TOTAL_WORKERS]
+            // if(undefined == wageMap[wages]){
+            //     wageMap[wages] = count
+            // }else{
+            //     wageMap[wages] += count
+            // }
+
+            updateWageMap(occupation.data.wageMap, h1bRecord)
+            // // const wageArrayEntry = _.pick(h1bRecord, TOTAL_WORKERS, ANNUALIZED_WAGE_RATE_OF_PAY)    
+            // occupation.data.wageArray.push(wageArrayEntry)    
         }
     
         if(LEVEL_1 == h1bRecord[WAGE_LEVEL]){
@@ -147,16 +155,17 @@ const summarizeMajor = (h1bRecords, query) => {
     
         if(0 <= h1bRecord[TOTAL_WORKERS]
                 && undefined != h1bRecord[ANNUALIZED_WAGE_RATE_OF_PAY]){
-            const arr = Array(h1bRecord[TOTAL_WORKERS])
-                    .fill(h1bRecord[ANNUALIZED_WAGE_RATE_OF_PAY])
+            // const arr = Array(h1bRecord[TOTAL_WORKERS])
+                    // .fill(h1bRecord[ANNUALIZED_WAGE_RATE_OF_PAY])
             // summaryRecord.wageArray = summaryRecord.wageArray.concat(arr)
-            const wageArrayEntry = _.pick(h1bRecord, TOTAL_WORKERS, ANNUALIZED_WAGE_RATE_OF_PAY)    
-            summaryRecord.wageArray.push(wageArrayEntry)    
+            // const wageArrayEntry = _.pick(h1bRecord, TOTAL_WORKERS, ANNUALIZED_WAGE_RATE_OF_PAY)    
+            // summaryRecord.wageArray.push(wageArrayEntry)    
+            updateWageMap(summaryRecord.wageMap, h1bRecord)
         }
     })
-    Object.assign(summaryRecord.wageArray, calculatePercentiles(summaryRecord.wageArray))
+    // Object.assign(summaryRecord.wageArray, calculatePercentiles(summaryRecord.wageArray))
     // summaryRecord.wageArray = summaryRecord.wageArray.sort((a, b) => a - b)
-    summaryRecord.percentiles = calculatePercentiles(summaryRecord.wageArray)
+    summaryRecord.percentiles = calculatePercentiles(summaryRecord.wageMap)
     var socKeys = Object.getOwnPropertyNames(summaryRecord.occupations)
     socKeys = socKeys.sort()
     logger.trace(chalk.bgRed.bold("properties: ", socKeys))
@@ -167,8 +176,8 @@ const summarizeMajor = (h1bRecords, query) => {
         occupations[socKey] = occupation
         delete summaryRecord.occupations[socKey]
         const data = occupation.data
-        if(undefined != data && undefined != data.wageArray){
-            data.percentiles = calculatePercentiles(data.wageArray)
+        if(undefined != data && undefined != data.wageMap){
+            data.percentiles = calculatePercentiles(data.wageMap)
             // data.wageArray = data.wageArray.sort((a, b) => a - b)
         }
     })
@@ -177,6 +186,17 @@ const summarizeMajor = (h1bRecords, query) => {
     logger.trace("percentiles: " + JSON.stringify(summaryRecord.percentiles, undefined, 2))
     return summaryRecord
 }
+
+const updateWageMap = (wageMap, h1bRecord) => {
+    var wages = "" + h1bRecord[ANNUALIZED_WAGE_RATE_OF_PAY]
+    wages = wages.replace(/\./g, 'X')
+    const count = h1bRecord[TOTAL_WORKERS]
+    if(undefined == wageMap[wages]){
+        wageMap[wages] = count
+    }else{
+        wageMap[wages] += count
+    }
+}    
 
 const summarizeMinor = (h1bRecords, summaryRecord) => {
     logger.trace('running summarize minor');
@@ -263,7 +283,7 @@ const createKey = (queryIn) => {
     return _.replace(key, / /g, '_')
 }
 
-const calculatePercentiles = (wageArrayEntries) => {
+const calculatePercentiles = (wageMap) => {
     logger.trace('running calculatePercentiles');
     // var salaryArray = []
     // wageArrayEntries.forEach((wageArrayEntry) => {
@@ -272,7 +292,7 @@ const calculatePercentiles = (wageArrayEntries) => {
     //     salaryArray = salaryArray.concat(arr)
     // })
     // salaryArray.sort((a, b) => a - b)
-    const salaryArray = buildWageArray(wageArrayEntries)
+    const salaryArray = buildWageArray(wageMap)
     const length = salaryArray.length
     if(0 == length)
         return {}
@@ -287,11 +307,12 @@ const calculatePercentiles = (wageArrayEntries) => {
     return returnStruct
 }
 
-const buildWageArray = (wageArrayEntries) => {
+const buildWageArray = (wageMap) => {
+    var salaries = Object.getOwnPropertyNames(wageMap)
     var salaryArray = []
-    wageArrayEntries.forEach((wageArrayEntry) => {
-        const arr =  Array(wageArrayEntry[TOTAL_WORKERS])
-                .fill(wageArrayEntry[ANNUALIZED_WAGE_RATE_OF_PAY])
+    salaries.forEach((salaryX) => {
+        const salary = salaryX.replace(/X/g, '.')
+        const arr =  Array(wageMap[salary]).fill(Number(salary))
         salaryArray = salaryArray.concat(arr)
     })
     salaryArray.sort((a, b) => a - b)

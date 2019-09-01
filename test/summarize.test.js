@@ -89,6 +89,7 @@ describe('Test summarize', () => {
     
     it('1) summarize should summarize h1bRecords', () => {
         const summary = summarize(h1bRecords, query)
+        logger.trace(chalk.bgRed(`summary: ${JSON.stringify(summary, undefined, 2)}`))
         expect(123).to.equal(summary['YEAR'])
         delete summary['YEAR']
         expect("HIWAY DEPT").to.equal(summary['EMPLOYER_NAME'])
@@ -99,13 +100,13 @@ describe('Test summarize', () => {
         delete summary['WORKSITE_COUNTY']
         expect("Shock").to.equal(summary['WORKSITE_STATE'])
         delete summary['WORKSITE_STATE']
-        expect(7).to.equal(summary.wageArray.length)
+        expect(7).to.equal(Object.getOwnPropertyNames(summary.wageMap).length)
         var wageArrayEntries = []
         h1bRecords.forEach((h1bRecord) => {
             const entry = _.pick(h1bRecord, TOTAL_WORKERS, ANNUALIZED_WAGE_RATE_OF_PAY)
             wageArrayEntries.push(entry)
         })
-        var wageArray = buildWageArray(wageArrayEntries)
+        var wageArray = buildWageArray(summary.wageMap)
         logger.trace("summary: " + JSON.stringify(summary, undefined, 2))
         var count = countItems(wageArray, 150)
         expect(2).to.equal(count)
@@ -124,6 +125,7 @@ describe('Test summarize', () => {
         count = countItems(wageArray, 10000)
         expect(23).to.equal(count)
 
+        logger.trace("summary: " + JSON.stringify(summary.percentiles, undefined, 2))
         expect(150).to.equal(summary.percentiles['0%'])
         expect(200).to.equal(summary.percentiles['10%'])
         expect(300).to.equal(summary.percentiles['25%'])
@@ -178,7 +180,7 @@ describe('Test summarize', () => {
         delete summary.categories
         delete summary[TOTAL_LCAS]
         delete summary[TOTAL_WORKERS]
-        delete summary['wageArray']
+        delete summary['wageMap']
         delete summary['percentiles']
         const occupations = summary.occupations
         var occRecords = Object.getOwnPropertyNames(occupations)
@@ -192,19 +194,17 @@ describe('Test summarize', () => {
         var socCode = data["SOC_CODE"]
         expect("123").to.equal(socCode)
         delete occupations[occRecords[0]].data["SOC_CODE"]
-        wageArray = data.wageArray.sort((a, b) => a[TOTAL_WORKERS] - b[TOTAL_WORKERS])
-        logger.info(`wageArray - ${JSON.stringify(wageArray)}`)
-        expect(3).to.equal(wageArray.length)
-        expect(2).to.equal(wageArray[0][TOTAL_WORKERS])
-        expect(150).to.equal(wageArray[0][ANNUALIZED_WAGE_RATE_OF_PAY])
-        expect(17).to.equal(wageArray[1][TOTAL_WORKERS])
-        expect(300).to.equal(wageArray[1][ANNUALIZED_WAGE_RATE_OF_PAY])
-        expect(23).to.equal(wageArray[2][TOTAL_WORKERS])
-        expect(10000).to.equal(wageArray[2][ANNUALIZED_WAGE_RATE_OF_PAY])
-        delete occupations[occRecords[0]].data.wageArray
+        // wageArray = data.wageArray.sort((a, b) => a[TOTAL_WORKERS] - b[TOTAL_WORKERS])
+        wageArray = buildWageArray(data.wageMap)
+        logger.trace(`wageArray - ${JSON.stringify(wageArray)}`)
+        expect(42).to.equal(wageArray.length)
+        expect(2).to.equal(countItems(wageArray, 150))
+        expect(17).to.equal(countItems(wageArray, 300))
+        expect(23).to.equal(countItems(wageArray, 10000))
+        delete occupations[occRecords[0]].data.wageMap
         var percentiles = Object.getOwnPropertyNames(data.percentiles)
+        logger.trace(chalk.bgRed("Percentiles: " + percentiles))
         expect(7).to.equal(percentiles.length)
-        logger.trace(chalk.bgRed(percentiles))
         expect('0%').to.equal(percentiles[0])
         expect('10%').to.equal(percentiles[1])
         expect('25%').to.equal(percentiles[2])
@@ -225,12 +225,10 @@ describe('Test summarize', () => {
         var socCode = data["SOC_CODE"]
         expect("abc").to.equal(socCode)
         delete occupations[occRecords[1]].data["SOC_CODE"]
-        wageArray = data.wageArray
-        expect(2).to.equal(wageArray.length)
-        expect(3).to.equal(wageArray[0][TOTAL_WORKERS])
-        expect(500).to.equal(wageArray[0][ANNUALIZED_WAGE_RATE_OF_PAY])
-        expect(11).to.equal(wageArray[1][TOTAL_WORKERS])
-        expect(200).to.equal(wageArray[1][ANNUALIZED_WAGE_RATE_OF_PAY])
+        wageArray = buildWageArray(data.wageMap)
+        expect(14).to.equal(wageArray.length)
+        expect(3).to.equal(countItems(wageArray, 500))
+        expect(11).to.equal(countItems(wageArray, 200))
         delete occupations[occRecords[1]].data.wageArray
         percentiles = Object.getOwnPropertyNames(data.percentiles)
         expect(7).to.equal(percentiles.length)
@@ -254,12 +252,10 @@ describe('Test summarize', () => {
         var socCode = data["SOC_CODE"]
         expect("xyz").to.equal(socCode)
         delete occupations[occRecords[2]].data["SOC_CODE"]
-        wageArray = data.wageArray
-        expect(2).to.equal(wageArray.length)
-        expect(5).to.equal(wageArray[0][TOTAL_WORKERS])
-        expect(600).to.equal(wageArray[0][ANNUALIZED_WAGE_RATE_OF_PAY])
-        expect(7).to.equal(wageArray[1][TOTAL_WORKERS])
-        expect(400).to.equal(wageArray[1][ANNUALIZED_WAGE_RATE_OF_PAY])
+        wageArray = buildWageArray(data.wageMap)
+        expect(12).to.equal(wageArray.length)
+        expect(5).to.equal(countItems(wageArray, 600))
+        expect(7).to.equal(countItems(wageArray, 400))
         delete occupations[occRecords[2]].data.wageArray
         percentiles = Object.getOwnPropertyNames(data.percentiles)
         expect(7).to.equal(percentiles.length)
@@ -294,7 +290,7 @@ describe('Test summarize', () => {
         delete summary['occupations']
         // Don't validate latLngMap here
         delete summary['latLngMap']
-        logger.trace(`${JSON.stringify(summary)}`)
+        logger.info(`${JSON.stringify(summary)}`)
 
         expect(_.isEmpty(summary)).to.be.true
         logger.trace("summary: " + JSON.stringify(summary, undefined, 2))
@@ -304,12 +300,12 @@ describe('Test summarize', () => {
 describe('Test calculatePercentiles', () => {
     logger.trace('testing calculatePercentiles');
     it('1) calculatePercentiles should find percentile levels of array of 100 Numbers', () => {
-        var wageArrayEntries = []
+        var wageMap = {}
         for(var i = 0; i < 100; ++i){
-            var wageArrayEntry = { TOTAL_WORKERS: 1, ANNUALIZED_WAGE_RATE_OF_PAY: i}
-            wageArrayEntries.push(wageArrayEntry)
+            wageMap[i] = 1
         }
-        const levels = calculatePercentiles(wageArrayEntries)
+        logger.trace("wageMap: " + JSON.stringify(wageMap, undefined, 2))
+        const levels = calculatePercentiles(wageMap)
         logger.trace("levels: " + JSON.stringify(levels, undefined, 2))
         expect(levels['0%']).to.equal(0)
         expect(levels['10%']).to.equal(10)
@@ -322,12 +318,11 @@ describe('Test calculatePercentiles', () => {
     })
         
     it('2) calculatePercentiles should find percentile levels of array of 9 Numbers', () => {
-        var wageArrayEntries = []
+        var wageMap = {}
         for(var i = 0; i < 9; ++i){
-            var wageArrayEntry = { TOTAL_WORKERS: 1, ANNUALIZED_WAGE_RATE_OF_PAY: i}
-            wageArrayEntries.push(wageArrayEntry)
+            wageMap[i] = 1
         }
-        const levels = calculatePercentiles(wageArrayEntries)
+        const levels = calculatePercentiles(wageMap)
         expect(levels['0%']).to.equal(0)
         expect(levels['10%']).to.equal(1)
         expect(levels['25%']).to.equal(2)
@@ -338,12 +333,11 @@ describe('Test calculatePercentiles', () => {
     })
         
     it('3) calculatePercentiles should find percentile levels of array of 11 Numbers', () => {
-        var wageArrayEntries = []
+        var wageMap = {}
         for(var i = 0; i < 11; ++i){
-            var wageArrayEntry = { TOTAL_WORKERS: 1, ANNUALIZED_WAGE_RATE_OF_PAY: i}
-            wageArrayEntries.push(wageArrayEntry)
+            wageMap[i] = 1
         }
-        const levels = calculatePercentiles(wageArrayEntries)
+        const levels = calculatePercentiles(wageMap)
         expect(levels['0%']).to.equal(0)
         expect(levels['10%']).to.equal(1)
         expect(levels['25%']).to.equal(3)
