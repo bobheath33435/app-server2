@@ -9,9 +9,9 @@ const logger = log4js.getLogger('h1bData');
 const chalk = require('chalk')
 const expect = require('chai').expect
 const _ = require('lodash')
-const { summarize, createKey, calculatePercentiles, countItems, buildWageArray,
-                compress, decompress } 
+const { summarize, createKey, calculatePercentiles, countItems, buildWageArray } 
         = require('../src/utilities/summarize')
+const { compress, decompress } = require('../src/utilities/compression')
 const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT,
     WORKSITE_COUNTY, WORKSITE_STATE, TOTAL_WORKERS, TOTAL_LCAS, LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4,
     NEW_EMPLOYMENT, CONTINUED_EMPLOYMENT, CHANGE_PREVIOUS_EMPLOYMENT,
@@ -291,7 +291,7 @@ describe('Test summarize', () => {
         delete summary['occupations']
         // Don't validate latLngMap here
         delete summary['latLngMap']
-        logger.info(`${JSON.stringify(summary)}`)
+        logger.trace(`${JSON.stringify(summary)}`)
 
         expect(_.isEmpty(summary)).to.be.true
         logger.trace("summary: " + JSON.stringify(summary, undefined, 2))

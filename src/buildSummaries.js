@@ -448,7 +448,8 @@ const newYorkCounties = [
     "Herkimer", "Jefferson", "Kings", "Lewis", "Livingston", "Madison", "Monroe",
     "Montgomery", "Nassau", "New York", "Niagara", "Oneida", "Onondaga", "Ontario",
     "Orange", "Orleans", "Oswego", "Otsego", "Putnam", "Queens", "Rensselaer", "Richmond",
-    "Rockland", "St. Lawrence", "Saratoga", "Schenectady", "Schoharie", "Schuyler", "Seneca",
+    "Rockland", "St Lawrence", "St. Lawrence", "Saint Lawrence", "Saratoga",
+    "Schenectady", "Schoharie", "Schuyler", "Seneca",
     "Steuben", "Suffolk", "Sullivan", "Tioga", "Tompkins", "Ulster", "Warren", "Washington",
     "Wayne", "Westchester", "Wyoming", "Yates"
 ]

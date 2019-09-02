@@ -1,11 +1,11 @@
 const log4js = require('log4js')
 const chalk = require('chalk')
 const _ = require('lodash')
-const pako = require("pako")
 
 var summaryMap = {}
 
-const log = console.log;
+const log = console.log
+const { compress, decompress } = require('./compression')
 const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT,
         WORKSITE_LATITUDE, WORKSITE_LONGITUDE, WORKSITE_ADDR1, WORKSITE_ADDR2,
         WORKSITE_CITY, WORKSITE_COUNTY, WORKSITE_STATE, TOTAL_WORKERS, TOTAL_LCAS, SOC_CODE, 
@@ -255,94 +255,109 @@ const summarizeMinor = (h1bRecords, summaryRecord) => {
     return summaryRecord
 }
 
-const compress = (uncompressedData) => {
-    // const compressedData = jsonpack.pack(uncompressedData)
-    const compressedData =
-            pako.deflate(JSON.stringify(uncompressedData), { to: 'string' });
-    return compressedData
-}
-
-const decompress = (compressedData) => {
-    // const decompressedData = jsonpack.unpack(compressedData)
-    const decompressedData = JSON.parse(pako.inflate(compressedData, { to: 'string' }))
-    return decompressedData
-}
-
 const compressSummaryRecord = (summaryRecord) => {
-    summaryRecord = compressWages(summaryRecord)
-    summaryRecord = compressOccupations(summaryRecord)
-    summaryRecord = compressLatLngMap(summaryRecord)
+    const status = _.pick(summaryRecord, 
+                          'categories',
+                          'latLngMap',
+                          'occupations',
+                          'percentiles', 
+                          'wageMap',
+                          'wageLevels')
+    const compressedStatus = compress(status)
+    delete summaryRecord.categories
+    delete summaryRecord.latLngMap
+    delete summaryRecord.occupations
+    delete summaryRecord.percentiles
+    delete summaryRecord.wageMap
+    delete summaryRecord.wageLevels
+    summaryRecord.status = compressedStatus
+    // summaryRecord = compressWages(summaryRecord)
+    // summaryRecord = compressOccupations(summaryRecord)
+    // summaryRecord = compressLatLngMap(summaryRecord)
     return summaryRecord
 }
 
 const decompressSummaryRecord = (summaryRecord) => {
-    summaryRecord = decompressWages(summaryRecord)
-    summaryRecord = decompressOccupations(summaryRecord)
-    summaryRecord = decompressLatLngMap(summaryRecord)
+    const status = decompress(summaryRecord.status)
+    summaryRecord.categories = status.categories
+    summaryRecord.latLngMap = status.latLngMap
+    summaryRecord.occupations = status.occupations
+    summaryRecord.percentiles = status.percentiles
+    summaryRecord.wageMap = status.wageMap
+    summaryRecord.wageLevels = status.wageLevels
+    delete summaryRecord.status
+    
+    // summaryRecord = decompressWages(summaryRecord)
+    // summaryRecord = decompressOccupations(summaryRecord)
+    // summaryRecord = decompressLatLngMap(summaryRecord)
     return summaryRecord
 }
 
 const compressWages = (summaryRecord) => {
-    const compressedWageMap = compress(summaryRecord.wageMap)
+    summaryRecord.compressedWageMap = compress(summaryRecord.wageMap)
     delete summaryRecord.wageMap
-    summaryRecord.compressedWageMap = compressedWageMap
     return summaryRecord
 }
 
 const decompressWages = (summaryRecord) => {
-    const compressedWageMap = summaryRecord.compressedWageMap
-    const wageMap = decompress(compressedWageMap)
+    summaryRecord.wageMap = decompress(summaryRecord.compressedWageMap)
     delete summaryRecord.compressedWageMap
-    summaryRecord.wageMap = wageMap
     return summaryRecord
 }
 
 const compressOccupations = (summaryRecord) => {
-    const occupationsMap = summaryRecord.occupations
-    const occupationKeys = Object.getOwnPropertyNames(occupationsMap)
-    occupationKeys.forEach((occupationKey) => {
-        var occupation = occupationsMap[occupationKey]
-        const compressedData = compress(occupation.data)
-        delete occupation.data
-        occupation.compressedData = compressedData
-
-    })
+    summaryRecord.compressedOccupations = compress(summaryRecord.occupations)
+    delete summaryRecord.occupations
+    // const occupationsMap = summaryRecord.occupations
+    // const occupationKeys = Object.getOwnPropertyNames(occupationsMap)
+    // occupationKeys.forEach((occupationKey) => {
+    //     var occupation = occupationsMap[occupationKey]
+    //     const compressedData = compress(occupation.data)
+    //     delete occupation.data
+    //     occupation.compressedData = compressedData
+    // })
     return summaryRecord
 }
 
 const decompressOccupations = (summaryRecord) => {
-    const occupationsMap = summaryRecord.occupations
-    const occupationKeys = Object.getOwnPropertyNames(occupationsMap)
-    occupationKeys.forEach((occupationKey) => {
-        var occupation = occupationsMap[occupationKey]
-        const data = decompress(occupation.compressedData)
-        delete occupation.compressedData
-        occupation.data = data
-    })
+    summaryRecord.occupations = decompress(summaryRecord.compressedOccupations)
+    delete summaryRecord.compressedOccupations
+    // const occupationsMap = summaryRecord.occupations
+    // const occupationKeys = Object.getOwnPropertyNames(occupationsMap)
+    // occupationKeys.forEach((occupationKey) => {
+    //     var occupation = occupationsMap[occupationKey]
+    //     const data = decompress(occupation.compressedData)
+    //     delete occupation.compressedData
+    //     occupation.data = data
+    // })
     return summaryRecord
 }
 
 const compressLatLngMap = (summaryRecord) => {
-    const latLngMap = summaryRecord.latLngMap
-    const latLngMapKeys = Object.getOwnPropertyNames(latLngMap)
-    latLngMapKeys.forEach((latLngMapKey) => {
-        var latLng = latLngMap[latLngMapKey]
-        const compressedData = compress(latLng)
-        delete latLngMap[latLngMapKey]
-        latLngMap[latLngMapKey] = compressedData
-    })
+    summaryRecord.compressedLatLngMap = compress(summaryRecord.latLngMap)
+    delete summaryRecord.latLngMap
+    // const latLngMap = summaryRecord.latLngMap
+    // const latLngMapKeys = Object.getOwnPropertyNames(latLngMap)
+    // latLngMapKeys.forEach((latLngMapKey) => {
+    //     var latLng = latLngMap[latLngMapKey]
+    //     const compressedData = compress(latLng)
+    //     delete latLngMap[latLngMapKey]
+    //     latLngMap[latLngMapKey] = compressedData
+    // })
     return summaryRecord
 }
 
 const decompressLatLngMap = (summaryRecord) => {
-    const latLngMap = summaryRecord.latLngMap
-    const latLngMapKeys = Object.getOwnPropertyNames(latLngMap)
-    latLngMapKeys.forEach((latLngMapKey) => {
-        const compressedData = latLngMap[latLngMapKey]
-        const latLng = decompress(compressedData)
-        delete latLngMap[latLngMapKey]
-        latLngMap[latLngMapKey] = latLng
-    })
+    summaryRecord.latLngMap = decompress(summaryRecord.compressedLatLngMap)
+    delete summaryRecord.compressedLatLngMap
+   // const latLngMap = summaryRecord.latLngMap
+    // const latLngMapKeys = Object.getOwnPropertyNames(latLngMap)
+    // latLngMapKeys.forEach((latLngMapKey) => {
+    //     const compressedData = latLngMap[latLngMapKey]
+    //     const latLng = decompress(compressedData)
+    //     delete latLngMap[latLngMapKey]
+    //     latLngMap[latLngMapKey] = latLng
+    // })
     return summaryRecord
 }
 
@@ -446,8 +461,6 @@ const readSummarizedQueries = async() => {
 module.exports = { 
                    summarize,
                    summarizeAndCompress,
-                   compress,
-                   decompress,
                    decompressSummaryRecord,
                    createKey,
                    calculatePercentiles,
