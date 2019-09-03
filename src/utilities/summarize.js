@@ -111,19 +111,8 @@ const summarizeMajor = (h1bRecords, query) => {
                 occupations[socKey] = occupation
                 occupation.data = {"SOC_CODE": socCode, "percentiles": {}, "wageMap": {}}
             }
-            // var wageMap = occupation.data.wageMap
-            // const wages = h1bRecord[ANNUALIZED_WAGE_RATE_OF_PAY]
-            // const count = h1bRecord[TOTAL_WORKERS]
-            // if(undefined == wageMap[wages]){
-            //     wageMap[wages] = count
-            // }else{
-            //     wageMap[wages] += count
-            // }
-
             updateWageMap(occupation.data.wageMap, h1bRecord)
-            // // const wageArrayEntry = _.pick(h1bRecord, TOTAL_WORKERS, ANNUALIZED_WAGE_RATE_OF_PAY)    
-            // occupation.data.wageArray.push(wageArrayEntry)    
-        }
+       }
     
         if(LEVEL_1 == h1bRecord[WAGE_LEVEL]){
             summaryRecord.wageLevels.workers[LEVEL_1] += h1bRecord[TOTAL_WORKERS]
@@ -162,16 +151,9 @@ const summarizeMajor = (h1bRecords, query) => {
     
         if(0 <= h1bRecord[TOTAL_WORKERS]
                 && undefined != h1bRecord[ANNUALIZED_WAGE_RATE_OF_PAY]){
-            // const arr = Array(h1bRecord[TOTAL_WORKERS])
-                    // .fill(h1bRecord[ANNUALIZED_WAGE_RATE_OF_PAY])
-            // summaryRecord.wageArray = summaryRecord.wageArray.concat(arr)
-            // const wageArrayEntry = _.pick(h1bRecord, TOTAL_WORKERS, ANNUALIZED_WAGE_RATE_OF_PAY)    
-            // summaryRecord.wageArray.push(wageArrayEntry)    
             updateWageMap(summaryRecord.wageMap, h1bRecord)
         }
     })
-    // Object.assign(summaryRecord.wageArray, calculatePercentiles(summaryRecord.wageArray))
-    // summaryRecord.wageArray = summaryRecord.wageArray.sort((a, b) => a - b)
     summaryRecord.percentiles = calculatePercentiles(summaryRecord.wageMap)
     var socKeys = Object.getOwnPropertyNames(summaryRecord.occupations)
     socKeys = socKeys.sort()
@@ -185,7 +167,6 @@ const summarizeMajor = (h1bRecords, query) => {
         const data = occupation.data
         if(undefined != data && undefined != data.wageMap){
             data.percentiles = calculatePercentiles(data.wageMap)
-            // data.wageArray = data.wageArray.sort((a, b) => a - b)
         }
     })
     summaryRecord.occupations = occupations
@@ -271,9 +252,6 @@ const compressSummaryRecord = (summaryRecord) => {
     delete summaryRecord.wageMap
     delete summaryRecord.wageLevels
     summaryRecord.status = compressedStatus
-    // summaryRecord = compressWages(summaryRecord)
-    // summaryRecord = compressOccupations(summaryRecord)
-    // summaryRecord = compressLatLngMap(summaryRecord)
     return summaryRecord
 }
 
@@ -287,77 +265,6 @@ const decompressSummaryRecord = (summaryRecord) => {
     summaryRecord.wageLevels = status.wageLevels
     delete summaryRecord.status
     
-    // summaryRecord = decompressWages(summaryRecord)
-    // summaryRecord = decompressOccupations(summaryRecord)
-    // summaryRecord = decompressLatLngMap(summaryRecord)
-    return summaryRecord
-}
-
-const compressWages = (summaryRecord) => {
-    summaryRecord.compressedWageMap = compress(summaryRecord.wageMap)
-    delete summaryRecord.wageMap
-    return summaryRecord
-}
-
-const decompressWages = (summaryRecord) => {
-    summaryRecord.wageMap = decompress(summaryRecord.compressedWageMap)
-    delete summaryRecord.compressedWageMap
-    return summaryRecord
-}
-
-const compressOccupations = (summaryRecord) => {
-    summaryRecord.compressedOccupations = compress(summaryRecord.occupations)
-    delete summaryRecord.occupations
-    // const occupationsMap = summaryRecord.occupations
-    // const occupationKeys = Object.getOwnPropertyNames(occupationsMap)
-    // occupationKeys.forEach((occupationKey) => {
-    //     var occupation = occupationsMap[occupationKey]
-    //     const compressedData = compress(occupation.data)
-    //     delete occupation.data
-    //     occupation.compressedData = compressedData
-    // })
-    return summaryRecord
-}
-
-const decompressOccupations = (summaryRecord) => {
-    summaryRecord.occupations = decompress(summaryRecord.compressedOccupations)
-    delete summaryRecord.compressedOccupations
-    // const occupationsMap = summaryRecord.occupations
-    // const occupationKeys = Object.getOwnPropertyNames(occupationsMap)
-    // occupationKeys.forEach((occupationKey) => {
-    //     var occupation = occupationsMap[occupationKey]
-    //     const data = decompress(occupation.compressedData)
-    //     delete occupation.compressedData
-    //     occupation.data = data
-    // })
-    return summaryRecord
-}
-
-const compressLatLngMap = (summaryRecord) => {
-    summaryRecord.compressedLatLngMap = compress(summaryRecord.latLngMap)
-    delete summaryRecord.latLngMap
-    // const latLngMap = summaryRecord.latLngMap
-    // const latLngMapKeys = Object.getOwnPropertyNames(latLngMap)
-    // latLngMapKeys.forEach((latLngMapKey) => {
-    //     var latLng = latLngMap[latLngMapKey]
-    //     const compressedData = compress(latLng)
-    //     delete latLngMap[latLngMapKey]
-    //     latLngMap[latLngMapKey] = compressedData
-    // })
-    return summaryRecord
-}
-
-const decompressLatLngMap = (summaryRecord) => {
-    summaryRecord.latLngMap = decompress(summaryRecord.compressedLatLngMap)
-    delete summaryRecord.compressedLatLngMap
-   // const latLngMap = summaryRecord.latLngMap
-    // const latLngMapKeys = Object.getOwnPropertyNames(latLngMap)
-    // latLngMapKeys.forEach((latLngMapKey) => {
-    //     const compressedData = latLngMap[latLngMapKey]
-    //     const latLng = decompress(compressedData)
-    //     delete latLngMap[latLngMapKey]
-    //     latLngMap[latLngMapKey] = latLng
-    // })
     return summaryRecord
 }
 
@@ -398,13 +305,6 @@ const createKey = (queryIn) => {
 
 const calculatePercentiles = (wageMap) => {
     logger.trace('running calculatePercentiles');
-    // var salaryArray = []
-    // wageArrayEntries.forEach((wageArrayEntry) => {
-    //     const arr =  Array(wageArrayEntry[TOTAL_WORKERS])
-    //             .fill(wageArrayEntry[ANNUALIZED_WAGE_RATE_OF_PAY])
-    //     salaryArray = salaryArray.concat(arr)
-    // })
-    // salaryArray.sort((a, b) => a - b)
     const salaryArray = buildWageArray(wageMap)
     const length = salaryArray.length
     if(0 == length)
