@@ -15,7 +15,8 @@ const { summarize, createKey, calculatePercentiles, countItems, buildWageArray,
         = require('../src/utilities/summarize')
 const { compress, decompress } = require('../src/utilities/compression')
 const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT,
-    WORKSITE_COUNTY, WORKSITE_STATE, TOTAL_WORKERS, TOTAL_LCAS, LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4,
+    WORKSITE_CITY, WORKSITE_COUNTY, WORKSITE_STATE, TOTAL_WORKERS, TOTAL_LCAS,
+    LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4,
     NEW_EMPLOYMENT, CONTINUED_EMPLOYMENT, CHANGE_PREVIOUS_EMPLOYMENT,
     NEW_CONCURRENT_EMPLOYMENT, CHANGE_EMPLOYER, AMENDED_PETITION,
     UNSPECIFIED, ANNUALIZED_WAGE_RATE_OF_PAY, h1bRecord } 
@@ -222,45 +223,10 @@ describe('Test compress/decompress', () => {
 
 const testSummary = (summary) => {
     logger.trace(chalk.bgRed(`summary: ${JSON.stringify(summary, undefined, 2)}`))
-    expect(123).to.equal(summary['YEAR'])
-    delete summary['YEAR']
-    expect("HIWAY DEPT").to.equal(summary['EMPLOYER_NAME'])
-    delete summary['EMPLOYER_NAME']
-    expect("Boise").to.equal(summary['WORKSITE_CITY'])
-    delete summary['WORKSITE_CITY']
-    expect("Orange").to.equal(summary['WORKSITE_COUNTY'])
-    delete summary['WORKSITE_COUNTY']
-    expect("Shock").to.equal(summary['WORKSITE_STATE'])
-    delete summary['WORKSITE_STATE']
-    expect(7).to.equal(Object.getOwnPropertyNames(summary.wageMap).length)
-
-    var wageArray = buildWageArray(summary.wageMap)
-    logger.trace("summary: " + JSON.stringify(summary, undefined, 2))
-    var count = countItems(wageArray, 150)
-    expect(2).to.equal(count)
-    logger.trace("count for 200: " + count)
-    count = countItems(wageArray, 200)
-    expect(11).to.equal(count)
-    count = countItems(wageArray, 300)
-    logger.trace("count for 300: " + count)
-    expect(17).to.equal(count)
-    count = countItems(wageArray, 600)
-    expect(5).to.equal(count)
-    count = countItems(wageArray, 500)
-    expect(3).to.equal(count)
-    count = countItems(wageArray, 400)
-    expect(7).to.equal(count)
-    count = countItems(wageArray, 10000)
-    expect(23).to.equal(count)
-
-    logger.trace("summary: " + JSON.stringify(summary.percentiles, undefined, 2))
-    expect(150).to.equal(summary.percentiles['0%'])
-    expect(200).to.equal(summary.percentiles['10%'])
-    expect(300).to.equal(summary.percentiles['25%'])
-    expect(400).to.equal(summary.percentiles['50%'])
-    expect(10000).to.equal(summary.percentiles['75%'])
-    expect(10000).to.equal(summary.percentiles['90%'])
-    expect(10000).to.equal(summary.percentiles['100%'])
+    summary = testHeaders(summary)
+    summary = testWageMap(summary)
+    summary = testPercentiles(summary)
+    summary = testCategories(summary)
 
     expect(13).to.equal(summary.wageLevels.workers[LEVEL_1])
     expect(2).to.equal(summary.wageLevels.lcas[LEVEL_1])
@@ -273,13 +239,6 @@ const testSummary = (summary) => {
     expect(23).to.equal(summary.wageLevels.workers[UNSPECIFIED])
     expect(1).to.equal(summary.wageLevels.lcas[UNSPECIFIED])
     
-    expect(12).to.equal(summary.categories[NEW_EMPLOYMENT])
-    expect(4003).to.equal(summary.categories[CONTINUED_EMPLOYMENT])
-    expect(8).to.equal(summary.categories[CHANGE_PREVIOUS_EMPLOYMENT])
-    expect(1).to.equal(summary.categories[NEW_CONCURRENT_EMPLOYMENT])
-    expect(14).to.equal(summary.categories[CHANGE_EMPLOYER])
-    expect(82).to.equal(summary.categories[AMENDED_PETITION])
-
     expect(9).to.equal(summary[TOTAL_LCAS])
     expect(68).to.equal(summary[TOTAL_WORKERS])
     delete summary.wageLevels.workers[LEVEL_1]
@@ -298,18 +257,8 @@ const testSummary = (summary) => {
     delete summary.wageLevels.lcas
     expect(_.isEmpty(summary.wageLevels)).to.be.true
     delete summary.wageLevels
-    delete summary.categories[NEW_EMPLOYMENT]
-    delete summary.categories[CONTINUED_EMPLOYMENT]
-    delete summary.categories[CHANGE_PREVIOUS_EMPLOYMENT]
-    delete summary.categories[NEW_CONCURRENT_EMPLOYMENT]
-    delete summary.categories[CHANGE_EMPLOYER]
-    delete summary.categories[AMENDED_PETITION]
-    expect(_.isEmpty(summary.categories)).to.be.true
-    delete summary.categories
     delete summary[TOTAL_LCAS]
     delete summary[TOTAL_WORKERS]
-    delete summary['wageMap']
-    delete summary['percentiles']
     const occupations = summary.occupations
     var occRecords = Object.getOwnPropertyNames(occupations)
     expect(3).to.equal(occRecords.length)
@@ -422,4 +371,81 @@ const testSummary = (summary) => {
 
     expect(_.isEmpty(summary)).to.be.true
     logger.trace("summary: " + JSON.stringify(summary, undefined, 2))
+}
+
+const testHeaders = (summary) => {
+    expect(123).to.equal(summary[YEAR])
+    delete summary[YEAR]
+    expect("HIWAY DEPT").to.equal(summary[EMPLOYER_NAME])
+    delete summary['EMPLOYER_NAME']
+    expect("Boise").to.equal(summary[WORKSITE_CITY])
+    delete summary['WORKSITE_CITY']
+    expect("Orange").to.equal(summary[WORKSITE_COUNTY])
+    delete summary['WORKSITE_COUNTY']
+    expect("Shock").to.equal(summary[WORKSITE_STATE])
+    delete summary['WORKSITE_STATE']
+    expect(7).to.equal(Object.getOwnPropertyNames(summary.wageMap).length)    
+    return summary
+}
+
+const testWageMap = (summary) => {
+    var wageArray = buildWageArray(summary.wageMap)
+    logger.trace("summary: " + JSON.stringify(summary, undefined, 2))
+    var count = countItems(wageArray, 150)
+    expect(2).to.equal(count)
+    logger.trace("count for 200: " + count)
+    count = countItems(wageArray, 200)
+    expect(11).to.equal(count)
+    count = countItems(wageArray, 300)
+    logger.trace("count for 300: " + count)
+    expect(17).to.equal(count)
+    count = countItems(wageArray, 600)
+    expect(5).to.equal(count)
+    count = countItems(wageArray, 500)
+    expect(3).to.equal(count)
+    count = countItems(wageArray, 400)
+    expect(7).to.equal(count)
+    count = countItems(wageArray, 10000)
+    expect(23).to.equal(count)
+    delete summary['wageMap']
+    return summary    
+}
+
+const testPercentiles = (summary) => {
+    logger.trace("summary: " + JSON.stringify(summary.percentiles, undefined, 2))
+    expect(150).to.equal(summary.percentiles['0%'])
+    expect(200).to.equal(summary.percentiles['10%'])
+    expect(300).to.equal(summary.percentiles['25%'])
+    expect(400).to.equal(summary.percentiles['50%'])
+    expect(10000).to.equal(summary.percentiles['75%'])
+    expect(10000).to.equal(summary.percentiles['90%'])
+    expect(10000).to.equal(summary.percentiles['100%'])
+    delete summary.percentiles['0%']
+    delete summary.percentiles['10%']
+    delete summary.percentiles['25%']
+    delete summary.percentiles['50%']
+    delete summary.percentiles['75%']
+    delete summary.percentiles['90%']
+    delete summary.percentiles['100%']
+    expect(_.isEmpty(summary.percentiles)).to.be.true
+    delete summary['percentiles']
+    return summary
+}
+
+const testCategories = (summary) => {
+    expect(12).to.equal(summary.categories[NEW_EMPLOYMENT])
+    expect(4003).to.equal(summary.categories[CONTINUED_EMPLOYMENT])
+    expect(8).to.equal(summary.categories[CHANGE_PREVIOUS_EMPLOYMENT])
+    expect(1).to.equal(summary.categories[NEW_CONCURRENT_EMPLOYMENT])
+    expect(14).to.equal(summary.categories[CHANGE_EMPLOYER])
+    expect(82).to.equal(summary.categories[AMENDED_PETITION])
+    delete summary.categories[NEW_EMPLOYMENT]
+    delete summary.categories[CONTINUED_EMPLOYMENT]
+    delete summary.categories[CHANGE_PREVIOUS_EMPLOYMENT]
+    delete summary.categories[NEW_CONCURRENT_EMPLOYMENT]
+    delete summary.categories[CHANGE_EMPLOYER]
+    delete summary.categories[AMENDED_PETITION]
+    expect(_.isEmpty(summary.categories)).to.be.true
+    delete summary.categories
+    return summary   
 }
