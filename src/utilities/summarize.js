@@ -361,6 +361,7 @@ const readSummarizedQueries = async() => {
 module.exports = { 
                    summarize,
                    summarizeAndCompress,
+                   compressSummaryRecord,
                    decompressSummaryRecord,
                    createKey,
                    calculatePercentiles,
