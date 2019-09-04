@@ -155,8 +155,8 @@ const performQuery = async (query) => {
         logger.warn(chalk.bgHex("#cc4400").white.bold(`Warn Time: ${diff} secs -- query: `)
                  + chalk.bgHex("#cc4400").white.bold(`${JSON.stringify(query)}`))  
     }else{
-        logger.info(chalk.bgHex("#ccffcc").blue.bold(`Good Time: ${diff} secs -- query: `)
-                 + chalk.bgHex("#ccffcc").blue.bold(`${JSON.stringify(query)}`))
+        logger.info(chalk.bgHex("#003300").white.bold(`Good Time: ${diff} secs -- query: `)
+                 + chalk.bgHex("#003300").white.bold(`${JSON.stringify(query)}`))
     }
     return h1bSummary
 }
