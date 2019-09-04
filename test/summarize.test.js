@@ -15,6 +15,7 @@ const { summarize, createKey, calculatePercentiles, countItems, buildWageArray,
         = require('../src/utilities/summarize')
 const { compress, decompress } = require('../src/utilities/compression')
 const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT,
+    WORKSITE_ADDR1, WORKSITE_ADDR2,
     WORKSITE_CITY, WORKSITE_COUNTY, WORKSITE_STATE, TOTAL_WORKERS, TOTAL_LCAS,
     WORKSITE_LATITUDE, WORKSITE_LONGITUDE,
     LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4,
@@ -84,11 +85,15 @@ describe('Test summarize', () => {
             ANNUALIZED_WAGE_RATE_OF_PAY: 400, SOC_CODE: "xyz",
             EMPLOYER_NAME: "GG", WORKSITE_LATITUDE: 6, WORKSITE_LONGITUDE: 4},
         {WAGE_LEVEL: LEVEL_1, TOTAL_WORKERS: 11, CHANGE_EMPLOYER: 14, AMENDED_PETITION: 77,
-            ANNUALIZED_WAGE_RATE_OF_PAY: 200, SOC_CODE: "abc"},
+            ANNUALIZED_WAGE_RATE_OF_PAY: 200, SOC_CODE: "abc",
+            EMPLOYER_NAME: "TT", WORKSITE_LATITUDE: 1, WORKSITE_LONGITUDE: 3},
         {WAGE_LEVEL: LEVEL_2, TOTAL_WORKERS: 17,  NEW_EMPLOYMENT: 7,
-            ANNUALIZED_WAGE_RATE_OF_PAY: 300, SOC_CODE: "123"},
+            ANNUALIZED_WAGE_RATE_OF_PAY: 300, SOC_CODE: "123",
+            EMPLOYER_NAME: "TT", WORKSITE_LATITUDE: 1, WORKSITE_LONGITUDE: 3},
         {TOTAL_WORKERS: 23, AMENDED_PETITION: 5,
-            ANNUALIZED_WAGE_RATE_OF_PAY: 10000, SOC_CODE: "123"},
+            ANNUALIZED_WAGE_RATE_OF_PAY: 10000, SOC_CODE: "123",
+            EMPLOYER_NAME: "TT", WORKSITE_ADDR1: "addr1", WORKSITE_ADDR2: "addr2", 
+            WORKSITE_LATITUDE: 1, WORKSITE_LONGITUDE: 3},
         {},
         {CASE_NUMBER: "12345"}
     ]
@@ -464,7 +469,72 @@ const testLatLngs = (summary) => {
     const latLngMap = summary['latLngMap']
     var latLngRecords = Object.getOwnPropertyNames(latLngMap)
     logger.trace(chalk.bgRed(`latLngRecords: ${JSON.stringify(latLngRecords, undefined, 2)}`))
-    expect(2).to.equal(latLngRecords.length)
+    expect(3).to.equal(latLngRecords.length)
+    latLngRecords = latLngRecords.sort()
+
+    expect("1_3").to.equal(latLngRecords[0])
+    var latLngRecord = latLngMap[latLngRecords[0]]
+    expect(latLngRecord.lat).to.equal(1)
+    expect(latLngRecord.lng).to.equal(3)
+    delete latLngRecord.lat
+    delete latLngRecord.lng
+    var employerInstances = latLngRecord.instances
+    delete latLngRecord.instances
+    expect(_.isEmpty(latLngRecord)).to.be.true
+    logger.trace(chalk.bgRed(`employerInstances: ${JSON.stringify(employerInstances, undefined, 2)}`))
+    var instances = Object.getOwnPropertyNames(employerInstances)
+    expect(2).to.equal(instances.length)
+    expect("TT").to.equal(instances[0])
+    var instanceArray = employerInstances[instances[0]].instanceArray
+    var employerName = employerInstances[instances[0]][EMPLOYER_NAME]
+    expect("TT").to.equal(employerName)
+    delete employerInstances[instances[0]].instanceArray
+    delete employerInstances[instances[0]][EMPLOYER_NAME]
+    expect(_.isEmpty(employerInstances[instances[0]])).to.be.true
+    expect(2).to.equal(instanceArray.length)
+    var instance = instanceArray[0]
+    expect(!_.isEmpty(instance)).to.be.true
+    expect("abc").to.equal(instance['SOC_CODE'])
+    expect(11).to.equal(instance['TOTAL_WORKERS'])
+    expect(200).to.equal(instance['ANNUALIZED_WAGE_RATE_OF_PAY'])
+    instanceArray.shift()
+    var instance = instanceArray[0]
+    expect(!_.isEmpty(instance)).to.be.true
+    expect("123").to.equal(instance['SOC_CODE'])
+    expect(17).to.equal(instance['TOTAL_WORKERS'])
+    expect(300).to.equal(instance['ANNUALIZED_WAGE_RATE_OF_PAY'])
+    instanceArray.shift()
+    expect(0).to.equal(instanceArray.length)
+    delete instanceArray
+    instances.shift()
+    expect(1).to.equal(instances.length)
+    expect("TTaddr1addr2").to.equal(instances[0])
+    var instanceArray = employerInstances[instances[0]].instanceArray
+    var employerName = employerInstances[instances[0]][EMPLOYER_NAME]
+    var addr1 = employerInstances[instances[0]][WORKSITE_ADDR1]
+    var addr2 = employerInstances[instances[0]][WORKSITE_ADDR2]
+    expect("TT").to.equal(employerName)
+    expect("addr1").to.equal(addr1)
+    expect("addr2").to.equal(addr2)
+    delete employerInstances[instances[0]].instanceArray
+    delete employerInstances[instances[0]][EMPLOYER_NAME]
+    delete employerInstances[instances[0]][WORKSITE_ADDR1]
+    delete employerInstances[instances[0]][WORKSITE_ADDR2]
+    expect(_.isEmpty(employerInstances[instances[0]])).to.be.true
+    expect(1).to.equal(instanceArray.length)
+    instance = instanceArray[0]
+    expect(!_.isEmpty(instance)).to.be.true
+    expect("123").to.equal(instance['SOC_CODE'])
+    expect(23).to.equal(instance['TOTAL_WORKERS'])
+    expect(10000).to.equal(instance['ANNUALIZED_WAGE_RATE_OF_PAY'])
+    delete instance['SOC_CODE']
+    delete instance['TOTAL_WORKERS']
+    delete instance['ANNUALIZED_WAGE_RATE_OF_PAY']
+    expect(_.isEmpty(instance)).to.be.true
+    instanceArray.pop()
+    expect(0).to.equal(instanceArray.length)
+    delete instanceArray
+    latLngRecords.shift()
 
     expect("5_8").to.equal(latLngRecords[0])
     var latLngRecord = latLngMap[latLngRecords[0]]
@@ -475,13 +545,18 @@ const testLatLngs = (summary) => {
     var employerInstances = latLngRecord.instances
     delete latLngRecord.instances
     expect(_.isEmpty(latLngRecord)).to.be.true
-    logger.info(chalk.bgRed(`employerInstances: ${JSON.stringify(employerInstances, undefined, 2)}`))
+    logger.trace(chalk.bgRed(`employerInstances: ${JSON.stringify(employerInstances, undefined, 2)}`))
     var instances = Object.getOwnPropertyNames(employerInstances)
     expect(1).to.equal(instances.length)
     expect("AA").to.equal(instances[0])
     var instanceArray = employerInstances[instances[0]].instanceArray
+    employerName = employerInstances[instances[0]][EMPLOYER_NAME]
+    expect("AA").to.equal(employerName)
+    delete employerInstances[instances[0]].instanceArray
+    delete employerInstances[instances[0]][EMPLOYER_NAME]
+    expect(_.isEmpty(employerInstances[instances[0]])).to.be.true
     expect(1).to.equal(instanceArray.length)
-    var instance = instanceArray[0]
+    instance = instanceArray[0]
     expect(!_.isEmpty(instance)).to.be.true
     expect("123").to.equal(instance['SOC_CODE'])
     expect(2).to.equal(instance['TOTAL_WORKERS'])
@@ -504,11 +579,16 @@ const testLatLngs = (summary) => {
     employerInstances = latLngRecord.instances
     delete latLngRecord.instances
     expect(_.isEmpty(latLngRecord)).to.be.true
-    logger.info(chalk.bgRed(`instances: ${JSON.stringify(employerInstances, undefined, 2)}`))
+    logger.trace(chalk.bgRed(`instances: ${JSON.stringify(employerInstances, undefined, 2)}`))
     instances = Object.getOwnPropertyNames(employerInstances)
     expect(1).to.equal(instances.length)
     expect("GG").to.equal(instances[0])
     instanceArray = employerInstances[instances[0]].instanceArray
+    employerName = employerInstances[instances[0]][EMPLOYER_NAME]
+    expect("GG").to.equal(employerName)
+    delete employerInstances[instances[0]].instanceArray
+    delete employerInstances[instances[0]][EMPLOYER_NAME]
+    expect(_.isEmpty(employerInstances[instances[0]])).to.be.true
     expect(2).to.equal(instanceArray.length)
     instance = instanceArray[0]
     expect(!_.isEmpty(instance)).to.be.true
@@ -519,7 +599,8 @@ const testLatLngs = (summary) => {
     delete instance['TOTAL_WORKERS']
     delete instance['ANNUALIZED_WAGE_RATE_OF_PAY']
     expect(_.isEmpty(instance)).to.be.true
-    instance = instanceArray[1]
+    instanceArray.shift()
+    instance = instanceArray[0]
     expect(!_.isEmpty(instance)).to.be.true
     expect("xyz").to.equal(instance['SOC_CODE'])
     expect(7).to.equal(instance['TOTAL_WORKERS'])
@@ -535,8 +616,7 @@ const testLatLngs = (summary) => {
     latLngRecords.shift()
     expect(_.isEmpty(latLngRecords)).to.be.true
 
-
-    logger.info(chalk.bgRed(`latLngRecord: ${JSON.stringify(latLngRecord, undefined, 2)}`))
+    logger.trace(chalk.bgRed(`latLngRecord: ${JSON.stringify(latLngRecord, undefined, 2)}`))
     delete summary['latLngMap']
     logger.trace(`${JSON.stringify(summary)}`)
 }
