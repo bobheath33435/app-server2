@@ -16,6 +16,7 @@ const { summarize, createKey, calculatePercentiles, countItems, buildWageArray,
 const { compress, decompress } = require('../src/utilities/compression')
 const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT,
     WORKSITE_CITY, WORKSITE_COUNTY, WORKSITE_STATE, TOTAL_WORKERS, TOTAL_LCAS,
+    WORKSITE_LATITUDE, WORKSITE_LONGITUDE,
     LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4,
     NEW_EMPLOYMENT, CONTINUED_EMPLOYMENT, CHANGE_PREVIOUS_EMPLOYMENT,
     NEW_CONCURRENT_EMPLOYMENT, CHANGE_EMPLOYER, AMENDED_PETITION,
@@ -71,9 +72,11 @@ describe('Test summarize', () => {
     }
     var h1bRecords = [
         {WAGE_LEVEL: LEVEL_1, TOTAL_WORKERS: 2, NEW_EMPLOYMENT: 5, CHANGE_PREVIOUS_EMPLOYMENT: 1,
-            ANNUALIZED_WAGE_RATE_OF_PAY: 150, SOC_CODE: "123"},
+            ANNUALIZED_WAGE_RATE_OF_PAY: 150, SOC_CODE: "123",
+            EMPLOYER_NAME: "AA", WORKSITE_LATITUDE: 5, WORKSITE_LONGITUDE: 8},
         {WAGE_LEVEL: LEVEL_2, TOTAL_WORKERS: 3, CONTINUED_EMPLOYMENT: 3,
-            ANNUALIZED_WAGE_RATE_OF_PAY: 500, SOC_CODE: "abc"},
+            ANNUALIZED_WAGE_RATE_OF_PAY: 500, SOC_CODE: "abc",
+            WORKSITE_LATITUDE: 5, WORKSITE_LATITUDE: 8},
         {WAGE_LEVEL: LEVEL_3, TOTAL_WORKERS: 5, CHANGE_PREVIOUS_EMPLOYMENT: 7,
             ANNUALIZED_WAGE_RATE_OF_PAY: 600, SOC_CODE: "xyz"},
         {WAGE_LEVEL: LEVEL_4, TOTAL_WORKERS: 7, NEW_CONCURRENT_EMPLOYMENT: 1, CONTINUED_EMPLOYMENT: 4000,
@@ -229,13 +232,10 @@ const testSummary = (summary) => {
     summary = testCategories(summary)
     summary = testWageLevels(summary)
     summary = testOccupations(summary)
+    summary = testLatLngs(summary)
 
-    // Don't validate latLngMap here
-    delete summary['latLngMap']
-    logger.trace(`${JSON.stringify(summary)}`)
-
-    expect(_.isEmpty(summary)).to.be.true
     logger.trace("summary: " + JSON.stringify(summary, undefined, 2))
+    expect(_.isEmpty(summary)).to.be.true
 }
 
 const testHeaders = (summary) => {
@@ -456,5 +456,37 @@ const testOccupations = (summary) => {
     return summary
 }
 
+const testLatLngs = (summary) => {
+    // Don't validate latLngMap here
+    expect(!_.isEmpty(summary['latLngMap'])).to.be.true
+    const latLngMap = summary['latLngMap']
+    var latLngRecords = Object.getOwnPropertyNames(latLngMap)
+    logger.trace(chalk.bgRed(`latLngRecords: ${JSON.stringify(latLngRecords, undefined, 2)}`))
+    expect(1).to.equal(latLngRecords.length)
+
+    expect("5_8").to.equal(latLngRecords[0])
+    const latLngRecord = latLngMap[latLngRecords[0]]
+    expect(latLngRecord.lat).to.equal(5)
+    expect(latLngRecord.lng).to.equal(8)
+    const employerInstances = latLngRecord.instances
+    logger.info(chalk.bgRed(`instances: ${JSON.stringify(employerInstances, undefined, 2)}`))
+    const instances = Object.getOwnPropertyNames(employerInstances)
+    expect(1).to.equal(instances.length)
+    expect("AA").to.equal(instances[0])
+    const instanceArray = employerInstances[instances[0]].instanceArray
+    expect(1).to.equal(instanceArray.length)
+    const instance = instanceArray[0]
+    expect(!_.isEmpty(instance)).to.be.true
+    expect("123").to.equal(instance['SOC_CODE'])
+    expect(2).to.equal(instance['TOTAL_WORKERS'])
+    expect(150).to.equal(instance['ANNUALIZED_WAGE_RATE_OF_PAY'])
+    delete instance['SOC_CODE']
+    delete instance['TOTAL_WORKERS']
+    delete instance['ANNUALIZED_WAGE_RATE_OF_PAY']
+    expect(_.isEmpty(instance)).to.be.true
 
 
+    logger.info(chalk.bgRed(`latLngRecord: ${JSON.stringify(latLngRecord, undefined, 2)}`))
+    delete summary['latLngMap']
+    logger.trace(`${JSON.stringify(summary)}`)
+}

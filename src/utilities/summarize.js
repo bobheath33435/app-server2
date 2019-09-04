@@ -189,44 +189,51 @@ const updateWageMap = (wageMap, h1bRecord) => {
 const summarizeMinor = (h1bRecords, summaryRecord) => {
     logger.trace('running summarize minor');
     var latLngMap = {}
-    var currentH1bRecord = {}
+    // var currentH1bRecord = {}
     try{
         h1bRecords.forEach((h1bRecord, index) => {
-            currentH1bRecord = h1bRecord
-            var key = h1bRecord[WORKSITE_LATITUDE] + '_' + h1bRecord[WORKSITE_LONGITUDE]
-            key = key.replace(/[\s\.,]+/g, '')
-            const latLngMap = summaryRecord.latLngMap
-            var latLngItem = latLngMap[key]
-            if(undefined == latLngItem){
-                latLngItem = { "latitude": h1bRecord[WORKSITE_LATITUDE],
-                               "longitude": h1bRecord[WORKSITE_LONGITUDE], 
-                               "h1bInstances" : {} }
-                latLngMap[key] = latLngItem
+            logger.trace(chalk.bgRed(`h1bRecord: ${JSON.stringify(h1bRecord, undefined, 2)}`))
+            // currentH1bRecord = h1bRecord
+            if(_.isNumber(h1bRecord[WORKSITE_LATITUDE]) && 
+                         _.isNumber(h1bRecord[WORKSITE_LONGITUDE]) &&
+                         !_.isEmpty(h1bRecord[EMPLOYER_NAME])){
+                var key = h1bRecord[WORKSITE_LATITUDE] + '_' + h1bRecord[WORKSITE_LONGITUDE]
+                key = key.replace(/[\s\.,]+/g, '')
+                const latLngMap = summaryRecord.latLngMap
+                var latLngItem = latLngMap[key]
+                if(undefined == latLngItem){
+                    latLngItem = { "lat": h1bRecord[WORKSITE_LATITUDE],
+                                    "lng": h1bRecord[WORKSITE_LONGITUDE], 
+                                    "instances" : {} }
+                    latLngMap[key] = latLngItem
+                }
+                var h1bInstKey = h1bRecord[EMPLOYER_NAME]
+                const addr1 = h1bRecord[WORKSITE_ADDR1]
+                h1bInstKey += (undefined == addr1) ? "" : addr1
+                const addr2 = h1bRecord[WORKSITE_ADDR2]
+                h1bInstKey += (undefined == addr2) ? "" : addr2
+                h1bInstKey = h1bInstKey.replace(/[\s\.,]+/g, '')
+                var h1bInstance = latLngItem.instances[h1bInstKey]
+                if(undefined == h1bInstance){
+                    h1bInstance = _.pick(h1bRecord,
+                        EMPLOYER_NAME,
+                        WORKSITE_ADDR1, 
+                        WORKSITE_ADDR2, 
+                        WORKSITE_CITY,
+                        WORKSITE_COUNTY,
+                        WORKSITE_STATE) 
+                    h1bInstance.instanceArray = []
+                    latLngItem.instances[h1bInstKey] = h1bInstance
+                }
+        
+                var workerData = _.pick(h1bRecord,
+                                        CASE_NUMBER,
+                                        SOC_CODE,
+                                        TOTAL_WORKERS,
+                                        H1B_DEPENDENT,
+                                        ANNUALIZED_WAGE_RATE_OF_PAY)
+                h1bInstance.instanceArray.push(workerData)                 
             }
-            var h1bInstKey = h1bRecord[EMPLOYER_NAME] + h1bRecord[WORKSITE_ADDR1]
-            const addr2 = h1bRecord[WORKSITE_ADDR2]
-            h1bInstKey += (undefined == addr2) ? "" : addr2
-            h1bInstKey = h1bInstKey.replace(/[\s\.,]+/g, '')
-            var h1bInstance = latLngItem.h1bInstances[h1bInstKey]
-            if(undefined == h1bInstance){
-                h1bInstance = _.pick(h1bRecord,
-                    EMPLOYER_NAME,
-                    WORKSITE_ADDR1, 
-                    WORKSITE_ADDR2, 
-                    WORKSITE_CITY,
-                    WORKSITE_COUNTY,
-                    WORKSITE_STATE) 
-                h1bInstance.instanceArray = []
-                latLngItem.h1bInstances[h1bInstKey] = h1bInstance
-            }
-    
-            var workerData = _.pick(h1bRecord,
-                                    CASE_NUMBER,
-                                    SOC_CODE,
-                                    TOTAL_WORKERS,
-                                    H1B_DEPENDENT,
-                                    ANNUALIZED_WAGE_RATE_OF_PAY)
-            h1bInstance.instanceArray.push(workerData)      
         })    
     }catch(e){
         logger.error(chalk.bgRed("Error building latitude longitude map: " + e))
