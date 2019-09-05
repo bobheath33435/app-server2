@@ -671,7 +671,6 @@ const vermontCities = [
     "Rutland", "St Albans", "St. Albans", "Saint Albans", "St Johnsbury", "St. Johnsbury", "Saint Johnsbury", 
     "Springfield", "Winooski"
 ]
-
 const virginIslandsCities = [
     "Charlotte Amalie", "Christiansted", "Cruz Bay", "Frederiksted", "Southwest Cape"
 ]
@@ -1059,7 +1058,7 @@ const states = [
      counties: wyomingCounties,
      cities: wyomingCities,
      congressionalDistricts: 1
-    }, 
+    },
 ]
 
 const years = [2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010]
@@ -1097,7 +1096,7 @@ log4js.configure({
     categories: { default: { appenders: ['h1bData'], level: 'info' } }
 });
 const modelMap = require('./models/dbRecords')
-const { summarizeAndCompress, createKey } = require('./utilities/summarize')
+const { summarizeAndCompress, createKey, decompressSummaryRecord } = require('./utilities/summarize')
 
 const logger = log4js.getLogger('h1bData');
 
@@ -1107,12 +1106,13 @@ const processState = ( async(year, stateRecord) => {
     const congDistCount = stateRecord.congressionalDistricts
     const counties = stateRecord.counties
     const cities = stateRecord.cities
+    var h1bObject = {}
     try{
         logger.info(chalk.bgHex("#0aee0a").black("Process State Year: " + year + " - State: " + worksiteState + " - Type: " + summarizeType))
         const query = {}
         query[YEAR] = year
         query[WORKSITE_STATE] = worksiteState
-        await queryAndSave(query, summarizeType)
+        h1bObject = await queryAndSave(query, summarizeType)
         logger.trace(chalk.bgBlue('End of block'))
         await processCongDistricts(year, worksiteState, congDistCount)
         if(!_.isEmpty(counties)){
@@ -1125,13 +1125,13 @@ const processState = ( async(year, stateRecord) => {
         logger.error(chalk.bgRed(`Process State, ${worksiteState}, failed: ` + e))
         throw(e)
     }
-    return Promise.resolve
+    return Promise.resolve(h1bObject)
 })
 
 const queryDB = async (query) => {
     const h1bModel = modelMap[query.YEAR]
     logger.trace(chalk.bgBlue('query: ' + JSON.stringify(query)))
-    key = createKey(query)
+    const key = createKey(query)
     logger.trace(chalk.bgBlue("Key: " + key + ' -- query: ' + JSON.stringify(query)))
 
     logger.trace(chalk.bgBlue('Read data started. query: ' + JSON.stringify(query)))
@@ -1140,7 +1140,7 @@ const queryDB = async (query) => {
     return Promise.resolve(h1bRecords) 
 }
 
-const saveSummary = async(h1bObject) => {
+const saveSummary = async(key, h1bObject) => {
     logger.trace(chalk.bgBlue('Data summarized'))
     logger.trace(JSON.stringify(h1bObject, undefined, 2))
     var summaryRecord = {
@@ -1159,7 +1159,8 @@ const queryAndSave = async (query, summarizeType) => {
     const h1bRecords = await queryDB(query)
     // const h1bObject = ("BRIEF" == summarizeType) ? summarizeMajor(h1bRecords, query) : summarize(h1bRecords, query)
     h1bObject = summarizeAndCompress(h1bRecords, query)
-    await saveSummary(h1bObject)
+    await saveSummary(createKey(query), h1bObject)
+    return Promise.resolve(h1bObject)
 }
 
 const processCounty = ( async(year, state, county) => {
@@ -1183,7 +1184,6 @@ const processCounty = ( async(year, state, county) => {
 const processCity = ( async(year, state, city) => {
     try{
         city = city.toUpperCase()
-        logger.info(chalk.bgHex("#0a9999").white.bold("Process City Year: " + year + " - State: " + state + " - City: " + city))
         const query = {}
         query[YEAR] = year
         query[WORKSITE_STATE] = state
@@ -1219,16 +1219,24 @@ const processCongDistrict = ( async(year, state, index) => {
 
 const processStates = async (year) => {
     try{
+        var yearH1bObject = initYearObject(year)
         await asyncForEach(states, async(stateRecord) => {
            try{
-                await processState(year, stateRecord)
+                var stateH1bObject = {}
+                stateH1bObject = await processState(year, stateRecord)
+                mergeStateObjects(yearH1bObject, stateH1bObject)
             }catch(e){
                 logger.error(chalk.bgRed(`Processing ${stateRecord.id} failed: ` + e))
                 logger.error(chalk.bgRed('Continuning to other states.'))
             }
         })
+
+        const query = {"YEAR": year}
+        await saveSummary(createKey(query), yearH1bObject)
+        logger.info(chalk.bgHex("#5511aa").white.bold("Save Year Record: " + year))
+        const x = 1
     }catch(e){
-        logger.error(chalk.bgRed('Process States FAILED.'))
+        logger.error(chalk.bgRed('Process States FAILED. ' + e))
         // return Promise.reject(e)
     }
     logger.trace(chalk.bgBlue('End of method'))
@@ -1288,6 +1296,7 @@ const processCongDistricts = async (year, state, congDistCount) => {
     logger.trace(chalk.bgBlue('End of method'))
     return Promise.resolve
 }
+
 const processYears = (async () => {
     const beginTime = moment()
     logger.info(chalk.bgRed.white.bold(`Initialize: ${beginTime.format('MMMM Do YYYY, h:mm:ss A')}`));
@@ -1313,8 +1322,103 @@ const processYears = (async () => {
     return Promise.resolve
 })
 
-const bldSummaries = async () => {
+const initYearObject = (year) => {
 
+    yearObject = {}
+    yearObject[YEAR] = year
+    yearObject[TOTAL_LCAS] = 0
+    yearObject[TOTAL_WORKERS] = 0
+    yearObject.categories = {}
+    yearObject.categories[NEW_EMPLOYMENT] = 0
+    yearObject.categories[CONTINUED_EMPLOYMENT] = 0
+    yearObject.categories[CHANGE_PREVIOUS_EMPLOYMENT] = 0
+    yearObject.categories[NEW_CONCURRENT_EMPLOYMENT] = 0
+    yearObject.categories[CHANGE_EMPLOYER] = 0
+    yearObject.categories[AMENDED_PETITION] = 0
+    yearObject.wageLevels = {}
+    yearObject.wageLevels.lcas = {}
+    yearObject.wageLevels.lcas[LEVEL_1] = 0
+    yearObject.wageLevels.lcas[LEVEL_2] = 0
+    yearObject.wageLevels.lcas[LEVEL_3] = 0
+    yearObject.wageLevels.lcas[LEVEL_4] = 0
+    yearObject.wageLevels.lcas[UNSPECIFIED] = 0
+    yearObject.wageLevels.workers = {}
+    yearObject.wageLevels.workers[LEVEL_1] = 0
+    yearObject.wageLevels.workers[LEVEL_2] = 0
+    yearObject.wageLevels.workers[LEVEL_3] = 0
+    yearObject.wageLevels.workers[LEVEL_4] = 0
+    yearObject.wageLevels.workers[UNSPECIFIED] = 0
+    yearObject.occupations = {}
+
+    return yearObject
+}
+
+const mergeStateObjects = (yearH1bObject, stateH1bObject) => {
+    if(_.isEmpty(stateH1bObject)){
+        throw(`Empty H1B object for year ${year}`)
+    }else{
+        if(!_.isEmpty(stateH1bObject.status)){
+            stateH1bObject = decompressSummaryRecord(stateH1bObject)
+        }
+        yearH1bObject.TOTAL_LCAS += stateH1bObject.TOTAL_LCAS
+        yearH1bObject.TOTAL_WORKERS += stateH1bObject.TOTAL_WORKERS
+
+        yearH1bObject.categories[NEW_EMPLOYMENT] += stateH1bObject.categories[NEW_EMPLOYMENT]
+        yearH1bObject.categories[CONTINUED_EMPLOYMENT] += stateH1bObject.categories[CONTINUED_EMPLOYMENT]
+        yearH1bObject.categories[CHANGE_PREVIOUS_EMPLOYMENT] += stateH1bObject.categories[CHANGE_PREVIOUS_EMPLOYMENT]
+        yearH1bObject.categories[NEW_CONCURRENT_EMPLOYMENT] += stateH1bObject.categories[NEW_CONCURRENT_EMPLOYMENT]
+        yearH1bObject.categories[CHANGE_EMPLOYER] += stateH1bObject.categories[CHANGE_EMPLOYER]
+        yearH1bObject.categories[AMENDED_PETITION] += stateH1bObject.categories[AMENDED_PETITION]
+    
+        yearH1bObject.wageLevels.lcas[LEVEL_1] += stateH1bObject.wageLevels.lcas[LEVEL_1]
+        yearH1bObject.wageLevels.lcas[LEVEL_2] += stateH1bObject.wageLevels.lcas[LEVEL_2]
+        yearH1bObject.wageLevels.lcas[LEVEL_3] += stateH1bObject.wageLevels.lcas[LEVEL_3]
+        yearH1bObject.wageLevels.lcas[LEVEL_4] += stateH1bObject.wageLevels.lcas[LEVEL_4]
+        yearH1bObject.wageLevels.lcas[UNSPECIFIED] += stateH1bObject.wageLevels.lcas[UNSPECIFIED]
+    
+        yearH1bObject.wageLevels.workers[LEVEL_1] += stateH1bObject.wageLevels.workers[LEVEL_1]
+        yearH1bObject.wageLevels.workers[LEVEL_2] += stateH1bObject.wageLevels.workers[LEVEL_2]
+        yearH1bObject.wageLevels.workers[LEVEL_3] += stateH1bObject.wageLevels.workers[LEVEL_3]
+        yearH1bObject.wageLevels.workers[LEVEL_4] += stateH1bObject.wageLevels.workers[LEVEL_4]
+        yearH1bObject.wageLevels.workers[UNSPECIFIED] += stateH1bObject.wageLevels.workers[UNSPECIFIED]
+
+        // var query = _.clone(queryIn, true)
+        const stateOccupations = stateH1bObject.occupations
+        var mergeOccupations = yearH1bObject.occupations
+        const stateOccArray = Object.getOwnPropertyNames(stateOccupations)
+        stateOccArray.forEach((stateOccCode) => {
+            const stateOccupation = stateOccupations[stateOccCode]
+            var stateWageMap = stateOccupation.data.wageMap
+            if(_.isEmpty(mergeOccupations[stateOccCode])){
+                mergeOccupations[stateOccCode] = 
+                    { 
+                        "data": _.pick(stateOccupation.data, "SOC_CODE", "wageMap")
+                        // "data": {"SOC_CODE": stateOccCode, wageMap}
+                    }
+                    // mergeOccupations[stateOccCode] = _.clone(stateOccupation)
+            }else{
+                const stateWageMapArray = Object.getOwnPropertyNames(stateWageMap)
+                mergeWageMap = mergeOccupations[stateOccCode].data.wageMap
+                stateWageMapArray.forEach((stateWageKey) => {
+                    if(_.isEmpty(mergeWageMap[stateWageKey])){
+                        const x = stateWageMap[stateWageKey]
+                        mergeWageMap[stateWageKey] = stateWageMap[stateWageKey]
+                    }else{
+                        const x = stateWageMap[stateWageKey]
+                        mergeWageMap[stateWageKey] += stateWageMap[stateWageKey]
+                    }
+                })
+                mergeOccupations[stateOccCode].data.wageMap = mergeWageMap
+            }
+        })
+
+        yearH1bObject.occupations = mergeOccupations 
+    }
+
+    return yearH1bObject
+}
+
+const bldSummaries = async () => {
     logger.info('Build summaries');
     // start()
     await processYears()
