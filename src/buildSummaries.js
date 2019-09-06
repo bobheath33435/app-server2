@@ -742,130 +742,108 @@ const wyomingCities = [
 ]
 const states = [
     {id: "AK",
-     summarizeType: "FULL",
      counties: alaskaCounties,
      cities: alaskaCities,
      congressionalDistricts: 1
     }, 
     {id: "AL",
-     summarizeType: "FULL",
      counties: alabamaCounties,
      cities: alabamaCities,
      congressionalDistricts: 7
     }, 
     {id: "AR",
-     summarizeType: "FULL",
      counties: arkansasCounties,
      cities: arkansasCities,
      congressionalDistricts: 4
     }, 
     {id: "AZ",
-     summarizeType: "FULL",
      counties: arizonaCounties,
      cities: arizonaCities,
      congressionalDistricts: 9
     }, 
     {id: "CA",
-     summarizeType: "FULL",
      counties: californiaCounties,
      cities: californiaCities,
      congressionalDistricts: 53
     }, 
     {id: "CO",
-     summarizeType: "FULL",
      counties: coloradoCounties,
      cities: coloradoCities,
      congressionalDistricts: 7
     }, 
     {id: "CT",
-     summarizeType: "FULL",
      counties: connecticutCounties,
      cities: connecticutCities,
      congressionalDistricts: 5
     }, 
     {id: "DC",
-     summarizeType: "FULL",
      cities: dcCities,
      congressionalDistricts: 1
     }, 
     {id: "DE",
-     summarizeType: "FULL",
      counties: delawareCounties,
      cities: delawareCities,
      congressionalDistricts: 1
     }, 
     {id: "FL",
-     summarizeType: "FULL",
      counties: floridaCounties,
      cities: floridaCities,
      congressionalDistricts: 27
     }, 
     {id: "GA",
-     summarizeType: "FULL",
      counties: georgiaCounties,
      cities: georgiaCities,
      congressionalDistricts: 14
     }, 
     {id: "GU",
-     summarizeType: "FULL",
      cities: guamCities
     }, 
     {id: "HI",
-     summarizeType: "FULL",
      counties: hawaiiCounties,
      cities: hawaiiCities,
      congressionalDistricts: 2
     }, 
     {id: "ID",
-     summarizeType: "FULL",
      counties: idahoCounties,
      cities: idahoCities,
      congressionalDistricts: 2
     }, 
     {id: "IL",
-     summarizeType: "FULL",
      counties: illinoisCounties,
      cities: illinoisCities,
      congressionalDistricts: 18
     }, 
     {id: "IN",
-     summarizeType: "FULL",
      counties: indianaCounties,
      cities: indianaCities,
      congressionalDistricts: 9
     }, 
     {id: "IO",
-     summarizeType: "FULL",
      counties: iowaCounties,
      cities: iowaCities,
      congressionalDistricts: 4
     }, 
     {id: "KS",
-     summarizeType: "FULL",
      counties: kansasCounties,
      cities: kansasCities,
      congressionalDistricts: 4
     }, 
     {id: "KY",
-     summarizeType: "FULL",
      counties: kentuckyCounties,
      cities: kentuckyCities,
      congressionalDistricts: 6
     }, 
     {id: "LA",
-     summarizeType: "FULL",
      counties: louisianaCounties,
      cities: louisianaCities,
      congressionalDistricts: 6
     }, 
     {id: "MA",
-     summarizeType: "FULL",
      counties: massachusettsCounties,
      cities: massachusettsCities,
      congressionalDistricts: 9
     }, 
     {id: "MD",
-     summarizeType: "FULL",
      counties: marylandCounties,
      cities: marylandCities,
      congressionalDistricts: 8
@@ -873,65 +851,54 @@ const states = [
     {id: "ME",
      counties: maineCounties,
      cities: maineCities,
-     summarizeType: "FULL",
      congressionalDistricts: 2
     }, 
     {id: "MI",
-     summarizeType: "FULL",
      counties: michiganCounties,
      cities: michiganCities,
      congressionalDistricts: 14
     }, 
     {id: "MN",
-     summarizeType: "FULL",
      counties: minnesotaCounties,
      cities: minnesotaCities,
      congressionalDistricts: 8
     }, 
     {id: "MO",
-     summarizeType: "FULL",
      counties: missouriCounties,
      cities: missouriCities,
      congressionalDistricts: 8
     }, 
     {id: "MS",
-     summarizeType: "FULL",
      counties: mississippiCounties,
      cities: mississippiCities,
      congressionalDistricts: 4
     }, 
     {id: "MT",
-     summarizeType: "FULL",
      counties: montanaCounties,
      cities: montanaCities,
      congressionalDistricts: 1
     }, 
     {id: "NC",
-     summarizeType: "FULL",
      counties: northCarolinaCounties,
      cities: northCarolinaCities,
      congressionalDistricts: 13
     }, 
     {id: "ND",
-     summarizeType: "FULL",
      counties: northDakotaCounties,
      cities: northDakotaCities,
      congressionalDistricts: 1
     }, 
     {id: "NE",
-     summarizeType: "FULL",
      counties: nebraskaCounties,
      cities: nebraskaCities,
      congressionalDistricts: 3
     }, 
     {id: "NH",
-     summarizeType: "FULL",
      counties: newHampshireCounties,
      cities: newHampshireCities,
      congressionalDistricts: 2
     }, 
     {id: "NJ",
-     summarizeType: "FULL",
      counties: newJerseyCounties,
      cities: newJerseyCities,
      congressionalDistricts: 12
@@ -939,122 +906,101 @@ const states = [
     {id: "NM",
      counties: newMexicoCounties,
      cities: newMexicoCities,
-     summarizeType: "FULL",
      congressionalDistricts: 3
     }, 
     {id: "NV",
-     summarizeType: "FULL",
      counties: nevadaCounties,
      cities: nevadaCities,
      congressionalDistricts: 4
     }, 
     {id: "NY",
-     summarizeType: "FULL",
      counties: newYorkCounties,
      cities: newYorkCities,
      congressionalDistricts: 27
     }, 
     {id: "OH",
-     summarizeType: "FULL",
      counties: ohioCounties,
      cities: ohioCities,
      congressionalDistricts: 16
     }, 
     {id: "OK",
-     summarizeType: "FULL",
      counties: oklahomaCounties,
      cities: oklahomaCities,
      congressionalDistricts: 5
     }, 
     {id: "OR",
-     summarizeType: "FULL",
      counties: oregonCounties,
      cities: oregonCities,
      congressionalDistricts: 5
     }, 
     {id: "PA",
-     summarizeType: "FULL",
      counties: pennsylvaniaCounties,
      cities: pennsylvaniaCities,
      congressionalDistricts: 18
     }, 
     {id: "PR",
      counties: puertoRicoCounties,
-     cities: puertoRicoCities,
-     summarizeType: "FULL"
+     cities: puertoRicoCities
     }, 
     {id: "RI",
-     summarizeType: "FULL",
      counties: rhodeIslandCounties,
      cities: rhodeIslandCities,
      congressionalDistricts: 2
     }, 
     {id: "SC",
-     summarizeType: "FULL",
      counties: southCarolinaCounties,
      cities: southCarolinaCities,
      congressionalDistricts: 7
     }, 
     {id: "SD",
-     summarizeType: "FULL",
      counties: southDakotaCounties,
      cities: southDakotaCities,
      congressionalDistricts: 3
     }, 
     {id: "TN",
-     summarizeType: "FULL",
      counties: tennesseeCounties,
      cities: tennesseeCities,
      congressionalDistricts: 9
     }, 
     {id: "TX",
-     summarizeType: "FULL",
      counties: texasCounties,
      cities: texasCities,
      congressionalDistricts: 36
     }, 
     {id: "UT",
-     summarizeType: "FULL",
      counties:utahCounties,
      cities: utahCities,
      congressionalDistricts: 4
     }, 
     {id: "VA",
-     summarizeType: "FULL",
      counties: virginiaCounties,
      cities: virginiaCities,
      congressionalDistricts: 23
     }, 
     {id: "VI",
-     summarizeType: "FULL",
      cities: virginIslandsCities
     }, 
     {id: "VT",
-     summarizeType: "FULL",
      counties: vermontCounties,
      cities: vermontCities,
      congressionalDistricts: 1
     }, 
     {id: "WA",
-     summarizeType: "FULL",
      counties: washingtonCounties,
      cities: washingtonCities,
      congressionalDistricts: 10
     }, 
     {id: "WV",
-     summarizeType: "FULL",
      counties: westVirginaCounties,
      cities: westVirginaCities,
      congressionalDistricts: 3
     }, 
     {id: "WI",
-     summarizeType: "FULL",
      counties: wisconsinCounties,
      cities: wisconsinCities,
      congressionalDistricts: 8
     }, 
     {id: "WY",
-     summarizeType: "FULL",
      counties: wyomingCounties,
      cities: wyomingCities,
      congressionalDistricts: 1
@@ -1096,23 +1042,23 @@ log4js.configure({
     categories: { default: { appenders: ['h1bData'], level: 'info' } }
 });
 const modelMap = require('./models/dbRecords')
-const { summarizeAndCompress, createKey, decompressSummaryRecord } = require('./utilities/summarize')
+const { summarizeAndCompress, createKey, calculatePercentiles,
+        compressSummaryRecord, decompressSummaryRecord } = require('./utilities/summarize')
 
 const logger = log4js.getLogger('h1bData');
 
 const processState = ( async(year, stateRecord) => {
     const worksiteState = stateRecord.id
-    const summarizeType = stateRecord.summarizeType
     const congDistCount = stateRecord.congressionalDistricts
     const counties = stateRecord.counties
     const cities = stateRecord.cities
     var h1bObject = {}
     try{
-        logger.info(chalk.bgHex("#0aee0a").black("Process State Year: " + year + " - State: " + worksiteState + " - Type: " + summarizeType))
+        logger.info(chalk.bgHex("#0aee0a").black("Process State Year: " + year + " - State: " + worksiteState))
         const query = {}
         query[YEAR] = year
         query[WORKSITE_STATE] = worksiteState
-        h1bObject = await queryAndSave(query, summarizeType)
+        h1bObject = await queryAndSave(query)
         logger.trace(chalk.bgBlue('End of block'))
         await processCongDistricts(year, worksiteState, congDistCount)
         if(!_.isEmpty(counties)){
@@ -1155,9 +1101,8 @@ const saveSummary = async(key, h1bObject) => {
     logger.trace(chalk.bgBlue('Save summary complete'))
 }
 
-const queryAndSave = async (query, summarizeType) => {
+const queryAndSave = async (query) => {
     const h1bRecords = await queryDB(query)
-    // const h1bObject = ("BRIEF" == summarizeType) ? summarizeMajor(h1bRecords, query) : summarize(h1bRecords, query)
     h1bObject = summarizeAndCompress(h1bRecords, query)
     await saveSummary(createKey(query), h1bObject)
     return Promise.resolve(h1bObject)
@@ -1184,6 +1129,7 @@ const processCounty = ( async(year, state, county) => {
 const processCity = ( async(year, state, city) => {
     try{
         city = city.toUpperCase()
+        logger.info(chalk.bgHex("#0a9999").white.bold("Process City Year: " + year + " - State: " + state + " - City: " + city))
         const query = {}
         query[YEAR] = year
         query[WORKSITE_STATE] = state
@@ -1224,6 +1170,7 @@ const processStates = async (year) => {
            try{
                 var stateH1bObject = {}
                 stateH1bObject = await processState(year, stateRecord)
+                stateH1bObject = decompressSummaryRecord(stateH1bObject)
                 mergeStateObjects(yearH1bObject, stateH1bObject)
             }catch(e){
                 logger.error(chalk.bgRed(`Processing ${stateRecord.id} failed: ` + e))
@@ -1232,7 +1179,8 @@ const processStates = async (year) => {
         })
 
         const query = {"YEAR": year}
-        await saveSummary(createKey(query), yearH1bObject)
+        yearH1bObject = finalizeMerge(yearH1bObject)
+        await saveSummary(createKey(query), compressSummaryRecord(yearH1bObject))
         logger.info(chalk.bgHex("#5511aa").white.bold("Save Year Record: " + year))
         const x = 1
     }catch(e){
@@ -1297,7 +1245,7 @@ const processCongDistricts = async (year, state, congDistCount) => {
     return Promise.resolve
 }
 
-const processYears = (async () => {
+const processYears = async () => {
     const beginTime = moment()
     logger.info(chalk.bgRed.white.bold(`Initialize: ${beginTime.format('MMMM Do YYYY, h:mm:ss A')}`));
     try{
@@ -1320,7 +1268,7 @@ const processYears = (async () => {
     }
     logger.info(chalk.bgBlue('End of building summaries'))
     return Promise.resolve
-})
+}
 
 const initYearObject = (year) => {
 
@@ -1392,8 +1340,11 @@ const mergeStateObjects = (yearH1bObject, stateH1bObject) => {
             if(_.isEmpty(mergeOccupations[stateOccCode])){
                 mergeOccupations[stateOccCode] = 
                     { 
-                        "data": _.pick(stateOccupation.data, "SOC_CODE", "wageMap")
-                        // "data": {"SOC_CODE": stateOccCode, wageMap}
+                        // "data": _.pick(stateOccupation.data, "SOC_CODE", "wageMap")
+                        "data": {"SOC_CODE": stateOccCode, 
+                                        percentiles: {},
+                                        wageMap: stateOccupation.data.wageMap
+                                }
                     }
                     // mergeOccupations[stateOccCode] = _.clone(stateOccupation)
             }else{
@@ -1418,6 +1369,16 @@ const mergeStateObjects = (yearH1bObject, stateH1bObject) => {
     return yearH1bObject
 }
 
+const finalizeMerge = (yearH1bObject) => {
+    const occupationKeysArray = Object.getOwnPropertyNames(yearH1bObject.occupations)
+    occupationKeysArray.forEach((occupationKey) => {
+        const occupation = yearH1bObject.occupations[occupationKey]
+        var data = occupation.data
+        data.percentiles = calculatePercentiles(data.wageMap)
+    })
+    return yearH1bObject
+}
+
 const bldSummaries = async () => {
     logger.info('Build summaries');
     // start()
@@ -1439,3 +1400,4 @@ si.osInfo(cb)
 
 bldSummaries();
 
+module.exports = { initYearObject, mergeStateObjects, finalizeMerge }
