@@ -29,31 +29,31 @@ const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT
     var yearObject = initYearObject(2017)
     var summary = {}
     var h1bRecords1 = [
-        {WAGE_LEVEL: LEVEL_1, TOTAL_WORKERS: 1, NEW_EMPLOYMENT: 5, CHANGE_PREVIOUS_EMPLOYMENT: 1,
+        {WAGE_LEVEL: LEVEL_1, TOTAL_WORKERS: 1, NEW_EMPLOYMENT: 5, CHANGE_PREVIOUS_EMPLOYMENT: 1, CONTINUED_EMPLOYMENT: 14,
             ANNUALIZED_WAGE_RATE_OF_PAY: 1, SOC_CODE: "123",
             EMPLOYER_NAME: "AA", WORKSITE_LATITUDE: 5, WORKSITE_LONGITUDE: 8},
         {WAGE_LEVEL: LEVEL_1, TOTAL_WORKERS: 1, NEW_EMPLOYMENT: 5, CHANGE_PREVIOUS_EMPLOYMENT: 1,
             ANNUALIZED_WAGE_RATE_OF_PAY: 2, SOC_CODE: "123",
             EMPLOYER_NAME: "AA", WORKSITE_LATITUDE: 5, WORKSITE_LONGITUDE: 8},
-        {WAGE_LEVEL: LEVEL_1, TOTAL_WORKERS: 1, NEW_EMPLOYMENT: 5, CHANGE_PREVIOUS_EMPLOYMENT: 1,
+        {TOTAL_WORKERS: 1, NEW_EMPLOYMENT: 5, CHANGE_PREVIOUS_EMPLOYMENT: 1, NEW_CONCURRENT_EMPLOYMENT: 3,
             ANNUALIZED_WAGE_RATE_OF_PAY: 3, SOC_CODE: "123",
             EMPLOYER_NAME: "AA", WORKSITE_LATITUDE: 5, WORKSITE_LONGITUDE: 8},
-        {WAGE_LEVEL: LEVEL_1, TOTAL_WORKERS: 1, NEW_EMPLOYMENT: 5, CHANGE_PREVIOUS_EMPLOYMENT: 1,
+        {WAGE_LEVEL: LEVEL_2, TOTAL_WORKERS: 1, NEW_EMPLOYMENT: 5, CHANGE_PREVIOUS_EMPLOYMENT: 1, CHANGE_EMPLOYER: 100,
             ANNUALIZED_WAGE_RATE_OF_PAY: 4, SOC_CODE: "123",
             EMPLOYER_NAME: "AA", WORKSITE_LATITUDE: 5, WORKSITE_LONGITUDE: 8},
-        {WAGE_LEVEL: LEVEL_1, TOTAL_WORKERS: 1, NEW_EMPLOYMENT: 5, CHANGE_PREVIOUS_EMPLOYMENT: 1,
+        {WAGE_LEVEL: LEVEL_4, TOTAL_WORKERS: 1, NEW_EMPLOYMENT: 5, CHANGE_PREVIOUS_EMPLOYMENT: 1,
             ANNUALIZED_WAGE_RATE_OF_PAY: 5, SOC_CODE: "123",
             EMPLOYER_NAME: "AA", WORKSITE_LATITUDE: 5, WORKSITE_LONGITUDE: 8},
-        {WAGE_LEVEL: LEVEL_1, TOTAL_WORKERS: 1, NEW_EMPLOYMENT: 5, CHANGE_PREVIOUS_EMPLOYMENT: 1,
+        {WAGE_LEVEL: LEVEL_4, TOTAL_WORKERS: 1, NEW_EMPLOYMENT: 5, CHANGE_PREVIOUS_EMPLOYMENT: 1,
             ANNUALIZED_WAGE_RATE_OF_PAY: 6, SOC_CODE: "123",
             EMPLOYER_NAME: "AA", WORKSITE_LATITUDE: 5, WORKSITE_LONGITUDE: 8},
-        {WAGE_LEVEL: LEVEL_1, TOTAL_WORKERS: 1, NEW_EMPLOYMENT: 5, CHANGE_PREVIOUS_EMPLOYMENT: 1,
+        {WAGE_LEVEL: LEVEL_1, TOTAL_WORKERS: 1, NEW_EMPLOYMENT: 5, CHANGE_PREVIOUS_EMPLOYMENT: 1, AMENDED_PETITION: 8,
             ANNUALIZED_WAGE_RATE_OF_PAY: 7, SOC_CODE: "123",
             EMPLOYER_NAME: "AA", WORKSITE_LATITUDE: 5, WORKSITE_LONGITUDE: 8},
-        {WAGE_LEVEL: LEVEL_1, TOTAL_WORKERS: 1, NEW_EMPLOYMENT: 5, CHANGE_PREVIOUS_EMPLOYMENT: 1,
+        {TOTAL_WORKERS: 1, NEW_EMPLOYMENT: 5, CHANGE_PREVIOUS_EMPLOYMENT: 1,
             ANNUALIZED_WAGE_RATE_OF_PAY: 8, SOC_CODE: "123",
             EMPLOYER_NAME: "AA", WORKSITE_LATITUDE: 5, WORKSITE_LONGITUDE: 8},  
-        {WAGE_LEVEL: LEVEL_1, TOTAL_WORKERS: 1, NEW_EMPLOYMENT: 5, CHANGE_PREVIOUS_EMPLOYMENT: 1,
+        {TOTAL_WORKERS: 1, NEW_EMPLOYMENT: 5, CHANGE_PREVIOUS_EMPLOYMENT: 1,
             ANNUALIZED_WAGE_RATE_OF_PAY: 9, SOC_CODE: "123",
             EMPLOYER_NAME: "AA", WORKSITE_LATITUDE: 5, WORKSITE_LONGITUDE: 8}           
     ]
@@ -130,11 +130,11 @@ describe('Test initYearObject', () => {
         delete yearObject.TOTAL_WORKERS
         const categories = yearObject.categories
         expect(45).to.equal(categories.NEW_EMPLOYMENT)
-        expect(0).to.equal(categories.CONTINUED_EMPLOYMENT)
+        expect(14).to.equal(categories.CONTINUED_EMPLOYMENT)
         expect(9).to.equal(categories.CHANGE_PREVIOUS_EMPLOYMENT)
-        expect(0).to.equal(categories.NEW_CONCURRENT_EMPLOYMENT)
-        expect(0).to.equal(categories.CHANGE_EMPLOYER)
-        expect(0).to.equal(categories.AMENDED_PETITION)
+        expect(3).to.equal(categories.NEW_CONCURRENT_EMPLOYMENT)
+        expect(100).to.equal(categories.CHANGE_EMPLOYER)
+        expect(8).to.equal(categories.AMENDED_PETITION)
         delete categories.NEW_EMPLOYMENT
         delete categories.CONTINUED_EMPLOYMENT
         delete categories.CHANGE_PREVIOUS_EMPLOYMENT
@@ -145,11 +145,11 @@ describe('Test initYearObject', () => {
         delete yearObject.categories
         
         const lcas = yearObject.wageLevels.lcas
-        expect(9).to.equal(lcas[LEVEL_1])
-        expect(0).to.equal(lcas[LEVEL_2])
+        expect(3).to.equal(lcas[LEVEL_1])
+        expect(1).to.equal(lcas[LEVEL_2])
         expect(0).to.equal(lcas[LEVEL_3])
-        expect(0).to.equal(lcas[LEVEL_4])
-        expect(0).to.equal(lcas[UNSPECIFIED])
+        expect(2).to.equal(lcas[LEVEL_4])
+        expect(3).to.equal(lcas[UNSPECIFIED])
         delete lcas[LEVEL_1]
         delete lcas[LEVEL_2]
         delete lcas[LEVEL_3]
@@ -158,11 +158,11 @@ describe('Test initYearObject', () => {
         expect(_.isEmpty(lcas)).to.be.true
         
         const workers = yearObject.wageLevels.workers
-        expect(9).to.equal(workers[LEVEL_1])
-        expect(0).to.equal(workers[LEVEL_2])
+        expect(3).to.equal(workers[LEVEL_1])
+        expect(1).to.equal(workers[LEVEL_2])
         expect(0).to.equal(workers[LEVEL_3])
-        expect(0).to.equal(workers[LEVEL_4])
-        expect(0).to.equal(workers[UNSPECIFIED])
+        expect(2).to.equal(workers[LEVEL_4])
+        expect(3).to.equal(workers[UNSPECIFIED])
         delete workers[LEVEL_1]
         delete workers[LEVEL_2]
         delete workers[LEVEL_3]
@@ -234,11 +234,11 @@ describe('Test initYearObject', () => {
         delete yearObject.TOTAL_WORKERS
         const categories = yearObject.categories
         expect(45).to.equal(categories.NEW_EMPLOYMENT)
-        expect(0).to.equal(categories.CONTINUED_EMPLOYMENT)
+        expect(14).to.equal(categories.CONTINUED_EMPLOYMENT)
         expect(9).to.equal(categories.CHANGE_PREVIOUS_EMPLOYMENT)
-        expect(0).to.equal(categories.NEW_CONCURRENT_EMPLOYMENT)
-        expect(0).to.equal(categories.CHANGE_EMPLOYER)
-        expect(0).to.equal(categories.AMENDED_PETITION)
+        expect(3).to.equal(categories.NEW_CONCURRENT_EMPLOYMENT)
+        expect(100).to.equal(categories.CHANGE_EMPLOYER)
+        expect(8).to.equal(categories.AMENDED_PETITION)
         delete categories.NEW_EMPLOYMENT
         delete categories.CONTINUED_EMPLOYMENT
         delete categories.CHANGE_PREVIOUS_EMPLOYMENT
@@ -249,11 +249,11 @@ describe('Test initYearObject', () => {
         delete yearObject.categories
         
         const lcas = yearObject.wageLevels.lcas
-        expect(9).to.equal(lcas[LEVEL_1])
-        expect(0).to.equal(lcas[LEVEL_2])
+        expect(3).to.equal(lcas[LEVEL_1])
+        expect(1).to.equal(lcas[LEVEL_2])
         expect(0).to.equal(lcas[LEVEL_3])
-        expect(0).to.equal(lcas[LEVEL_4])
-        expect(0).to.equal(lcas[UNSPECIFIED])
+        expect(2).to.equal(lcas[LEVEL_4])
+        expect(3).to.equal(lcas[UNSPECIFIED])
         delete lcas[LEVEL_1]
         delete lcas[LEVEL_2]
         delete lcas[LEVEL_3]
@@ -262,11 +262,11 @@ describe('Test initYearObject', () => {
         expect(_.isEmpty(lcas)).to.be.true
         
         const workers = yearObject.wageLevels.workers
-        expect(9).to.equal(workers[LEVEL_1])
-        expect(0).to.equal(workers[LEVEL_2])
+        expect(3).to.equal(workers[LEVEL_1])
+        expect(1).to.equal(workers[LEVEL_2])
         expect(0).to.equal(workers[LEVEL_3])
-        expect(0).to.equal(workers[LEVEL_4])
-        expect(0).to.equal(workers[UNSPECIFIED])
+        expect(2).to.equal(workers[LEVEL_4])
+        expect(3).to.equal(workers[UNSPECIFIED])
         delete workers[LEVEL_1]
         delete workers[LEVEL_2]
         delete workers[LEVEL_3]
