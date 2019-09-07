@@ -13,9 +13,7 @@ log4js.configure({
 });
 const logger = log4js.getLogger('h1bData');
 
-
-
-var results = []
+var results = {}
 
 const cb = (obj) => {
     // logger.info(`System Info: ${JSON.stringify(obj)}`)
@@ -27,9 +25,13 @@ const cb = (obj) => {
     fs.createReadStream(config.congressFilename)
         .pipe(csv())
         .on('error', (err) => logger.error(`ERROR - ${err}`))
-        .on('data', (chunk) => results.push(chunk))
+        .on('data', (chunk) => {
+            const key = chunk.state + '-' + chunk.district
+            results[key] = chunk
+            logger.info(chalk.bgBlue.white.bold(`${JSON.stringify(chunk, undefined, 2)}`))
+        })
         .on('end', () => {
-            console.log(results)
+            // console.log(results)
         })
 }
 si.osInfo(cb)

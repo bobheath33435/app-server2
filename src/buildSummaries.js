@@ -1395,9 +1395,10 @@ const cb = (obj) => {
     // logger.info(`System Info: ${JSON.stringify(obj)}`)
     logger.info(chalk.bgRed.white.bold("Platform:") + ' ' + chalk.green.bold(obj.platform))
     logger.info(chalk.bgRed.white.bold("Hostname:") + ' ' + chalk.green.bold(obj.hostname))
+
+    bldSummaries()
 }
 si.osInfo(cb)
 
-bldSummaries();
 
 module.exports = { initYearObject, mergeStateObjects, finalizeMerge }

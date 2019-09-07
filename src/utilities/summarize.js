@@ -202,18 +202,20 @@ const summarizeMinor = (h1bRecords, summaryRecord) => {
                 const latLngMap = summaryRecord.latLngMap
                 var latLngItem = latLngMap[key]
                 if(undefined == latLngItem){
-                    latLngItem = { "lat": h1bRecord[WORKSITE_LATITUDE],
+                    latLngItem = { "count": 0,
+                                    "lat": h1bRecord[WORKSITE_LATITUDE],
                                     "lng": h1bRecord[WORKSITE_LONGITUDE], 
-                                    "instances" : {} }
+                                    "instanceMap" : {} }
                     latLngMap[key] = latLngItem
                 }
+                latLngItem.count += 1
                 var h1bInstKey = h1bRecord[EMPLOYER_NAME]
                 const addr1 = h1bRecord[WORKSITE_ADDR1]
                 h1bInstKey += (undefined == addr1) ? "" : addr1
                 const addr2 = h1bRecord[WORKSITE_ADDR2]
                 h1bInstKey += (undefined == addr2) ? "" : addr2
                 h1bInstKey = h1bInstKey.replace(/[\s\.,]+/g, '')
-                var h1bInstance = latLngItem.instances[h1bInstKey]
+                var h1bInstance = latLngItem.instanceMap[h1bInstKey]
                 if(undefined == h1bInstance){
                     h1bInstance = _.pick(h1bRecord,
                         EMPLOYER_NAME,
@@ -222,8 +224,9 @@ const summarizeMinor = (h1bRecords, summaryRecord) => {
                         WORKSITE_CITY,
                         WORKSITE_COUNTY,
                         WORKSITE_STATE) 
+                    h1bInstance.count = 0
                     h1bInstance.instanceArray = []
-                    latLngItem.instances[h1bInstKey] = h1bInstance
+                    latLngItem.instanceMap[h1bInstKey] = h1bInstance
                 }
         
                 var workerData = _.pick(h1bRecord,
@@ -232,9 +235,36 @@ const summarizeMinor = (h1bRecords, summaryRecord) => {
                                         TOTAL_WORKERS,
                                         H1B_DEPENDENT,
                                         ANNUALIZED_WAGE_RATE_OF_PAY)
+                h1bInstance.count += 1
                 h1bInstance.instanceArray.push(workerData)                 
             }
-        })    
+        })  
+        // sort lat lng map by count
+        const latLngMap = summaryRecord.latLngMap
+        var latLngKeys = Object.getOwnPropertyNames(latLngMap)
+        latLngKeys = latLngKeys.sort((a, b) => {
+            const aCount = latLngMap[a].count 
+            const bCount = latLngMap[b].count 
+            return(bCount - aCount)
+        })
+        summaryRecord.latLngMap = {}
+        latLngKeys.forEach((key) => {
+            const latLngItem = latLngMap[key]
+            const instanceMap = latLngItem.instanceMap
+            var instanceKeys = Object.getOwnPropertyNames(instanceMap)
+            instanceKeys = instanceKeys.sort((a, b) => {
+                const aCount = instanceMap[a].count 
+                const bCount = instanceMap[b].count 
+                return(bCount - aCount)
+            })
+            latLngItem.instanceMap = {}
+            instanceKeys.forEach((instanceKey) => {
+                latLngItem.instanceMap[instanceKey] = instanceMap[instanceKey]
+            })
+    
+            summaryRecord.latLngMap[key] = latLngItem
+        })
+
     }catch(e){
         logger.error(chalk.bgRed("Error building latitude longitude map: " + e))
         logger.errorr(chalk.bgRed(`JSON: ${JSON.stringify(currentH1bRecord)}`))
@@ -363,7 +393,6 @@ const readSummarizedQueries = async() => {
     logger.trace(keys)
     logger.trace(summaryMap)
 }
-
 
 module.exports = { 
                    summarize,
