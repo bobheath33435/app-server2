@@ -467,10 +467,10 @@ const testLatLngs = (summary) => {
     // Don't validate latLngMap here
     expect(!_.isEmpty(summary['latLngMap'])).to.be.true
     const latLngMap = summary['latLngMap']
+    logger.trace(chalk.bgRed(`latLngMap: ${JSON.stringify(latLngMap, undefined, 2)}`))
     var latLngRecords = Object.getOwnPropertyNames(latLngMap)
     logger.trace(chalk.bgRed(`latLngRecords: ${JSON.stringify(latLngRecords, undefined, 2)}`))
     expect(3).to.equal(latLngRecords.length)
-    latLngRecords = latLngRecords.sort()
 
     expect("1_3").to.equal(latLngRecords[0])
     var latLngRecord = latLngMap[latLngRecords[0]]
@@ -547,46 +547,6 @@ const testLatLngs = (summary) => {
     delete instanceArray
     latLngRecords.shift()
 
-    expect("5_8").to.equal(latLngRecords[0])
-    var latLngRecord = latLngMap[latLngRecords[0]]
-    logger.trace(chalk.bgRed(`latLngRecord: ${JSON.stringify(latLngRecord, undefined, 2)}`))
-    expect(latLngRecord.count).to.equal(1)
-    expect(latLngRecord.lat).to.equal(5)
-    expect(latLngRecord.lng).to.equal(8)
-    delete latLngRecord.count
-    delete latLngRecord.lat
-    delete latLngRecord.lng
-    var employerInstanceMap = latLngRecord.instanceMap
-    delete latLngRecord.instanceMap
-    expect(_.isEmpty(latLngRecord)).to.be.true
-    logger.trace(chalk.bgRed(`employerInstanceMap: ${JSON.stringify(employerInstanceMap, undefined, 2)}`))
-    var instanceMap = Object.getOwnPropertyNames(employerInstanceMap)
-    expect(1).to.equal(instanceMap.length)
-    expect("AA").to.equal(instanceMap[0])
-    var count = employerInstanceMap[instanceMap[0]].count
-    var instanceArray = employerInstanceMap[instanceMap[0]].instanceArray
-    employerName = employerInstanceMap[instanceMap[0]][EMPLOYER_NAME]
-    expect(1).to.equal(count)
-    expect("AA").to.equal(employerName)
-    delete employerInstanceMap[instanceMap[0]].count
-    delete employerInstanceMap[instanceMap[0]].instanceArray
-    delete employerInstanceMap[instanceMap[0]][EMPLOYER_NAME]
-    expect(_.isEmpty(employerInstanceMap[instanceMap[0]])).to.be.true
-    expect(1).to.equal(instanceArray.length)
-    instance = instanceArray[0]
-    expect(!_.isEmpty(instance)).to.be.true
-    expect("123").to.equal(instance['SOC_CODE'])
-    expect(2).to.equal(instance['TOTAL_WORKERS'])
-    expect(150).to.equal(instance['ANNUALIZED_WAGE_RATE_OF_PAY'])
-    delete instance['SOC_CODE']
-    delete instance['TOTAL_WORKERS']
-    delete instance['ANNUALIZED_WAGE_RATE_OF_PAY']
-    expect(_.isEmpty(instance)).to.be.true
-    instanceArray.pop()
-    expect(0).to.equal(instanceArray.length)
-    delete instanceArray
-    latLngRecords.shift()
-
     expect("6_4").to.equal(latLngRecords[0])
     latLngRecord = latLngMap[latLngRecords[0]]
     logger.trace(chalk.bgRed(`latLngRecord: ${JSON.stringify(latLngRecord, undefined, 2)}`))
@@ -637,6 +597,47 @@ const testLatLngs = (summary) => {
     expect(0).to.equal(instanceArray.length)
     delete instanceArray
     latLngRecords.shift()
+    
+    expect("5_8").to.equal(latLngRecords[0])
+    var latLngRecord = latLngMap[latLngRecords[0]]
+    logger.trace(chalk.bgRed(`latLngRecord: ${JSON.stringify(latLngRecord, undefined, 2)}`))
+    expect(latLngRecord.count).to.equal(1)
+    expect(latLngRecord.lat).to.equal(5)
+    expect(latLngRecord.lng).to.equal(8)
+    delete latLngRecord.count
+    delete latLngRecord.lat
+    delete latLngRecord.lng
+    var employerInstanceMap = latLngRecord.instanceMap
+    delete latLngRecord.instanceMap
+    expect(_.isEmpty(latLngRecord)).to.be.true
+    logger.trace(chalk.bgRed(`employerInstanceMap: ${JSON.stringify(employerInstanceMap, undefined, 2)}`))
+    var instanceMap = Object.getOwnPropertyNames(employerInstanceMap)
+    expect(1).to.equal(instanceMap.length)
+    expect("AA").to.equal(instanceMap[0])
+    var count = employerInstanceMap[instanceMap[0]].count
+    var instanceArray = employerInstanceMap[instanceMap[0]].instanceArray
+    employerName = employerInstanceMap[instanceMap[0]][EMPLOYER_NAME]
+    expect(1).to.equal(count)
+    expect("AA").to.equal(employerName)
+    delete employerInstanceMap[instanceMap[0]].count
+    delete employerInstanceMap[instanceMap[0]].instanceArray
+    delete employerInstanceMap[instanceMap[0]][EMPLOYER_NAME]
+    expect(_.isEmpty(employerInstanceMap[instanceMap[0]])).to.be.true
+    expect(1).to.equal(instanceArray.length)
+    instance = instanceArray[0]
+    expect(!_.isEmpty(instance)).to.be.true
+    expect("123").to.equal(instance['SOC_CODE'])
+    expect(2).to.equal(instance['TOTAL_WORKERS'])
+    expect(150).to.equal(instance['ANNUALIZED_WAGE_RATE_OF_PAY'])
+    delete instance['SOC_CODE']
+    delete instance['TOTAL_WORKERS']
+    delete instance['ANNUALIZED_WAGE_RATE_OF_PAY']
+    expect(_.isEmpty(instance)).to.be.true
+    instanceArray.pop()
+    expect(0).to.equal(instanceArray.length)
+    delete instanceArray
+    latLngRecords.shift()
+
     expect(_.isEmpty(latLngRecords)).to.be.true
 
     logger.trace(chalk.bgRed(`latLngRecord: ${JSON.stringify(latLngRecord, undefined, 2)}`))
