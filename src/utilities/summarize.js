@@ -241,32 +241,35 @@ const summarizeMinor = (h1bRecords, summaryRecord) => {
             }
         })  
         // sort lat lng map by count
-        const latLngMap = summaryRecord.latLngMap
-        var latLngKeys = Object.getOwnPropertyNames(latLngMap)
-        latLngKeys = latLngKeys.sort((a, b) => sortLatLng(a, b, latLngMap))
-        summaryRecord.latLngMap = {}
-        latLngKeys.forEach((key) => {
-            const latLngItem = latLngMap[key]
-            const instanceMap = latLngItem.instanceMap
-            var instanceKeys = Object.getOwnPropertyNames(instanceMap)
-            instanceKeys = instanceKeys.sort((a, b) => sortInstanceKey(a, b, instanceMap))
-            latLngItem.instanceMap = {}
-            instanceKeys.forEach((instanceKey) => {
-                const instance = instanceMap[instanceKey]
-                // instance.instanceArray =
-                //         instance.instanceArray.sort((a, b) => sortInstanceArray(a, b))
-                latLngItem.instanceMap[instanceKey] = instance
-            })
-    
-            summaryRecord.latLngMap[key] = latLngItem
-        })
-
+        summaryRecord.latLngMap = sortLatLngRecords(summaryRecord.latLngMap)
     }catch(e){
         logger.error(chalk.bgRed("Error building latitude longitude map: " + e))
+        logger.error(chalk.bgRed("Stack: " + e.stack))
         logger.error(chalk.bgRed(`JSON: ${JSON.stringify(currentH1bRecord)}`))
     }
     logger.trace('completed running summarize minor');
     return summaryRecord
+}
+
+const sortLatLngRecords = (oldLatLngMap) => {
+    var latLngKeys = Object.getOwnPropertyNames(oldLatLngMap)
+    latLngKeys = latLngKeys.sort((a, b) => sortLatLng(a, b, oldLatLngMap))
+    var newLatLngMap = {}
+    latLngKeys.forEach((key) => {
+        const latLngItem = oldLatLngMap[key]
+        const instanceMap = latLngItem.instanceMap
+        var instanceKeys = Object.getOwnPropertyNames(instanceMap)
+        instanceKeys = instanceKeys.sort((a, b) => sortInstanceKey(a, b, instanceMap))
+        latLngItem.instanceMap = {}
+        instanceKeys.forEach((instanceKey) => {
+            const instance = instanceMap[instanceKey]
+            // instance.instanceArray =
+            //         instance.instanceArray.sort((a, b) => sortInstanceArray(a, b))
+            latLngItem.instanceMap[instanceKey] = instance
+        })
+        newLatLngMap[key] = latLngItem
+    })
+    return newLatLngMap
 }
 
 const processLngLat = (summaryRecord, h1bRecord) => {
