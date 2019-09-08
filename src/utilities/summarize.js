@@ -189,11 +189,12 @@ const updateWageMap = (wageMap, h1bRecord) => {
 const summarizeMinor = (h1bRecords, summaryRecord) => {
     logger.trace('running summarize minor');
     var latLngMap = {}
-    // var currentH1bRecord = {}
+    var currentH1bRecord = {}
     try{
         h1bRecords.forEach((h1bRecord, index) => {
             logger.trace(chalk.bgRed(`h1bRecord: ${JSON.stringify(h1bRecord, undefined, 2)}`))
-            // currentH1bRecord = h1bRecord
+            currentH1bRecord = h1bRecord
+            // processLngLat(summaryRecord, h1bRecord)
             if(_.isNumber(h1bRecord[WORKSITE_LATITUDE]) && 
                          _.isNumber(h1bRecord[WORKSITE_LONGITUDE]) &&
                          !_.isEmpty(h1bRecord[EMPLOYER_NAME])){
@@ -242,24 +243,19 @@ const summarizeMinor = (h1bRecords, summaryRecord) => {
         // sort lat lng map by count
         const latLngMap = summaryRecord.latLngMap
         var latLngKeys = Object.getOwnPropertyNames(latLngMap)
-        latLngKeys = latLngKeys.sort((a, b) => {
-            const aCount = latLngMap[a].count 
-            const bCount = latLngMap[b].count 
-            return(bCount - aCount)
-        })
+        latLngKeys = latLngKeys.sort((a, b) => sortLatLng(a, b, latLngMap))
         summaryRecord.latLngMap = {}
         latLngKeys.forEach((key) => {
             const latLngItem = latLngMap[key]
             const instanceMap = latLngItem.instanceMap
             var instanceKeys = Object.getOwnPropertyNames(instanceMap)
-            instanceKeys = instanceKeys.sort((a, b) => {
-                const aCount = instanceMap[a].count 
-                const bCount = instanceMap[b].count 
-                return(bCount - aCount)
-            })
+            instanceKeys = instanceKeys.sort((a, b) => sortInstanceKey(a, b, instanceMap))
             latLngItem.instanceMap = {}
             instanceKeys.forEach((instanceKey) => {
-                latLngItem.instanceMap[instanceKey] = instanceMap[instanceKey]
+                const instance = instanceMap[instanceKey]
+                // instance.instanceArray =
+                //         instance.instanceArray.sort((a, b) => sortInstanceArray(a, b))
+                latLngItem.instanceMap[instanceKey] = instance
             })
     
             summaryRecord.latLngMap[key] = latLngItem
@@ -267,10 +263,142 @@ const summarizeMinor = (h1bRecords, summaryRecord) => {
 
     }catch(e){
         logger.error(chalk.bgRed("Error building latitude longitude map: " + e))
-        logger.errorr(chalk.bgRed(`JSON: ${JSON.stringify(currentH1bRecord)}`))
+        logger.error(chalk.bgRed(`JSON: ${JSON.stringify(currentH1bRecord)}`))
     }
     logger.trace('completed running summarize minor');
     return summaryRecord
+}
+
+const processLngLat = (summaryRecord, h1bRecord) => {
+    if(_.isNumber(h1bRecord[WORKSITE_LATITUDE]) && 
+                    _.isNumber(h1bRecord[WORKSITE_LONGITUDE]) &&
+                    !_.isEmpty(h1bRecord[EMPLOYER_NAME])){
+        var key = h1bRecord[WORKSITE_LATITUDE] + '_' + h1bRecord[WORKSITE_LONGITUDE]
+        key = key.replace(/[\s\.,]+/g, '')
+        const latLngMap = summaryRecord.latLngMap
+        var latLngItem = latLngMap[key]
+        if(undefined == latLngItem){
+            latLngItem = { "count": 0,
+                            "lat": h1bRecord[WORKSITE_LATITUDE],
+                            "lng": h1bRecord[WORKSITE_LONGITUDE], 
+                            "instanceMap" : {} }
+            latLngMap[key] = latLngItem
+        }
+        latLngItem.count += 1
+        var h1bInstKey = h1bRecord[EMPLOYER_NAME]
+        const addr1 = h1bRecord[WORKSITE_ADDR1]
+        h1bInstKey += (undefined == addr1) ? "" : addr1
+        const addr2 = h1bRecord[WORKSITE_ADDR2]
+        h1bInstKey += (undefined == addr2) ? "" : addr2
+        h1bInstKey = h1bInstKey.replace(/[\s\.,]+/g, '')
+        var h1bInstance = latLngItem.instanceMap[h1bInstKey]
+        if(undefined == h1bInstance){
+            h1bInstance = _.pick(h1bRecord,
+                EMPLOYER_NAME,
+                WORKSITE_ADDR1, 
+                WORKSITE_ADDR2, 
+                WORKSITE_CITY,
+                WORKSITE_COUNTY,
+                WORKSITE_STATE) 
+            h1bInstance.count = 0
+            h1bInstance.instanceArray = []
+            latLngItem.instanceMap[h1bInstKey] = h1bInstance
+        }
+
+        var workerData = _.pick(h1bRecord,
+                                CASE_NUMBER,
+                                SOC_CODE,
+                                TOTAL_WORKERS,
+                                H1B_DEPENDENT,
+                                ANNUALIZED_WAGE_RATE_OF_PAY)
+        h1bInstance.count += 1
+        h1bInstance.instanceArray.push(workerData)                 
+    }
+
+}
+
+const sortLatLng = (a, b, latLngMap) => {
+    logger.trace(`Within routine a - ${JSON.stringify(a)}, b - ${JSON.stringify(b)}, latLngMap - ${JSON.stringify(latLngMap)}, `)
+    const aCount = latLngMap[a].count 
+    const bCount = latLngMap[b].count 
+    if(aCount != bCount)
+        return(bCount - aCount)
+    const aLat = latLngMap[a].lat
+    const bLat = latLngMap[b].lat
+    if(undefined == aLat && undefined == bLat)
+        return 0
+    if(undefined == aLat)
+        return 1
+    if(undefined == bLat)
+        return -1
+    if(aLat != bLat)
+        return(bLat - aLat)
+    const aLng = latLngMap[a].lng
+    const bLng = latLngMap[b].lng
+    if(undefined == aLng && undefined == bLng)
+        return 0
+    if(undefined == aLng)
+        return 1
+    if(undefined == bLng)
+        return -1
+    return latLngMap[b].lng - latLngMap[a].lng
+}
+
+const sortInstanceKey = (a, b, instanceMap) => {
+    logger.trace(`Within routine a - ${JSON.stringify(a)}, b - ${JSON.stringify(b)}, latLngMap - ${JSON.stringify(instanceMap)}, `)
+    const aCount = instanceMap[a].count 
+    const bCount = instanceMap[b].count 
+    if(aCount != bCount)
+        return(bCount - aCount)
+    const aEmp = instanceMap[a][EMPLOYER_NAME]
+    const bEmp = instanceMap[b][EMPLOYER_NAME]
+    if(undefined == aEmp && undefined == bEmp)
+        return 0
+    if(undefined == aEmp)
+        return 1
+    if(undefined == bEmp)
+        return -1
+    if(aEmp != bEmp)
+        return(aEmp > bEmp) ? -1 : 1 
+    const aAd1 = instanceMap[a][WORKSITE_ADDR1]
+    const bAd1 = instanceMap[b][WORKSITE_ADDR1]
+    if(undefined == aAd1 && undefined == bAd1)
+        return 0
+    if(undefined == aAd1)
+        return 1
+    if(undefined == bAd1)
+        return -1
+    if(aAd1 != bAd1)
+        return(aAd1 > bAd1) ? -1 : 1
+    const aAd2 = instanceMap[a][WORKSITE_ADDR2]
+    const bAd2 = instanceMap[b][WORKSITE_ADDR2]
+    if(undefined == aAd2 && undefined == bAd2)
+        return 0
+    if(undefined == aAd2)
+        return 1
+    if(undefined == bAd2)
+        return -1
+    if(aAd2 != bAd2)
+        return(aAd2 > bAd2) ? -1 : 1 
+    return 0
+}
+
+const sortInstanceArray = (a, b) => {
+    const aTw = a[TOTAL_WORKERS]
+    const bTw = b[TOTAL_WORKERS]
+    if(aTw != bTw)
+        return bTw - aTw
+    const aCn = a[CASE_NUMBER]
+    const bCn = b[CASE_NUMBER]
+    if(undefined == aCn && undefined == bCn)
+        return 0
+    if(undefined == aCn)
+        return 1
+    if(undefined == bCn)
+        return -1
+    if(aCn != bCn)
+        return(aCn > bCn) ? -1 : 1 
+    return 0
 }
 
 const compressSummaryRecord = (summaryRecord) => {
@@ -404,5 +532,8 @@ module.exports = {
                    countItems,
                    buildWageArray,
                    readSummarizedQueries,
+                   sortLatLng,
+                   sortInstanceKey,
+                   sortInstanceArray,
                    summaryMap
                  }

@@ -1103,6 +1103,7 @@ const saveSummary = async(key, h1bObject) => {
 
 const queryAndSave = async (query) => {
     const h1bRecords = await queryDB(query)
+    logger.trace(chalk.bgHex("#ca4e0a").white.bold("query count: " + h1bRecords.length))
     h1bObject = summarizeAndCompress(h1bRecords, query)
     await saveSummary(createKey(query), h1bObject)
     return Promise.resolve(h1bObject)

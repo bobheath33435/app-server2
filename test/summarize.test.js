@@ -10,14 +10,15 @@ const chalk = require('chalk')
 const expect = require('chai').expect
 const _ = require('lodash')
 const { summarize, createKey, calculatePercentiles, countItems, buildWageArray,
-    compressSummaryRecord, decompressSummaryRecord
+    compressSummaryRecord, decompressSummaryRecord, sortLatLng, sortInstanceKey,
+    sortInstanceArray
 } 
         = require('../src/utilities/summarize')
 const { compress, decompress } = require('../src/utilities/compression')
 const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT,
     WORKSITE_ADDR1, WORKSITE_ADDR2,
     WORKSITE_CITY, WORKSITE_COUNTY, WORKSITE_STATE, TOTAL_WORKERS, TOTAL_LCAS,
-    WORKSITE_LATITUDE, WORKSITE_LONGITUDE,
+    WORKSITE_LATITUDE, WORKSITE_LONGITUDE, H1B_DEPENDENT,
     LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4,
     NEW_EMPLOYMENT, CONTINUED_EMPLOYMENT, CHANGE_PREVIOUS_EMPLOYMENT,
     NEW_CONCURRENT_EMPLOYMENT, CHANGE_EMPLOYER, AMENDED_PETITION,
@@ -62,6 +63,153 @@ describe('Test createKey', () => {
     })             
 })
 
+describe('Test sort routine', () => {
+    it('1) Test sortLatLng() sort routine', () => {
+        var latLngMap = {
+            "a": {"count": 1},
+            "b": {"count": 2}
+        }
+        expect(0).to.be.below(sortLatLng("a", "b", latLngMap))
+        expect(0).to.be.above(sortLatLng("b", "a", latLngMap))
+        latLngMap = {
+            "a": {"count": 2},
+            "b": {"count": 2}
+        }
+        expect(0).to.be.equal(sortLatLng("b", "a", latLngMap))
+        latLngMap = {
+            "a": {"count": 2, lat: 1},
+            "b": {"count": 2, lat: 1}
+        }
+        expect(0).to.be.equal(sortLatLng("b", "a", latLngMap))
+        latLngMap = {
+            "a": {"count": 2, lat: 1, lng: 5},
+            "b": {"count": 2, lat: 1, lng: 5}
+        }
+        expect(0).to.be.equal(sortLatLng("b", "a", latLngMap))
+        latLngMap = {
+            "a": {"count": 2},
+            "b": {"count": 2, lat: 3}
+        }
+        expect(0).to.be.below(sortLatLng("a", "b", latLngMap))
+        latLngMap = {
+            "a": {"count": 2, lat: 3},
+            "b": {"count": 2}
+        }
+        expect(0).to.be.above(sortLatLng("a", "b", latLngMap))
+        latLngMap = {
+            "a": {"count": 2, lat: 2},
+            "b": {"count": 2, lat: 3}
+        }
+        expect(0).to.be.below(sortLatLng("a", "b", latLngMap))
+        latLngMap = {
+            "a": {"count": 2, lat: 4},
+            "b": {"count": 2, lat: 3}
+        }
+        expect(0).to.be.above(sortLatLng("a", "b", latLngMap))
+        latLngMap = {
+            "a": {"count": 2, lat: 1},
+            "b": {"count": 2, lat: 1, lng: 8}
+        }
+        expect(0).to.be.below(sortLatLng("a", "b", latLngMap))
+        latLngMap = {
+            "a": {"count": 2, lat: 1, lng: 8},
+            "b": {"count": 2, lat: 1}
+        }
+        expect(0).to.be.above(sortLatLng("a", "b", latLngMap))
+    })
+    
+    it('2) Test sortInstanceKey() sort routine', () => {
+        var instanceMap = {
+            "a": {"count": 1},
+            "b": {"count": 2}
+        }
+        expect(0).to.be.below(sortInstanceKey("a", "b", instanceMap))
+        expect(0).to.be.above(sortInstanceKey("b", "a", instanceMap))
+        instanceMap = {
+            "a": {"count": 2},
+            "b": {"count": 2}
+        }
+        expect(0).to.be.equal(sortInstanceKey("b", "a", instanceMap))
+        instanceMap = {
+            "a": {"count": 2, EMPLOYER_NAME: "abc"},
+            "b": {"count": 2, EMPLOYER_NAME: "abc"}
+        }
+        expect(0).to.be.equal(sortInstanceKey("b", "a", instanceMap))
+        instanceMap = {
+            "a": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa"},
+            "b": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa"}
+        }
+        expect(0).to.be.equal(sortInstanceKey("b", "a", instanceMap))
+        instanceMap = {
+            "a": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa", WORKSITE_ADDR1: "bbb"},
+            "b": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa", WORKSITE_ADDR1: "bbb"}
+        }
+        expect(0).to.be.equal(sortInstanceKey("b", "a", instanceMap))
+        instanceMap = {
+            "a": {"count": 2, EMPLOYER_NAME: "abc"},
+            "b": {"count": 2, EMPLOYER_NAME: "xyz"}
+        }
+        expect(0).to.be.below(sortInstanceKey("a", "b", instanceMap))
+        instanceMap = {
+            "a": {"count": 2, EMPLOYER_NAME: "abc"},
+            "b": {"count": 2}
+        }
+        expect(0).to.be.above(sortInstanceKey("a", "b", instanceMap))
+        instanceMap = {
+            "a": {"count": 2},
+            "b": {"count": 2, EMPLOYER_NAME: "abc"}
+        }
+        expect(0).to.be.below(sortInstanceKey("a", "b", instanceMap))
+        instanceMap = {
+            "a": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa"}, 
+            "b": {"count": 2, EMPLOYER_NAME: "abc"}
+        }
+        expect(0).to.be.above(sortInstanceKey("a", "b", instanceMap))
+        instanceMap = {
+            "a": {"count": 2, EMPLOYER_NAME: "abc"}, 
+            "b": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa"}
+        }
+        expect(0).to.be.below(sortInstanceKey("a", "b", instanceMap))
+        instanceMap = {
+            "a": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa"}, 
+            "b": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "bbb"}
+        }
+        expect(0).to.be.below(sortInstanceKey("a", "b", instanceMap))
+        instanceMap = {
+            "a": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "cccc"}, 
+            "b": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "bbb"}
+        }
+        expect(0).to.be.above(sortInstanceKey("a", "b", instanceMap))
+        instanceMap = {
+            "a": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa", WORKSITE_ADDR2: "bbb"}, 
+            "b": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa"}
+        }
+        expect(0).to.be.above(sortInstanceKey("a", "b", instanceMap))
+        instanceMap = {
+            "a": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa"}, 
+            "b": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa", WORKSITE_ADDR2: "bbb"}
+        }
+        expect(0).to.be.below(sortInstanceKey("a", "b", instanceMap))
+        instanceMap = {
+            "a": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa", WORKSITE_ADDR2: "bbb"}, 
+            "b": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa", WORKSITE_ADDR2: "ccc"}
+        }
+        expect(0).to.be.below(sortInstanceKey("a", "b", instanceMap))
+        instanceMap = {
+            "a": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa", WORKSITE_ADDR2: "ddd"}, 
+            "b": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa", WORKSITE_ADDR2: "ccc"}
+        }
+        expect(0).to.be.above(sortInstanceKey("a", "b", instanceMap))
+    })
+    
+    it('3) Test sortInstanceArray() sort routine', () => {
+        var a = { TOTAL_WORKERS: 2}
+        var b = { TOTAL_WORKERS: 3}
+        expect(0).to.be.below(sortInstanceArray(a, b))
+    })
+
+})
+
 describe('Test summarize', () => {
     logger.trace('testing summarize');
     var query = {
@@ -72,30 +220,30 @@ describe('Test summarize', () => {
         "WORKSITE_STATE": "Shock"
     }
     var h1bRecords = [
-        {WAGE_LEVEL: LEVEL_1, TOTAL_WORKERS: 2, NEW_EMPLOYMENT: 5, CHANGE_PREVIOUS_EMPLOYMENT: 1,
-            ANNUALIZED_WAGE_RATE_OF_PAY: 150, SOC_CODE: "123",
-            EMPLOYER_NAME: "AA", WORKSITE_LATITUDE: 5, WORKSITE_LONGITUDE: 8},
-        {WAGE_LEVEL: LEVEL_2, TOTAL_WORKERS: 3, CONTINUED_EMPLOYMENT: 3,
-            ANNUALIZED_WAGE_RATE_OF_PAY: 500, SOC_CODE: "abc",
+        {i: 0, WAGE_LEVEL: LEVEL_3, TOTAL_WORKERS: 5, CHANGE_PREVIOUS_EMPLOYMENT: 7,
+            ANNUALIZED_WAGE_RATE_OF_PAY: 600, SOC_CODE: "xyz", CASE_NUMBER: "111", H1B_DEPENDENT: "Y",
+            EMPLOYER_NAME: "GG", WORKSITE_LATITUDE: 6, WORKSITE_LONGITUDE: 4},
+        {i: 1, WAGE_LEVEL: LEVEL_2, TOTAL_WORKERS: 3, CONTINUED_EMPLOYMENT: 3,
+            ANNUALIZED_WAGE_RATE_OF_PAY: 500, SOC_CODE: "abc", CASE_NUMBER: "222", H1B_DEPENDENT: "Y",
             WORKSITE_LATITUDE: 5, WORKSITE_LATITUDE: 8},
-        {WAGE_LEVEL: LEVEL_3, TOTAL_WORKERS: 5, CHANGE_PREVIOUS_EMPLOYMENT: 7,
-            ANNUALIZED_WAGE_RATE_OF_PAY: 600, SOC_CODE: "xyz",
+        {i: 2, WAGE_LEVEL: LEVEL_1, TOTAL_WORKERS: 2, NEW_EMPLOYMENT: 5, CHANGE_PREVIOUS_EMPLOYMENT: 1,
+            ANNUALIZED_WAGE_RATE_OF_PAY: 150, SOC_CODE: "123", CASE_NUMBER: "333", H1B_DEPENDENT: "C",
+            EMPLOYER_NAME: "AA", WORKSITE_LATITUDE: 5, WORKSITE_LONGITUDE: 8},
+        {i: 3, WAGE_LEVEL: LEVEL_4, TOTAL_WORKERS: 7, NEW_CONCURRENT_EMPLOYMENT: 1, CONTINUED_EMPLOYMENT: 4000,
+            ANNUALIZED_WAGE_RATE_OF_PAY: 400, SOC_CODE: "xyz", CASE_NUMBER: "444", H1B_DEPENDENT: "Y",
             EMPLOYER_NAME: "GG", WORKSITE_LATITUDE: 6, WORKSITE_LONGITUDE: 4},
-        {WAGE_LEVEL: LEVEL_4, TOTAL_WORKERS: 7, NEW_CONCURRENT_EMPLOYMENT: 1, CONTINUED_EMPLOYMENT: 4000,
-            ANNUALIZED_WAGE_RATE_OF_PAY: 400, SOC_CODE: "xyz",
-            EMPLOYER_NAME: "GG", WORKSITE_LATITUDE: 6, WORKSITE_LONGITUDE: 4},
-        {WAGE_LEVEL: LEVEL_1, TOTAL_WORKERS: 11, CHANGE_EMPLOYER: 14, AMENDED_PETITION: 77,
-            ANNUALIZED_WAGE_RATE_OF_PAY: 200, SOC_CODE: "abc",
+        {i: 4, WAGE_LEVEL: LEVEL_1, TOTAL_WORKERS: 11, CHANGE_EMPLOYER: 14, AMENDED_PETITION: 77,
+            ANNUALIZED_WAGE_RATE_OF_PAY: 200, SOC_CODE: "abc", CASE_NUMBER: "555", H1B_DEPENDENT: "R",
             EMPLOYER_NAME: "TT", WORKSITE_LATITUDE: 1, WORKSITE_LONGITUDE: 3},
-        {WAGE_LEVEL: LEVEL_2, TOTAL_WORKERS: 17,  NEW_EMPLOYMENT: 7,
-            ANNUALIZED_WAGE_RATE_OF_PAY: 300, SOC_CODE: "123",
+        {i: 5, WAGE_LEVEL: LEVEL_2, TOTAL_WORKERS: 17,  NEW_EMPLOYMENT: 7,
+            ANNUALIZED_WAGE_RATE_OF_PAY: 300, SOC_CODE: "123", CASE_NUMBER: "666", H1B_DEPENDENT: "Y",
             EMPLOYER_NAME: "TT", WORKSITE_LATITUDE: 1, WORKSITE_LONGITUDE: 3},
-        {TOTAL_WORKERS: 23, AMENDED_PETITION: 5,
-            ANNUALIZED_WAGE_RATE_OF_PAY: 10000, SOC_CODE: "123",
+        {i: 6, TOTAL_WORKERS: 23, AMENDED_PETITION: 5,
+            ANNUALIZED_WAGE_RATE_OF_PAY: 10000, SOC_CODE: "123", CASE_NUMBER: "777", H1B_DEPENDENT: "Y",
             EMPLOYER_NAME: "TT", WORKSITE_ADDR1: "addr1", WORKSITE_ADDR2: "addr2", 
             WORKSITE_LATITUDE: 1, WORKSITE_LONGITUDE: 3},
-        {},
-        {CASE_NUMBER: "12345"}
+        {i: 7,  CASE_NUMBER: "888", H1B_DEPENDENT: "Y"},
+        {i: 8, CASE_NUMBER: "12345", H1B_DEPENDENT: "Y"}
     ]
 
     var summary = {}
@@ -114,6 +262,46 @@ describe('Test summarize', () => {
     })
     
     it('3) test summarized h1bRecords after summarize, compressSummaryRecord, and then decompressSummaryRecord', () => {
+        const compressedSummary = compressSummaryRecord(summary)
+        const decompressedSummary = decompressSummaryRecord(compressedSummary)
+        // logger.info(chalk.bgMagenta(`decompressedSummary: ${JSON.stringify(decompressedSummary, undefined, 2)}`))
+        testSummary(decompressedSummary)
+    })
+    
+    xit('4) test summarized reordered h1bRecords after summarize, compressSummaryRecord, and then decompressSummaryRecord', () => {
+        summary = summarize(h1bRecords, query)
+        logger.trace(chalk.bgBlue(`summary: ${JSON.stringify(summary, undefined, 2)}`))
+        const newH1bRecords = reOrderArray(h1bRecords)
+        logger.trace(chalk.bgYellow.black(`h1bRecords: ${JSON.stringify(h1bRecords, undefined, 2)}`))
+        logger.trace(chalk.bgMagenta(`newH1bRecords: ${JSON.stringify(newH1bRecords, undefined, 2)}`))
+        summary = summarize(newH1bRecords, query)
+        logger.trace(chalk.bgRed(`summary: ${JSON.stringify(summary, undefined, 2)}`))
+        const compressedSummary = compressSummaryRecord(summary)
+        const decompressedSummary = decompressSummaryRecord(compressedSummary)
+        testSummary(decompressedSummary)
+    })
+
+    xit('5) test summarized reordered h1bRecords after summarize, compressSummaryRecord, and then decompressSummaryRecord', () => {
+        summary = summarize(h1bRecords, query)
+        logger.trace(chalk.bgBlue(`summary: ${JSON.stringify(summary, undefined, 2)}`))
+        const newH1bRecords = reOrderArray(h1bRecords)
+        logger.trace(chalk.bgYellow.black(`h1bRecords: ${JSON.stringify(h1bRecords, undefined, 2)}`))
+        logger.trace(chalk.bgMagenta(`newH1bRecords: ${JSON.stringify(newH1bRecords, undefined, 2)}`))
+        summary = summarize(newH1bRecords, query)
+        logger.trace(chalk.bgRed(`summary: ${JSON.stringify(summary, undefined, 2)}`))
+        const compressedSummary = compressSummaryRecord(summary)
+        const decompressedSummary = decompressSummaryRecord(compressedSummary)
+        testSummary(decompressedSummary)
+    })
+
+    xit('6) test summarized reordered h1bRecords after summarize, compressSummaryRecord, and then decompressSummaryRecord', () => {
+        summary = summarize(h1bRecords, query)
+        logger.trace(chalk.bgBlue(`summary: ${JSON.stringify(summary, undefined, 2)}`))
+        const newH1bRecords = reOrderArray(h1bRecords)
+        logger.trace(chalk.bgYellow.black(`h1bRecords: ${JSON.stringify(h1bRecords, undefined, 2)}`))
+        logger.trace(chalk.bgMagenta(`newH1bRecords: ${JSON.stringify(newH1bRecords, undefined, 2)}`))
+        summary = summarize(newH1bRecords, query)
+        logger.trace(chalk.bgRed(`summary: ${JSON.stringify(summary, undefined, 2)}`))
         const compressedSummary = compressSummaryRecord(summary)
         const decompressedSummary = decompressSummaryRecord(compressedSummary)
         testSummary(decompressedSummary)
@@ -488,7 +676,7 @@ const testLatLngs = (summary) => {
     var instanceMap = Object.getOwnPropertyNames(employerInstanceMap)
     expect(2).to.equal(instanceMap.length)
     expect("TT").to.equal(instanceMap[0])
-    logger.isTraceEnabled(chalk.bgRed(`instanceMap[0]: ${JSON.stringify(employerInstanceMap[instanceMap[0]], undefined, 2)}`))
+    logger.trace(chalk.bgRed(`instanceMap[0]: ${JSON.stringify(employerInstanceMap[instanceMap[0]], undefined, 2)}`))
     var count = employerInstanceMap[instanceMap[0]].count
     expect(2).to.equal(count)
     var instanceArray = employerInstanceMap[instanceMap[0]].instanceArray
@@ -503,18 +691,23 @@ const testLatLngs = (summary) => {
     var instance = instanceArray[0]
     expect(!_.isEmpty(instance)).to.be.true
     expect("abc").to.equal(instance['SOC_CODE'])
+    expect("555").to.equal(instance['CASE_NUMBER'])
+    expect("R").to.equal(instance['H1B_DEPENDENT'])
     expect(11).to.equal(instance['TOTAL_WORKERS'])
     expect(200).to.equal(instance['ANNUALIZED_WAGE_RATE_OF_PAY'])
     instanceArray.shift()
     var instance = instanceArray[0]
     expect(!_.isEmpty(instance)).to.be.true
     expect("123").to.equal(instance['SOC_CODE'])
+    expect("666").to.equal(instance['CASE_NUMBER'])
+    expect("Y").to.equal(instance['H1B_DEPENDENT'])
     expect(17).to.equal(instance['TOTAL_WORKERS'])
     expect(300).to.equal(instance['ANNUALIZED_WAGE_RATE_OF_PAY'])
     instanceArray.shift()
     expect(0).to.equal(instanceArray.length)
     delete instanceArray
     instanceMap.shift()
+    
     expect(1).to.equal(instanceMap.length)
     expect("TTaddr1addr2").to.equal(instanceMap[0])
     var count = employerInstanceMap[instanceMap[0]].count
@@ -536,8 +729,12 @@ const testLatLngs = (summary) => {
     instance = instanceArray[0]
     expect(!_.isEmpty(instance)).to.be.true
     expect("123").to.equal(instance['SOC_CODE'])
+    expect("Y").to.equal(instance['H1B_DEPENDENT'])
+    expect("777").to.equal(instance['CASE_NUMBER'])
     expect(23).to.equal(instance['TOTAL_WORKERS'])
     expect(10000).to.equal(instance['ANNUALIZED_WAGE_RATE_OF_PAY'])
+    delete instance['H1B_DEPENDENT']
+    delete instance['CASE_NUMBER']
     delete instance['SOC_CODE']
     delete instance['TOTAL_WORKERS']
     delete instance['ANNUALIZED_WAGE_RATE_OF_PAY']
@@ -575,9 +772,13 @@ const testLatLngs = (summary) => {
     expect(2).to.equal(instanceArray.length)
     instance = instanceArray[0]
     expect(!_.isEmpty(instance)).to.be.true
+    expect("111").to.equal(instance['CASE_NUMBER'])
+    expect("Y").to.equal(instance['H1B_DEPENDENT'])
     expect("xyz").to.equal(instance['SOC_CODE'])
     expect(5).to.equal(instance['TOTAL_WORKERS'])
     expect(600).to.equal(instance['ANNUALIZED_WAGE_RATE_OF_PAY'])
+    delete instance['CASE_NUMBER']
+    delete instance['H1B_DEPENDENT']
     delete instance['SOC_CODE']
     delete instance['TOTAL_WORKERS']
     delete instance['ANNUALIZED_WAGE_RATE_OF_PAY']
@@ -585,9 +786,13 @@ const testLatLngs = (summary) => {
     instanceArray.shift()
     instance = instanceArray[0]
     expect(!_.isEmpty(instance)).to.be.true
+    expect("444").to.equal(instance['CASE_NUMBER'])
+    expect("Y").to.equal(instance['H1B_DEPENDENT'])
     expect("xyz").to.equal(instance['SOC_CODE'])
     expect(7).to.equal(instance['TOTAL_WORKERS'])
     expect(400).to.equal(instance['ANNUALIZED_WAGE_RATE_OF_PAY'])
+    delete instance['CASE_NUMBER']
+    delete instance['H1B_DEPENDENT']
     delete instance['SOC_CODE']
     delete instance['TOTAL_WORKERS']
     delete instance['ANNUALIZED_WAGE_RATE_OF_PAY']
@@ -626,9 +831,13 @@ const testLatLngs = (summary) => {
     expect(1).to.equal(instanceArray.length)
     instance = instanceArray[0]
     expect(!_.isEmpty(instance)).to.be.true
+    expect("C").to.equal(instance['H1B_DEPENDENT'])
+    expect("333").to.equal(instance['CASE_NUMBER'])
     expect("123").to.equal(instance['SOC_CODE'])
     expect(2).to.equal(instance['TOTAL_WORKERS'])
     expect(150).to.equal(instance['ANNUALIZED_WAGE_RATE_OF_PAY'])
+    delete instance['H1B_DEPENDENT']
+    delete instance['CASE_NUMBER']
     delete instance['SOC_CODE']
     delete instance['TOTAL_WORKERS']
     delete instance['ANNUALIZED_WAGE_RATE_OF_PAY']
@@ -643,4 +852,16 @@ const testLatLngs = (summary) => {
     logger.trace(chalk.bgRed(`latLngRecord: ${JSON.stringify(latLngRecord, undefined, 2)}`))
     delete summary['latLngMap']
     logger.trace(`${JSON.stringify(summary)}`)
+}
+
+const reOrderArray = (array) => {
+    const copyArray = _.clone(array)
+    const newArray = []
+
+    while(copyArray.length > 0){
+        const index = Math.random() * copyArray.length
+        const arr = copyArray.splice(index, 1)
+        newArray.push(arr[0])
+    }
+    return newArray
 }
