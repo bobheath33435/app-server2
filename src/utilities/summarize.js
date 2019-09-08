@@ -35,7 +35,7 @@ const summarizeAndCompress = (h1bRecords, query) => {
 const summarize = (h1bRecords, query) => {
     logger.trace('running summarize');
     var summaryRecord = summarizeMajor(h1bRecords, query)
-    summaryRecord = summarizeMinor(h1bRecords, summaryRecord)
+    // summaryRecord = summarizeMinor(h1bRecords, summaryRecord)
     logger.trace('completed running summarize');
     return summaryRecord
 }
@@ -153,6 +153,7 @@ const summarizeMajor = (h1bRecords, query) => {
                 && undefined != h1bRecord[ANNUALIZED_WAGE_RATE_OF_PAY]){
             updateWageMap(summaryRecord.wageMap, h1bRecord)
         }
+        processLatLng(summaryRecord, h1bRecord)
     })
     summaryRecord.percentiles = calculatePercentiles(summaryRecord.wageMap)
     var socKeys = Object.getOwnPropertyNames(summaryRecord.occupations)
@@ -170,6 +171,7 @@ const summarizeMajor = (h1bRecords, query) => {
         }
     })
     summaryRecord.occupations = occupations
+    // summaryRecord.latLngMap = sortLatLngRecords(summaryRecord.latLngMap)
     logger.trace("summaryRecord: " + JSON.stringify(summaryRecord, undefined, 2))
     logger.trace("percentiles: " + JSON.stringify(summaryRecord.percentiles, undefined, 2))
     return summaryRecord
@@ -194,51 +196,51 @@ const summarizeMinor = (h1bRecords, summaryRecord) => {
         h1bRecords.forEach((h1bRecord, index) => {
             logger.trace(chalk.bgRed(`h1bRecord: ${JSON.stringify(h1bRecord, undefined, 2)}`))
             currentH1bRecord = h1bRecord
-            // processLngLat(summaryRecord, h1bRecord)
-            if(_.isNumber(h1bRecord[WORKSITE_LATITUDE]) && 
-                         _.isNumber(h1bRecord[WORKSITE_LONGITUDE]) &&
-                         !_.isEmpty(h1bRecord[EMPLOYER_NAME])){
-                var key = h1bRecord[WORKSITE_LATITUDE] + '_' + h1bRecord[WORKSITE_LONGITUDE]
-                key = key.replace(/[\s\.,]+/g, '')
-                const latLngMap = summaryRecord.latLngMap
-                var latLngItem = latLngMap[key]
-                if(undefined == latLngItem){
-                    latLngItem = { "count": 0,
-                                    "lat": h1bRecord[WORKSITE_LATITUDE],
-                                    "lng": h1bRecord[WORKSITE_LONGITUDE], 
-                                    "instanceMap" : {} }
-                    latLngMap[key] = latLngItem
-                }
-                latLngItem.count += 1
-                var h1bInstKey = h1bRecord[EMPLOYER_NAME]
-                const addr1 = h1bRecord[WORKSITE_ADDR1]
-                h1bInstKey += (undefined == addr1) ? "" : addr1
-                const addr2 = h1bRecord[WORKSITE_ADDR2]
-                h1bInstKey += (undefined == addr2) ? "" : addr2
-                h1bInstKey = h1bInstKey.replace(/[\s\.,]+/g, '')
-                var h1bInstance = latLngItem.instanceMap[h1bInstKey]
-                if(undefined == h1bInstance){
-                    h1bInstance = _.pick(h1bRecord,
-                        EMPLOYER_NAME,
-                        WORKSITE_ADDR1, 
-                        WORKSITE_ADDR2, 
-                        WORKSITE_CITY,
-                        WORKSITE_COUNTY,
-                        WORKSITE_STATE) 
-                    h1bInstance.count = 0
-                    h1bInstance.instanceArray = []
-                    latLngItem.instanceMap[h1bInstKey] = h1bInstance
-                }
+            // processLatLng(summaryRecord, h1bRecord)
+        //     if(_.isNumber(h1bRecord[WORKSITE_LATITUDE]) && 
+        //                  _.isNumber(h1bRecord[WORKSITE_LONGITUDE]) &&
+        //                  !_.isEmpty(h1bRecord[EMPLOYER_NAME])){
+        //         var key = h1bRecord[WORKSITE_LATITUDE] + '_' + h1bRecord[WORKSITE_LONGITUDE]
+        //         key = key.replace(/[\s\.,]+/g, '')
+        //         const latLngMap = summaryRecord.latLngMap
+        //         var latLngItem = latLngMap[key]
+        //         if(undefined == latLngItem){
+        //             latLngItem = { "count": 0,
+        //                             "lat": h1bRecord[WORKSITE_LATITUDE],
+        //                             "lng": h1bRecord[WORKSITE_LONGITUDE], 
+        //                             "instanceMap" : {} }
+        //             latLngMap[key] = latLngItem
+        //         }
+        //         latLngItem.count += 1
+        //         var h1bInstKey = h1bRecord[EMPLOYER_NAME]
+        //         const addr1 = h1bRecord[WORKSITE_ADDR1]
+        //         h1bInstKey += (undefined == addr1) ? "" : addr1
+        //         const addr2 = h1bRecord[WORKSITE_ADDR2]
+        //         h1bInstKey += (undefined == addr2) ? "" : addr2
+        //         h1bInstKey = h1bInstKey.replace(/[\s\.,]+/g, '')
+        //         var h1bInstance = latLngItem.instanceMap[h1bInstKey]
+        //         if(undefined == h1bInstance){
+        //             h1bInstance = _.pick(h1bRecord,
+        //                 EMPLOYER_NAME,
+        //                 WORKSITE_ADDR1, 
+        //                 WORKSITE_ADDR2, 
+        //                 WORKSITE_CITY,
+        //                 WORKSITE_COUNTY,
+        //                 WORKSITE_STATE) 
+        //             h1bInstance.count = 0
+        //             h1bInstance.instanceArray = []
+        //             latLngItem.instanceMap[h1bInstKey] = h1bInstance
+        //         }
         
-                var workerData = _.pick(h1bRecord,
-                                        CASE_NUMBER,
-                                        SOC_CODE,
-                                        TOTAL_WORKERS,
-                                        H1B_DEPENDENT,
-                                        ANNUALIZED_WAGE_RATE_OF_PAY)
-                h1bInstance.count += 1
-                h1bInstance.instanceArray.push(workerData)                 
-            }
+        //         var workerData = _.pick(h1bRecord,
+        //                                 CASE_NUMBER,
+        //                                 SOC_CODE,
+        //                                 TOTAL_WORKERS,
+        //                                 H1B_DEPENDENT,
+        //                                 ANNUALIZED_WAGE_RATE_OF_PAY)
+        //         h1bInstance.count += 1
+        //         h1bInstance.instanceArray.push(workerData)                 
+        //     }
         })  
         // sort lat lng map by count
         summaryRecord.latLngMap = sortLatLngRecords(summaryRecord.latLngMap)
@@ -272,52 +274,53 @@ const sortLatLngRecords = (oldLatLngMap) => {
     return newLatLngMap
 }
 
-const processLngLat = (summaryRecord, h1bRecord) => {
-    if(_.isNumber(h1bRecord[WORKSITE_LATITUDE]) && 
-                    _.isNumber(h1bRecord[WORKSITE_LONGITUDE]) &&
-                    !_.isEmpty(h1bRecord[EMPLOYER_NAME])){
-        var key = h1bRecord[WORKSITE_LATITUDE] + '_' + h1bRecord[WORKSITE_LONGITUDE]
-        key = key.replace(/[\s\.,]+/g, '')
-        const latLngMap = summaryRecord.latLngMap
-        var latLngItem = latLngMap[key]
-        if(undefined == latLngItem){
-            latLngItem = { "count": 0,
-                            "lat": h1bRecord[WORKSITE_LATITUDE],
-                            "lng": h1bRecord[WORKSITE_LONGITUDE], 
-                            "instanceMap" : {} }
-            latLngMap[key] = latLngItem
-        }
-        latLngItem.count += 1
-        var h1bInstKey = h1bRecord[EMPLOYER_NAME]
-        const addr1 = h1bRecord[WORKSITE_ADDR1]
-        h1bInstKey += (undefined == addr1) ? "" : addr1
-        const addr2 = h1bRecord[WORKSITE_ADDR2]
-        h1bInstKey += (undefined == addr2) ? "" : addr2
-        h1bInstKey = h1bInstKey.replace(/[\s\.,]+/g, '')
-        var h1bInstance = latLngItem.instanceMap[h1bInstKey]
-        if(undefined == h1bInstance){
-            h1bInstance = _.pick(h1bRecord,
-                EMPLOYER_NAME,
-                WORKSITE_ADDR1, 
-                WORKSITE_ADDR2, 
-                WORKSITE_CITY,
-                WORKSITE_COUNTY,
-                WORKSITE_STATE) 
-            h1bInstance.count = 0
-            h1bInstance.instanceArray = []
-            latLngItem.instanceMap[h1bInstKey] = h1bInstance
-        }
-
-        var workerData = _.pick(h1bRecord,
-                                CASE_NUMBER,
-                                SOC_CODE,
-                                TOTAL_WORKERS,
-                                H1B_DEPENDENT,
-                                ANNUALIZED_WAGE_RATE_OF_PAY)
-        h1bInstance.count += 1
-        h1bInstance.instanceArray.push(workerData)                 
+const processLatLng = (summaryRecord, h1bRecord) => {
+    if(!_.isNumber(h1bRecord[WORKSITE_LATITUDE]) || 
+                    !_.isNumber(h1bRecord[WORKSITE_LONGITUDE]) ||
+                    _.isEmpty(h1bRecord[EMPLOYER_NAME])){
+        return
     }
 
+    var key = h1bRecord[WORKSITE_LATITUDE] + '_' + h1bRecord[WORKSITE_LONGITUDE]
+    key = key.replace(/[\s\.,]+/g, '')
+    const latLngMap = summaryRecord.latLngMap
+    var latLngItem = latLngMap[key]
+    if(undefined == latLngItem){
+        latLngItem = { "count": 0,
+                        "lat": h1bRecord[WORKSITE_LATITUDE],
+                        "lng": h1bRecord[WORKSITE_LONGITUDE], 
+                        "instanceMap" : {} }
+        latLngMap[key] = latLngItem
+    }
+    latLngItem.count += 1
+    var h1bInstKey = h1bRecord[EMPLOYER_NAME]
+    const addr1 = h1bRecord[WORKSITE_ADDR1]
+    h1bInstKey += (undefined == addr1) ? "" : addr1
+    const addr2 = h1bRecord[WORKSITE_ADDR2]
+    h1bInstKey += (undefined == addr2) ? "" : addr2
+    h1bInstKey = h1bInstKey.replace(/[\s\.,]+/g, '')
+    var h1bInstance = latLngItem.instanceMap[h1bInstKey]
+    if(undefined == h1bInstance){
+        h1bInstance = _.pick(h1bRecord,
+            EMPLOYER_NAME,
+            WORKSITE_ADDR1, 
+            WORKSITE_ADDR2, 
+            WORKSITE_CITY,
+            WORKSITE_COUNTY,
+            WORKSITE_STATE) 
+        h1bInstance.count = 0
+        h1bInstance.instanceArray = []
+        latLngItem.instanceMap[h1bInstKey] = h1bInstance
+    }
+
+    var workerData = _.pick(h1bRecord,
+                            CASE_NUMBER,
+                            SOC_CODE,
+                            TOTAL_WORKERS,
+                            H1B_DEPENDENT,
+                            ANNUALIZED_WAGE_RATE_OF_PAY)
+    h1bInstance.count += 1
+    h1bInstance.instanceArray.push(workerData)                 
 }
 
 const sortLatLng = (a, b, latLngMap) => {
