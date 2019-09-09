@@ -65,147 +65,174 @@ describe('Test createKey', () => {
 
 describe('Test sort routine', () => {
     it('1) Test sortLatLng() sort routine', () => {
-        var latLngMap = {
-            "a": {"count": 1},
-            "b": {"count": 2}
-        }
-        expect(0).to.be.below(sortLatLng("a", "b", latLngMap))
-        expect(0).to.be.above(sortLatLng("b", "a", latLngMap))
-        latLngMap = {
-            "a": {"count": 2},
-            "b": {"count": 2}
-        }
-        expect(0).to.be.equal(sortLatLng("b", "a", latLngMap))
-        latLngMap = {
-            "a": {"count": 2, lat: 1},
-            "b": {"count": 2, lat: 1}
-        }
-        expect(0).to.be.equal(sortLatLng("b", "a", latLngMap))
-        latLngMap = {
-            "a": {"count": 2, lat: 1, lng: 5},
-            "b": {"count": 2, lat: 1, lng: 5}
-        }
-        expect(0).to.be.equal(sortLatLng("b", "a", latLngMap))
-        latLngMap = {
-            "a": {"count": 2},
-            "b": {"count": 2, lat: 3}
-        }
-        expect(0).to.be.below(sortLatLng("a", "b", latLngMap))
-        latLngMap = {
-            "a": {"count": 2, lat: 3},
-            "b": {"count": 2}
-        }
-        expect(0).to.be.above(sortLatLng("a", "b", latLngMap))
-        latLngMap = {
-            "a": {"count": 2, lat: 2},
-            "b": {"count": 2, lat: 3}
-        }
-        expect(0).to.be.below(sortLatLng("a", "b", latLngMap))
-        latLngMap = {
-            "a": {"count": 2, lat: 4},
-            "b": {"count": 2, lat: 3}
-        }
-        expect(0).to.be.above(sortLatLng("a", "b", latLngMap))
-        latLngMap = {
-            "a": {"count": 2, lat: 1},
-            "b": {"count": 2, lat: 1, lng: 8}
-        }
-        expect(0).to.be.below(sortLatLng("a", "b", latLngMap))
-        latLngMap = {
-            "a": {"count": 2, lat: 1, lng: 8},
-            "b": {"count": 2, lat: 1}
-        }
-        expect(0).to.be.above(sortLatLng("a", "b", latLngMap))
+ 
+            var a = {"count": 1}
+            var b = {"count": 2}
+
+        expect(0).to.be.below(sortLatLng(a, b))
+        expect(0).to.be.above(sortLatLng(b, a))
+
+            a = {"count": 2},
+            b = {"count": 2}
+
+        expect(0).to.be.equal(sortLatLng(a, b))
+
+            a = {"count": 2, lat: 1},
+            b = {"count": 2, lat: 1}
+
+        expect(0).to.be.equal(sortLatLng(b, a))
+
+            a = {"count": 2, lat: 1, lng: 5},
+            b = {"count": 2, lat: 1, lng: 5}
+
+        expect(0).to.be.equal(sortLatLng(b, a))
+
+            a = {"count": 2},
+            b = {"count": 2, lat: 3}
+
+        expect(0).to.be.below(sortLatLng(a, b))
+
+            a = {"count": 2, lat: 3},
+            b = {"count": 2}
+
+        expect(0).to.be.above(sortLatLng(a, b))
+
+            a = {"count": 2, lat: 2},
+            b = {"count": 2, lat: 3}
+
+        expect(0).to.be.below(sortLatLng(a, b))
+
+            a = {"count": 2, lat: 4},
+            b = {"count": 2, lat: 3}
+
+        expect(0).to.be.above(sortLatLng(a, b))
+
+            a = {"count": 2, lat: 1},
+            b = {"count": 2, lat: 1, lng: 8}
+
+        expect(0).to.be.below(sortLatLng(a, b))
+
+            a = {"count": 2, lat: 1, lng: 8}
+            b = {"count": 2, lat: 1}
+
+        expect(0).to.be.above(sortLatLng(a, b))
     })
     
     it('2) Test sortInstanceKey() sort routine', () => {
-        var instanceMap = {
-            "a": {"count": 1},
-            "b": {"count": 2}
-        }
-        expect(0).to.be.below(sortInstanceKey("a", "b", instanceMap))
-        expect(0).to.be.above(sortInstanceKey("b", "a", instanceMap))
-        instanceMap = {
-            "a": {"count": 2},
-            "b": {"count": 2}
-        }
-        expect(0).to.be.equal(sortInstanceKey("b", "a", instanceMap))
-        instanceMap = {
-            "a": {"count": 2, EMPLOYER_NAME: "abc"},
-            "b": {"count": 2, EMPLOYER_NAME: "abc"}
-        }
-        expect(0).to.be.equal(sortInstanceKey("b", "a", instanceMap))
-        instanceMap = {
-            "a": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa"},
-            "b": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa"}
-        }
-        expect(0).to.be.equal(sortInstanceKey("b", "a", instanceMap))
-        instanceMap = {
-            "a": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa", WORKSITE_ADDR1: "bbb"},
-            "b": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa", WORKSITE_ADDR1: "bbb"}
-        }
-        expect(0).to.be.equal(sortInstanceKey("b", "a", instanceMap))
-        instanceMap = {
-            "a": {"count": 2, EMPLOYER_NAME: "abc"},
-            "b": {"count": 2, EMPLOYER_NAME: "xyz"}
-        }
-        expect(0).to.be.below(sortInstanceKey("a", "b", instanceMap))
-        instanceMap = {
-            "a": {"count": 2, EMPLOYER_NAME: "abc"},
-            "b": {"count": 2}
-        }
-        expect(0).to.be.above(sortInstanceKey("a", "b", instanceMap))
-        instanceMap = {
-            "a": {"count": 2},
-            "b": {"count": 2, EMPLOYER_NAME: "abc"}
-        }
-        expect(0).to.be.below(sortInstanceKey("a", "b", instanceMap))
-        instanceMap = {
-            "a": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa"}, 
-            "b": {"count": 2, EMPLOYER_NAME: "abc"}
-        }
-        expect(0).to.be.above(sortInstanceKey("a", "b", instanceMap))
-        instanceMap = {
-            "a": {"count": 2, EMPLOYER_NAME: "abc"}, 
-            "b": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa"}
-        }
-        expect(0).to.be.below(sortInstanceKey("a", "b", instanceMap))
-        instanceMap = {
-            "a": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa"}, 
-            "b": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "bbb"}
-        }
-        expect(0).to.be.below(sortInstanceKey("a", "b", instanceMap))
-        instanceMap = {
-            "a": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "cccc"}, 
-            "b": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "bbb"}
-        }
-        expect(0).to.be.above(sortInstanceKey("a", "b", instanceMap))
-        instanceMap = {
-            "a": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa", WORKSITE_ADDR2: "bbb"}, 
-            "b": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa"}
-        }
-        expect(0).to.be.above(sortInstanceKey("a", "b", instanceMap))
-        instanceMap = {
-            "a": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa"}, 
-            "b": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa", WORKSITE_ADDR2: "bbb"}
-        }
-        expect(0).to.be.below(sortInstanceKey("a", "b", instanceMap))
-        instanceMap = {
-            "a": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa", WORKSITE_ADDR2: "bbb"}, 
-            "b": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa", WORKSITE_ADDR2: "ccc"}
-        }
-        expect(0).to.be.below(sortInstanceKey("a", "b", instanceMap))
-        instanceMap = {
-            "a": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa", WORKSITE_ADDR2: "ddd"}, 
-            "b": {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa", WORKSITE_ADDR2: "ccc"}
-        }
-        expect(0).to.be.above(sortInstanceKey("a", "b", instanceMap))
+
+            a = {"count": 1}
+            b = {"count": 2}
+
+        expect(0).to.be.below(sortInstanceKey(a, b))
+        expect(0).to.be.above(sortInstanceKey(b, a))
+
+            a = {"count": 2},
+            b = {"count": 2}
+
+        expect(0).to.be.equal(sortInstanceKey(b, a))
+
+            a = {"count": 2, EMPLOYER_NAME: "abc"}
+            b = {"count": 2, EMPLOYER_NAME: "abc"}
+
+        expect(0).to.be.equal(sortInstanceKey(b, a))
+
+            a = {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa"},
+            b = {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa"}
+
+        expect(0).to.be.equal(sortInstanceKey(b, a))
+
+            a = {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa", WORKSITE_ADDR1: "bbb"},
+            b = {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa", WORKSITE_ADDR1: "bbb"}
+
+        expect(0).to.be.equal(sortInstanceKey(b, a))
+
+            a = {"count": 2, EMPLOYER_NAME: "abc"}
+            b = {"count": 2, EMPLOYER_NAME: "xyz"}
+
+        expect(0).to.be.below(sortInstanceKey(a, b))
+
+            a = {"count": 2, EMPLOYER_NAME: "abc"}
+            b = {"count": 2}
+
+        expect(0).to.be.above(sortInstanceKey(a, b))
+
+            a = {"count": 2}
+            b = {"count": 2, EMPLOYER_NAME: "abc"}
+
+        expect(0).to.be.below(sortInstanceKey(a, b))
+
+            a = {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa"}
+            b = {"count": 2, EMPLOYER_NAME: "abc"}
+
+        expect(0).to.be.above(sortInstanceKey(a, b))
+
+            a = {"count": 2, EMPLOYER_NAME: "abc"}
+            b = {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa"}
+
+        expect(0).to.be.below(sortInstanceKey(a, b))
+
+            a = {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa"}
+            b = {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "bbb"}
+
+        expect(0).to.be.below(sortInstanceKey(a, b))
+
+            a = {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "cccc"}
+            b = {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "bbb"}
+
+        expect(0).to.be.above(sortInstanceKey(a, b))
+
+            a = {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa", WORKSITE_ADDR2: "bbb"}
+            b = {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa"}
+
+        expect(0).to.be.above(sortInstanceKey(a, b))
+
+            a = {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa"}
+            b = {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa", WORKSITE_ADDR2: "bbb"}
+
+        expect(0).to.be.below(sortInstanceKey(a, b))
+
+            a = {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa", WORKSITE_ADDR2: "bbb"}
+            b = {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa", WORKSITE_ADDR2: "ccc"}
+
+        expect(0).to.be.below(sortInstanceKey(a, b))
+
+            a = {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa", WORKSITE_ADDR2: "ddd"}
+            b = {"count": 2, EMPLOYER_NAME: "abc", WORKSITE_ADDR1: "aaa", WORKSITE_ADDR2: "ccc"}
+
+        expect(0).to.be.above(sortInstanceKey(a, b))
     })
     
     it('3) Test sortInstanceArray() sort routine', () => {
         var a = { TOTAL_WORKERS: 2}
         var b = { TOTAL_WORKERS: 3}
         expect(0).to.be.below(sortInstanceArray(a, b))
+        expect(0).to.be.above(sortInstanceArray(b, a))
+
+        var a = { TOTAL_WORKERS: 2}
+        var b = { TOTAL_WORKERS: 3}
+        expect(0).to.be.below(sortInstanceArray(a, b))
+
+        var a = { TOTAL_WORKERS: 2, CASE_NUMBER: "aa"}
+        var b = { TOTAL_WORKERS: 2, CASE_NUMBER: "bb"}
+        expect(0).to.be.below(sortInstanceArray(a, b))
+        expect(0).to.be.above(sortInstanceArray(b, a))
+
+        var a = { TOTAL_WORKERS: 2, CASE_NUMBER: "aa"}
+        var b = { TOTAL_WORKERS: 2}
+        expect(0).to.be.above(sortInstanceArray(a, b))
+
+        var a = { TOTAL_WORKERS: 2}
+        var b = { TOTAL_WORKERS: 2, CASE_NUMBER: "aa"}
+        expect(0).to.be.below(sortInstanceArray(a, b))
+
+        var a = { TOTAL_WORKERS: 3}
+        var b = { TOTAL_WORKERS: 2, CASE_NUMBER: "aa"}
+        expect(0).to.be.above(sortInstanceArray(a, b))
+
+        var a = { TOTAL_WORKERS: 2}
+        var b = { TOTAL_WORKERS: 3, CASE_NUMBER: "aa"}
+        expect(0).to.be.below(sortInstanceArray(a, b))
+
     })
 
 })
@@ -264,44 +291,49 @@ describe('Test summarize', () => {
     it('3) test summarized h1bRecords after summarize, compressSummaryRecord, and then decompressSummaryRecord', () => {
         const compressedSummary = compressSummaryRecord(summary)
         const decompressedSummary = decompressSummaryRecord(compressedSummary)
-        // logger.info(chalk.bgMagenta(`decompressedSummary: ${JSON.stringify(decompressedSummary, undefined, 2)}`))
         testSummary(decompressedSummary)
     })
     
-    xit('4) test summarized reordered h1bRecords after summarize, compressSummaryRecord, and then decompressSummaryRecord', () => {
+    it('4) test summarized reordered h1bRecords after summarize, compressSummaryRecord, and then decompressSummaryRecord', () => {
         summary = summarize(h1bRecords, query)
-        logger.trace(chalk.bgBlue(`summary: ${JSON.stringify(summary, undefined, 2)}`))
         const newH1bRecords = reOrderArray(h1bRecords)
-        logger.trace(chalk.bgYellow.black(`h1bRecords: ${JSON.stringify(h1bRecords, undefined, 2)}`))
-        logger.trace(chalk.bgMagenta(`newH1bRecords: ${JSON.stringify(newH1bRecords, undefined, 2)}`))
         summary = summarize(newH1bRecords, query)
-        logger.trace(chalk.bgRed(`summary: ${JSON.stringify(summary, undefined, 2)}`))
         const compressedSummary = compressSummaryRecord(summary)
         const decompressedSummary = decompressSummaryRecord(compressedSummary)
         testSummary(decompressedSummary)
     })
 
-    xit('5) test summarized reordered h1bRecords after summarize, compressSummaryRecord, and then decompressSummaryRecord', () => {
+    it('5) test summarized reordered h1bRecords after summarize, compressSummaryRecord, and then decompressSummaryRecord', () => {
         summary = summarize(h1bRecords, query)
-        logger.trace(chalk.bgBlue(`summary: ${JSON.stringify(summary, undefined, 2)}`))
         const newH1bRecords = reOrderArray(h1bRecords)
-        logger.trace(chalk.bgYellow.black(`h1bRecords: ${JSON.stringify(h1bRecords, undefined, 2)}`))
-        logger.trace(chalk.bgMagenta(`newH1bRecords: ${JSON.stringify(newH1bRecords, undefined, 2)}`))
         summary = summarize(newH1bRecords, query)
-        logger.trace(chalk.bgRed(`summary: ${JSON.stringify(summary, undefined, 2)}`))
         const compressedSummary = compressSummaryRecord(summary)
         const decompressedSummary = decompressSummaryRecord(compressedSummary)
         testSummary(decompressedSummary)
     })
 
-    xit('6) test summarized reordered h1bRecords after summarize, compressSummaryRecord, and then decompressSummaryRecord', () => {
+    it('6) test summarized reordered h1bRecords after summarize, compressSummaryRecord, and then decompressSummaryRecord', () => {
         summary = summarize(h1bRecords, query)
-        logger.trace(chalk.bgBlue(`summary: ${JSON.stringify(summary, undefined, 2)}`))
         const newH1bRecords = reOrderArray(h1bRecords)
-        logger.trace(chalk.bgYellow.black(`h1bRecords: ${JSON.stringify(h1bRecords, undefined, 2)}`))
-        logger.trace(chalk.bgMagenta(`newH1bRecords: ${JSON.stringify(newH1bRecords, undefined, 2)}`))
         summary = summarize(newH1bRecords, query)
-        logger.trace(chalk.bgRed(`summary: ${JSON.stringify(summary, undefined, 2)}`))
+        const compressedSummary = compressSummaryRecord(summary)
+        const decompressedSummary = decompressSummaryRecord(compressedSummary)
+        testSummary(decompressedSummary)
+    })
+
+    it('7) test summarized reordered, reordered h1bRecords after summarize, compressSummaryRecord, and then decompressSummaryRecord', () => {
+        summary = summarize(h1bRecords, query)
+        const newH1bRecords = reOrderArray(reOrderArray(h1bRecords))
+        summary = summarize(newH1bRecords, query)
+        const compressedSummary = compressSummaryRecord(summary)
+        const decompressedSummary = decompressSummaryRecord(compressedSummary)
+        testSummary(decompressedSummary)
+    })
+
+    it('8) test summarized reordered, reordered, reordered h1bRecords after summarize, compressSummaryRecord, and then decompressSummaryRecord', () => {
+        summary = summarize(h1bRecords, query)
+        const newH1bRecords = reOrderArray(reOrderArray(reOrderArray(h1bRecords)))
+        summary = summarize(newH1bRecords, query)
         const compressedSummary = compressSummaryRecord(summary)
         const decompressedSummary = decompressSummaryRecord(compressedSummary)
         testSummary(decompressedSummary)
@@ -690,19 +722,19 @@ const testLatLngs = (summary) => {
     expect(2).to.equal(instanceArray.length)
     var instance = instanceArray[0]
     expect(!_.isEmpty(instance)).to.be.true
-    expect("abc").to.equal(instance['SOC_CODE'])
-    expect("555").to.equal(instance['CASE_NUMBER'])
-    expect("R").to.equal(instance['H1B_DEPENDENT'])
-    expect(11).to.equal(instance['TOTAL_WORKERS'])
-    expect(200).to.equal(instance['ANNUALIZED_WAGE_RATE_OF_PAY'])
-    instanceArray.shift()
-    var instance = instanceArray[0]
-    expect(!_.isEmpty(instance)).to.be.true
     expect("123").to.equal(instance['SOC_CODE'])
     expect("666").to.equal(instance['CASE_NUMBER'])
     expect("Y").to.equal(instance['H1B_DEPENDENT'])
     expect(17).to.equal(instance['TOTAL_WORKERS'])
     expect(300).to.equal(instance['ANNUALIZED_WAGE_RATE_OF_PAY'])
+    instanceArray.shift()
+    var instance = instanceArray[0]
+    expect("abc").to.equal(instance['SOC_CODE'])
+    expect("555").to.equal(instance['CASE_NUMBER'])
+    expect("R").to.equal(instance['H1B_DEPENDENT'])
+    expect(11).to.equal(instance['TOTAL_WORKERS'])
+    expect(200).to.equal(instance['ANNUALIZED_WAGE_RATE_OF_PAY'])
+    expect(!_.isEmpty(instance)).to.be.true
     instanceArray.shift()
     expect(0).to.equal(instanceArray.length)
     delete instanceArray
@@ -772,11 +804,12 @@ const testLatLngs = (summary) => {
     expect(2).to.equal(instanceArray.length)
     instance = instanceArray[0]
     expect(!_.isEmpty(instance)).to.be.true
-    expect("111").to.equal(instance['CASE_NUMBER'])
+    expect(!_.isEmpty(instance)).to.be.true
+    expect("444").to.equal(instance['CASE_NUMBER'])
     expect("Y").to.equal(instance['H1B_DEPENDENT'])
     expect("xyz").to.equal(instance['SOC_CODE'])
-    expect(5).to.equal(instance['TOTAL_WORKERS'])
-    expect(600).to.equal(instance['ANNUALIZED_WAGE_RATE_OF_PAY'])
+    expect(7).to.equal(instance['TOTAL_WORKERS'])
+    expect(400).to.equal(instance['ANNUALIZED_WAGE_RATE_OF_PAY'])
     delete instance['CASE_NUMBER']
     delete instance['H1B_DEPENDENT']
     delete instance['SOC_CODE']
@@ -785,12 +818,11 @@ const testLatLngs = (summary) => {
     expect(_.isEmpty(instance)).to.be.true
     instanceArray.shift()
     instance = instanceArray[0]
-    expect(!_.isEmpty(instance)).to.be.true
-    expect("444").to.equal(instance['CASE_NUMBER'])
+    expect("111").to.equal(instance['CASE_NUMBER'])
     expect("Y").to.equal(instance['H1B_DEPENDENT'])
     expect("xyz").to.equal(instance['SOC_CODE'])
-    expect(7).to.equal(instance['TOTAL_WORKERS'])
-    expect(400).to.equal(instance['ANNUALIZED_WAGE_RATE_OF_PAY'])
+    expect(5).to.equal(instance['TOTAL_WORKERS'])
+    expect(600).to.equal(instance['ANNUALIZED_WAGE_RATE_OF_PAY'])
     delete instance['CASE_NUMBER']
     delete instance['H1B_DEPENDENT']
     delete instance['SOC_CODE']
