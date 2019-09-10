@@ -20,7 +20,8 @@ const alaskaCounties = ["Aleutians East", "Aleutians West", "Anchorage", "Bethel
                             "Haines", "Juneau",  
                             "Kenai Peninsula", "Kodiak Island", "Lake and Peninsula", "Nome", "North SLope", 
                             "Northwest Arctic", "Sitka", "Yakutat", "Wade Hampton"]
-const alaskaCities = ["Anchorage", "Fairbanks", "Homer", "Juneau", "Nome"]
+const alaskaCities = ["Anchorage", "Fairbanks", "Homer", "Juneau", "Kenai", "Ketchikam", 
+                        "Nome", "Seward", "Sitka", "Skagway", "Wasilla"]
 const alabamaCounties = ["Autauga", "Baldwin", "Barbour", "Bibb", "Blount", 
                             "Bullock", "Butler", "Calhoun", "Chambers",
                             "Cherokee", "Chilton", "Choctaw", "Clarke", "Clay", "Cleburne",
@@ -36,7 +37,9 @@ const alabamaCounties = ["Autauga", "Baldwin", "Barbour", "Bibb", "Blount",
                             "Tuscaloosa", "Walker", "Washington", "Wilcox", "Winston"
                         ]
 const alabamaCities = [
-    "Birmingham", "Huntsville", "Montgomery", "Mobile", "Tuscaloosa"
+    "Anniston", "Auburn", "Birmingham", "Decatur", "Dothan", "Gadsden", "Gulf Shores",
+    "Hoover", "Huntsville", "Montgomery", "Mobile", "Muscle Shoals",
+    "Orange Beach", "Phenix City", "Taladega", "Tuscaloosa"
 ]
 const arkansasCounties = [ 
     "Arkansas", "Ashley", "Baxter", "Benton", "Boone", "Bradley", "Calhoun", "Carroll",
@@ -52,8 +55,9 @@ const arkansasCounties = [
     "White", "Woodruff", "Yell"
 ]
 const arkansasCities = [ 
-    "Bentonville", "Fayetteville", "Fort Smith", "Hot Springs",
-    "Little Rock", "Pine Bluff", "Texarkana", "West Memphis"
+    "Bentonville", "Cabot", "Conway", "Fayetteville", "Fort Smith", "Hot Springs",
+    "Jonesboro", "Little Rock", "North Little Rock",
+    "Pine Bluff", "Rogers", "Springdale", "Texarkana", "West Memphis"
 ]
 const arizonaCounties = [
     "Apache", "Cochise", "Coconino", "Gila", "Graham", "Greenlee", "La Paz",
@@ -61,7 +65,8 @@ const arizonaCounties = [
     "Yuma"
 ]
 const arizonaCities = [
-    "Chandler", "Flagstaff", "Mesa", "Phoenix", "Prescott", "Scottsdale", "Sedona", "Tempe", 
+    "Chandler", "Flagstaff", "Gilbert", "Glendale", "Mesa", "Phoenix", 
+    "Prescott", "Scottsdale", "Sedona", "Surprise", "Tempe", 
     "Tucson", "Yuma"
 ]
 const californiaCounties = [
@@ -76,12 +81,15 @@ const californiaCounties = [
     "Ventura", "Yolo", "Yuba"
 ]
 const californiaCities = [
-    "Anaheim", "Cupertino", "Fresno", "Hayward", "Los Angeles", "Los Gatos",
-    "Milpitas", "Mountain View", "Oakland",
-    "Palm Springs", "Palo Alto", "Pasadena",
-    "Redding", "Sacramento", "San Diego", "San Francisco", 
-    "San Jose", "San Mateo", "Santa Barbara", "Santa Clara", "Santa Monica", "Santa Rosa",
-    "San Luis Obispo", "Sunnyvale"
+    "Anaheim", "Bakersfield", "Beverly Hills", "Burbank", "Carlsbad", "Compton", "Cupertino", "Fremont",
+    "Fresno", "Hayward", "Huntington Beach", "Irvine",
+    "Los Angeles", "Long Beach", "Los Gatos", "Malibu",
+    "Milpitas", "Modesto", "Mountain View", "Newport Beach", "Oakland",
+    "Palm Springs", "Palo Alto", "Pasadena", "Pomona",
+    "Redding", "Riverside", "Sacramento", "San Diego", "San Bernardino", "San Francisco", 
+    "San Jose", "San Luis Obispo", "San Mateo", "Santa Ana", "Santa Barbara", "Santa Clara", "Santa Cruz", 
+    "Santa Monica", "Santa Rosa",
+    "Stockton", "Sunnyvale", "Ventura"
 ]
 const coloradoCounties = [
     "Adams", "Alamosa", "Arapahoe", "Archuleta", "Baca", "Bent", "Boulder", "Broomfield",
@@ -94,15 +102,18 @@ const coloradoCounties = [
     "Summitt", "Teller", "Washington", "Weld", "Yuma"
 ]
 const coloradoCities = [
-    "Boulder", "Colorado Springs", "Denver", "Fort Collins"
+    "Aspen", "Aurora", "Boulder", "Colorado Springs", "Denver", "Durango", "Englewood",
+    "Fort Collins", "Golden", "Grand Junction", "Loveland", "Pueblo",
+    "Steamboat Springs", "Vail", "Westminster"
 ]
 const connecticutCounties = [
-    "Fairfield", "Hartford", "Litchfield", "Middlesex", "New Haven", "New London",
+    "East Hartford", "Fairfield", "Hartford", "Litchfield", "Middlesex", "New Haven", "New London",
     "Tolland", "Windham"
 ]
 const connecticutCities = [
-    "Fairfield", "Hartford", "Litchfield", "Middletown", "New Haven", "New London",
-    "Norwalk", "Rockville"
+    "Bridgeport", "Bristol", "Danbury", "Fairfield", "Greenwich", "Hartford", "Litchfield",
+    "Manchester", "Middletown", "New Britain", "New Haven", "New London",
+    "Norwalk", "Rockville", "Stamford", "Waterbury", "West Hartford", "Westport"
 ]
 const dcCities = [
     "Washington"
@@ -111,7 +122,7 @@ const delawareCounties = [
     "Kent", "New Castle", "Sussex"
 ]
 const delawareCities = [
-    "Dover", "Newark", "Wilmington"
+    "Dover", "Newark", "Wilmington", "Rehoboth Beach", "Milford", "Middletown", "New Castle"
 ]
 const floridaCounties = [
     "Alachua", "Baker", "Bay", "Bradford", "Brevard", "Broward", "Calhoun", "Charlotte", "Citrus",
@@ -120,17 +131,23 @@ const floridaCounties = [
     "Hillsborough", "Holmes", "Indian River", "Jackson", "Jefferson", "Lafayette", "Lake", "Lee", "Leon",
     "Levy", "Liberty", "Madison", "Manatee", "Marion", "Martin", "Dade", "Miami-Dade", "Monroe", "Nassau",
     "Okaloosa", "Okeechobee", "Orange", "Osceola", "Palm Beach", "Pasco", "Pinellas", "Polk", "Putnam",
-    "St. Johns", "St Johns", "Saint Johns",
+    "St. Johns", "St Johns", "Saint Johns", "Saint Pete Beach", "St Pete Beach", "St. Pete Beach",
     "Santa Rosa", "Sarasota", "Seminole", "Sumter", "Suwannee", "Taylor", "Union", "Volusia",
     "Wakulla", "Walton", "Washington"
 ]
 const floridaCities = [
-    "Boca Raton", "Davie", "Daytona Beach", "Deerfield Beach", "Delray Beach", "Fort Lauderdale", "Hialeah",
-    "Jacksonville", 
-    "Juno Beach", "Kendall", "Key West", "Kissimmee", "Lake Buena Vista", "Lake Mary", "Melbourne", "Miami", 
-    "Miami Beach", "Orlando", "Palm Beach", "Palm Beach Gardens", "Panama City", "Pensacola", 
-    "Sarasota", "St. Petersburg", "St Petersburg", "Saint Petersburg", "Tallahassee", "Tampa",
-    "West Palm Beach"
+    "Boca Raton", "Clearwater", "Coral Gables", "Davie", "Daytona Beach", "Deerfield Beach", "Delray Beach",
+    "Destin", "Eglin Air Force Base", "Fort Lauderdale", "Fort Myers", "Fort Myers Beach", "Gainesville", "Hialeah",
+    "Jacksonville", "Jacksonville Beach", 
+    "Juno Beach", "Kendall", "Key West", "Kissimmee", "Lake Buena Vista", "Lake Mary",
+    "Marco Island", "Melbourne", "Miami", 
+    "Miami Beach", "Naples", "New Smyrna Beach",
+    "Ocala", "Orlando", "Palm Beach", "Palm Beach Gardens", "Palm Bay", "Panama City",
+    "Panama City Beach", "Pensacola", "Pompano Beach",
+    "Port Saint Lucy", "Port St Lucy", "Port St. Lucy", "Punta Gorda",
+    "Sarasota", "St. Petersburg", "St Petersburg", "Saint Petersburg",
+    "Siesta Key", "Tallahassee", "Tampa",
+    "The Villages", "West Palm Beach"
 ]
 const georgiaCounties = [ 
     "Appling", "Atkinson", "Bacon", "Baker", "Baldwin", "Banks", "Barrow", "Bartow", "Ben Hill",
@@ -153,8 +170,9 @@ const georgiaCounties = [
     "Wayne", "Webster", "Wheeler", "White", "Whitfield", "Wilcox", "Wilkes", "Wilkinson", "Worth"
 ]
 const georgiaCities = [ 
-    "Alpharetta", "Augusta", "Atlanta", "College Park", "Columbus", "Kennesaw", "Macon", "Marietta",
-    "Savannah", "Valdosta"
+    "Alpharetta", "Americus", "Augusta", "Atlanta", "Athens", "College Park", "Columbus", 
+    "Decatur", "Gainesville", "Lawrenceville", "Kennesaw", "Macon", "Marietta",
+    "Norcross", "Roswell", "Savannah", "Stone Mountain", "Valdosta"
 ]
 const guamCities = [ 
     "Agana", "Agat", "Barrigada", "Dededo", "Hagatna", "Harmon", "Inarajan", "Maite", 
@@ -164,7 +182,7 @@ const hawaiiCounties = [
     "Hawaii", "Honolulu", "Kalawao", "Kauai", "Maui"
 ]
 const hawaiiCities = [ 
-    "Honolulu", "Lihue"
+    "Hilo", "Honolulu", "Lahaina", "Lihue", "Kailua", "Kailua-Kona", "Volcano"
 ]
 const idahoCounties = [ 
     "Ada", "Adams", "Bannock", "Bear Lake", "Benewah", "Bingham", "Blaine", "Boise", "Bonner",
@@ -175,7 +193,8 @@ const idahoCounties = [
     "Twin Falls", "Valley", "Washington" 
 ]
 const idahoCities = [ 
-    "Coeur d'Alene", "Boise", "Idaho Falls"
+    "Coeur d'Alene", "Boise", "Idaho Falls", "Ketchum", "Lewiston", "Meridian",
+    "Moscow", "Nampa", "Pocatello", "Twin Falls"
 ]
 const illinoisCounties = [ 
     "Adams", "Alexander", "Bond", "Boone", "Brown", "Bureau", "Calhoun", "Carroll", "Cass",

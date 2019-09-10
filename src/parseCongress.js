@@ -5,6 +5,8 @@ const log4js = require('log4js')
 const chalk = require('chalk')
 const log = console.log
 const {configSystem, config, platform, congressFilename} = require('./config')
+const modelMap = require('./models/dbRecords')
+const { compress, decompress } = require('./utilities/compression')
 
 log4js.configure({
     // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
@@ -28,11 +30,32 @@ const cb = (obj) => {
         .on('data', (chunk) => {
             const key = chunk.state + '-' + chunk.district
             results[key] = chunk
-            logger.info(chalk.bgBlue.white.bold(`${JSON.stringify(chunk, undefined, 2)}`))
+            // logger.info(chalk.bgBlue.white.bold(`${JSON.stringify(chunk, undefined, 2)}`))
         })
         .on('end', () => {
-            // console.log(results)
+            saveCongress(results)
         })
 }
+
+const saveCongress = async(congress) => {
+    try{
+        logger.trace(JSON.stringify(congress, undefined, 2))
+        var congressRecord = {
+            "key": 'congress',
+            "congress": compress(congress)
+        }
+        const congressModel = modelMap['congress']
+        const congressSummary = congressModel(congressRecord)
+        logger.info(chalk.bgBlue('Save congress started'))
+        await congressSummary.save()
+        logger.info(chalk.bgBlue('Save congress complete'))    
+    }catch(e){
+        logger.error(chalk.bgRed.white.bold("Saving congress data failed: " + e))
+        logger.error(chalk.bgRed.white.bold("Stack: " + e.stack))
+        
+    }
+}
+
+
 si.osInfo(cb)
 
