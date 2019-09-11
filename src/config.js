@@ -17,6 +17,7 @@ const configSystem = (plat) => {
     platform = plat
     if("win32" == platform){
         config.congressFilename = "G:\\MembersOfCongress\\MembersOfCongress.csv"
+        config.lcaFileTemplate = "G:\\ReducedH1bData\\base\\h1b-2017.out.latlng.csv"
     }else{
         logger.error(chalk.bgRed.white.bold("Platform is not configured."))
     }
