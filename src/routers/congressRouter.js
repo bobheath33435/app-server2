@@ -24,10 +24,8 @@ congressRouter.get('/congress', async (req, res) => {
         }
     
         var congress = await congressModel.find({"key": "congress"})
-        const keys = Object.getOwnPropertyNames(congress[0])
-
-        logger.info(chalk.bgBlue.white.bold(`congress JSON object: ${JSON.stringify(keys)}`))
         congress = congress[0].congress
+        congress = decompress(congress)
         res.status(202).send(congress)
     }catch(e){
         logger.error(chalk.bgRed.white.bold("Congress request failed: " + e))

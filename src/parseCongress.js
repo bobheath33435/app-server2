@@ -42,7 +42,7 @@ const saveCongress = async(congress) => {
         logger.trace(JSON.stringify(congress, undefined, 2))
         var congressRecord = {
             "key": 'congress',
-            "congress": congress
+            "congress": compress(congress)
         }
         const congressModel = modelMap['congress']
         const congressSummary = congressModel(congressRecord)
