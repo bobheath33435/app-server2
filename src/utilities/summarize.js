@@ -15,6 +15,9 @@ const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT
         UNSPECIFIED, ANNUALIZED_PREVAILING_WAGE, ANNUALIZED_WAGE_RATE_OF_PAY,
         percentileLevels, h1bRecord } 
             = require('../models/h1bRecordSchema')
+const years = [2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010]
+
+
 
 log4js.configure({
     // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
@@ -562,5 +565,6 @@ module.exports = {
                    sortLatLng,
                    sortInstanceKey,
                    sortInstanceArray,
-                   summaryMap
+                   summaryMap,
+                   years
                  }
