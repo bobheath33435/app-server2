@@ -15,7 +15,7 @@ const { summarize, createKey, calculatePercentiles, countItems, buildWageArray,
         = require('../src/utilities/summarize')
 
 const { initYearObject, mergeStateObjects, finalizeMerge } 
-        = require('../src/buildSummaries')
+        = require('../src/utilities/yearModules')
 const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT,
     WORKSITE_ADDR1, WORKSITE_ADDR2,
     WORKSITE_CITY, WORKSITE_COUNTY, WORKSITE_STATE, TOTAL_WORKERS, TOTAL_LCAS,
