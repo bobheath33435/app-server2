@@ -33,18 +33,18 @@ const parseFile = async(filename, autoCompleteMap) => {
             return reject(error)
         })
         .on('data', (chunk) => {
-            var cities = autoCompleteMap.cities
+            var worksiteCities = autoCompleteMap.worksiteCities
             const cityKey = chunk[WORKSITE_CITY]
-            if(undefined == cities[cityKey]){
+            if(undefined == worksiteCities[cityKey]){
                 // logger.info(chalk.bgGreen.white.bold(`reading ${chunk[WORKSITE_CITY]}`))
-                cities[cityKey] = {
-                    city: cityKey,
-                    lcaCount: 0,
-                    totalWorkers: 0
+                worksiteCities[cityKey] = {
+                    WORKSITE_CITY: cityKey,
+                    TOTAL_LCAS: 0,
+                    TOTAL_WORKERS: 0
                 }
             }
-            cities[cityKey].lcaCount += 1
-            cities[cityKey].totalWorkers += Number(chunk[TOTAL_WORKERS])
+            worksiteCities[cityKey].TOTAL_LCAS += 1
+            worksiteCities[cityKey].TOTAL_WORKERS += Number(chunk[TOTAL_WORKERS])
             // if(cities[cityKey].totalWorkers > 100){
             //     logger.info(`city: ${cities[cityKey].city}; totalWorkers: ${cities[cityKey].totalWorkers}`)
             // }
@@ -59,4 +59,23 @@ const parseFile = async(filename, autoCompleteMap) => {
     
     })
 }
-module.exports = { parseFile }
+
+const sortWithField = (a, b, field) => {
+    logger.trace(chalk.bgRed.white.bold(`a: ${JSON.stringify(a, undefined, 2)}; b: ${JSON.stringify(b, undefined, 2)}`))
+    if(a[TOTAL_WORKERS] != b[TOTAL_WORKERS])
+        return b[TOTAL_WORKERS] - a[TOTAL_WORKERS]
+    if(a[TOTAL_LCAS] != b[TOTAL_LCAS])
+        return b[TOTAL_LCAS] - a[TOTAL_LCAS]
+    if(a[field] == b[field])
+        return 0
+    return(a[field] > b[field]) ? 1 : -1 
+}
+
+const sortEmployerName = (a, b) => sortWithField(a, b, EMPLOYER_NAME)
+const sortWorksiteAddr1 = (a, b) => sortWithField(a, b, WORKSITE_ADDR1)
+const sortWorksiteCity = (a, b) => sortWithField(a, b, WORKSITE_CITY)
+module.exports = { parseFile,
+                    sortWithField,
+                    sortWorksiteAddr1, 
+                    sortWorksiteCity,
+                    sortEmployerName }
