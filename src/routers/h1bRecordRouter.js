@@ -135,7 +135,7 @@ const performQuery = async (query) => {
         const summaryModel = modelMap['summary']
         h1bSummary = await summaryModel.find({ "key": key })
         h1bSummary = h1bSummary[0]['summary']
-        h1bSummary = decompressSummaryRecord(h1bSummary)
+        // h1bSummary = decompressSummaryRecord(h1bSummary)
     }else{
         logger.info("Sending read data")
         const h1bModel = modelMap[year]

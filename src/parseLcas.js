@@ -51,7 +51,7 @@ const cb = async(obj) => {
         //     logger.info(chalk.bgBlue.white.bold(`LCA file name: ${filename}`))
         //     autoCompleteMap = await parseFile(filename, autoCompleteMap)    
         // })
-        await saveLcas(autoCompleteMap)
+        await saveAutocompleteData(autoCompleteMap)
         logger.info("The End")
         // process.exit()
     }catch(e){
@@ -60,8 +60,8 @@ const cb = async(obj) => {
     }
  }
 
-const saveLcas = async(autoCompleteMap) => {
-    return new Promise((resolve, reject) => {
+const saveAutocompleteData = async(autoCompleteMap) => {
+
         try{
             var worksiteCitiesArray = Object.values(autoCompleteMap.worksiteCities)
             autoCompleteMap.worksiteCitiesArray = worksiteCitiesArray
@@ -69,24 +69,21 @@ const saveLcas = async(autoCompleteMap) => {
             delete autoCompleteMap.worksiteCities
 
             logger.trace(JSON.stringify(autoCompleteMap, undefined, 2))
-            // var congressRecord = {
-            //     "key": 'congress',
-            //     "congress": compress(congress)
-            // }
-            // const congressModel = modelMap['congress']
-            // const congressSummary = congressModel(congressRecord)
-            // logger.info(chalk.bgBlue('Save congress started'))
-            // await congressSummary.save()
-            // logger.info(chalk.bgBlue('Save congress complete'))    
-            logger.info(chalk.bgBlue(`cities: ${JSON.stringify(autoCompleteMap, undefined, 2)}`)) 
-            return resolve() 
+            var autoCompleteRecord = {
+                "key": 'autocomplete',
+                "autocomplete": compress(autoCompleteMap)
+            }
+            const autocompleteModel = modelMap['autocomplete']
+            const autocomplete = autocompleteModel(autoCompleteRecord)
+            logger.info(chalk.bgBlue('Save autoComplete started'))
+            await autocomplete.save()
+            logger.info(chalk.bgBlue('Save autoComplete complete'))    
+            logger.trace(chalk.bgBlue(`cities: ${JSON.stringify(autoCompleteMap, undefined, 2)}`)) 
         }catch(e){
             logger.error(chalk.bgRed.white.bold("Saving autocomplete data failed: " + e))
             logger.error(chalk.bgRed.white.bold("Stack: " + e.stack))
-            return reject()
         }
     
-    })
 }
 
 si.osInfo(cb)

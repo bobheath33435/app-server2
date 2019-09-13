@@ -18,6 +18,7 @@ const { readSummarizedQueries } = require('./utilities/summarize')
 const h1bRecordRouter = require('./routers/h1bRecordRouter')
 const usersRouter = require('./routers/usersRouter')
 const congressRouter = require('./routers/congressRouter')
+const autocompleteRouter = require('./routers/autoCompDataRouter')
 
 log4js.configure({
     // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
@@ -36,6 +37,7 @@ app.use(express.json())
 app.use(h1bRecordRouter)
 app.use(usersRouter)
 app.use(congressRouter)
+app.use(autocompleteRouter)
 
 app.listen(port, () => {
     logger.info(chalk.bgRed.white.bold('Server is up on port') + ' ' + chalk.green.bold(port))

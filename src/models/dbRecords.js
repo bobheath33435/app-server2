@@ -5,6 +5,7 @@ const { h1bRecordSchema } = require('./h1bRecordSchema')
 const userSchema = require('./userSchema')
 const summarySchema = require('./summarySchema')
 const congressSchema = require('./congressSchema')
+const autocompleteSchema = require('./autocompleteSchema')
 
 log4js.configure({
     // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
@@ -25,6 +26,7 @@ logger.info('After connect');
 const user = mongoose.model('users', userSchema)
 const summary = mongoose.model('summary', summarySchema)
 const congress = mongoose.model('congress', congressSchema)
+const autocomplete = mongoose.model('autocomplete', autocompleteSchema)
 const h1B2010 = mongoose.model('H1bRecord10', h1bRecordSchema)
 const h1B2011 = mongoose.model('H1bRecord11', h1bRecordSchema)
 const h1B2012 = mongoose.model('H1bRecord12', h1bRecordSchema)
@@ -39,6 +41,7 @@ const modelMap = {
     'user': user,
     'summary': summary,
     'congress': congress,
+    'autocomplete': autocomplete,
     2010: h1B2010,
     2011: h1B2011,
     2012: h1B2012,
