@@ -17,7 +17,9 @@ const logger = log4js.getLogger('h1bData');
 autocompleteRouter.get('/autocomplete', async (req, res) => {
     try{
         logger.info('Processing get of AutoComplete data');
-     
+        debugger
+
+
         const autocompleteModel = modelMap['autocomplete']
         if(undefined === autocompleteModel){
             return res.status(500).send("Should not happen")

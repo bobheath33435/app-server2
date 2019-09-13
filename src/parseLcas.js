@@ -8,7 +8,7 @@ const {configSystem, config, platform, congressFilename} = require('./config')
 const modelMap = require('./models/dbRecords')
 const { compress, decompress } = require('./utilities/compression')
 const { years } = require('./utilities/summarize')
-const { parseFile, sortEmployerName, sortWorksiteCity, sortWorksiteAddr1}
+const { parseFile, sortEmployerName, sortWorksiteCity, sortWorksiteCounty, sortWorksiteAddr1}
                 = require('./utilities/lcaParser')
 
 log4js.configure({
@@ -46,11 +46,6 @@ const cb = async(obj) => {
             logger.info(chalk.bgBlue.white.bold(`LCA file name: ${filename}`))
             autoCompleteMap = await parseFile(filename, autoCompleteMap)    
         })
-        // years.forEach(async(year) => {
-        //     const filename = config.lcaFileTemplate.replace(/<year>/, year)
-        //     logger.info(chalk.bgBlue.white.bold(`LCA file name: ${filename}`))
-        //     autoCompleteMap = await parseFile(filename, autoCompleteMap)    
-        // })
         await saveAutocompleteData(autoCompleteMap)
         logger.info("The End")
         // process.exit()
@@ -63,27 +58,44 @@ const cb = async(obj) => {
 const saveAutocompleteData = async(autoCompleteMap) => {
 
         try{
-            var worksiteCitiesArray = Object.values(autoCompleteMap.worksiteCities)
-            autoCompleteMap.worksiteCitiesArray = worksiteCitiesArray
-                        .sort((a, b) => sortWorksiteCity(a, b))
+            autoCompleteMap.worksiteCitiesArray
+                    = migrateToArray(autoCompleteMap.worksiteCities, sortWorksiteCity)
             delete autoCompleteMap.worksiteCities
-
-            logger.trace(JSON.stringify(autoCompleteMap, undefined, 2))
-            var autoCompleteRecord = {
-                "key": 'autocomplete',
-                "autocomplete": compress(autoCompleteMap)
-            }
-            const autocompleteModel = modelMap['autocomplete']
-            const autocomplete = autocompleteModel(autoCompleteRecord)
+            autoCompleteMap.worksiteCountiesArray
+                    = migrateToArray(autoCompleteMap.worksiteCounties, sortWorksiteCity)
+            delete autoCompleteMap.worksiteCounties
+            autoCompleteMap.employerNamesArray
+                    = migrateToArray(autoCompleteMap.employers, sortEmployerName)
+            delete autoCompleteMap.employers
             logger.info(chalk.bgBlue('Save autoComplete started'))
-            await autocomplete.save()
+            await saveToDb('autocomplete', compress(autoCompleteMap))
+            // await saveToDb('autocomplete.cities', compress(autoCompleteMap.worksiteCitiesArray))
+            // await saveToDb('autocomplete.counties', compress(autoCompleteMap.worksiteCountiesArray))
+            // await saveToDb('autocomplete.employers', compress(autoCompleteMap.employerNamesArray))
             logger.info(chalk.bgBlue('Save autoComplete complete'))    
-            logger.trace(chalk.bgBlue(`cities: ${JSON.stringify(autoCompleteMap, undefined, 2)}`)) 
         }catch(e){
             logger.error(chalk.bgRed.white.bold("Saving autocomplete data failed: " + e))
             logger.error(chalk.bgRed.white.bold("Stack: " + e.stack))
         }
-    
+}
+
+const saveToDb = async (key, value) => {
+    debugger
+    var autoCompleteRecord = {
+        "key": key,
+        "autocomplete": value
+    }
+    const autocompleteModel = modelMap['autocomplete']
+    const autocompleteSummary = autocompleteModel(autoCompleteRecord)
+    await autocompleteSummary.save()
+    logger.trace(chalk.bgBlue(`value: ${JSON.stringify(value, undefined, 2)}`)) 
+}
+
+const migrateToArray = (map, sort) => {
+    var array = Object.values(map)
+    array = array.sort((a, b) => sort(a, b))
+    map = undefined
+    return array
 }
 
 si.osInfo(cb)

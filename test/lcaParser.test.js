@@ -10,8 +10,9 @@ const chalk = require('chalk')
 const expect = require('chai').expect
 const _ = require('lodash')
 
-const {sortWithField, sortEmployerName, sortWorksiteAddr1, sortWorksiteCity}
-             = require('../src/utilities/lcaParser')
+const {sortWithField, sortEmployerName, sortWorksiteAddr1, sortWorksiteCity,
+            sortWorksiteCounty}
+                 = require('../src/utilities/lcaParser')
 const { compress, decompress } = require('../src/utilities/compression')
 const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT,
     WORKSITE_ADDR1, WORKSITE_ADDR2,
@@ -89,7 +90,39 @@ describe('Test autoComplete sorts', () => {
         expect(0).to.be.above(sortWorksiteCity(b, a))
 
     })
-    it('3) test sortEmployerName', () => {
+    it('3) test sortWorksiteCounty', () => {
+        var a = {"WORKSITE_COUNTY": "a", TOTAL_WORKERS: 5, TOTAL_LCAS: 2}
+        var b = {"WORKSITE_COUNTY": "a", TOTAL_WORKERS: 5, TOTAL_LCAS: 2}
+        expect(0).to.be.equal(sortWorksiteCounty(a, b))
+        expect(0).to.be.equal(sortWorksiteCounty(b, a))
+
+        a = {"WORKSITE_COUNTY": "a", TOTAL_WORKERS: 5, TOTAL_LCAS: 2}
+        b = {"WORKSITE_COUNTY": "x", TOTAL_WORKERS: 5, TOTAL_LCAS: 2}
+        expect(0).to.be.above(sortWorksiteCounty(a, b))
+        expect(0).to.be.below(sortWorksiteCounty(b, a))
+
+        a = {"WORKSITE_COUNTY": "a", TOTAL_WORKERS: 5, TOTAL_LCAS: 2}
+        b = {"WORKSITE_COUNTY": "x", TOTAL_WORKERS: 4, TOTAL_LCAS: 2}
+        expect(0).to.be.above(sortWorksiteCounty(a, b))
+        expect(0).to.be.below(sortWorksiteCounty(b, a))
+
+        a = {"WORKSITE_COUNTY": "a", TOTAL_WORKERS: 4, TOTAL_LCAS: 2}
+        b = {"WORKSITE_COUNTY": "x", TOTAL_WORKERS: 5, TOTAL_LCAS: 2}
+        expect(0).to.be.below(sortWorksiteCounty(a, b))
+        expect(0).to.be.above(sortWorksiteCounty(b, a))
+
+        a = {"WORKSITE_COUNTY": "a", TOTAL_WORKERS: 4, TOTAL_LCAS: 2}
+        b = {"WORKSITE_COUNTY": "x", TOTAL_WORKERS: 5, TOTAL_LCAS: 1}
+        expect(0).to.be.below(sortWorksiteCounty(a, b))
+        expect(0).to.be.above(sortWorksiteCounty(b, a))
+
+        a = {"WORKSITE_COUNTY": "a", TOTAL_WORKERS: 5, TOTAL_LCAS: 1}
+        b = {"WORKSITE_COUNTY": "x", TOTAL_WORKERS: 5, TOTAL_LCAS: 2}
+        expect(0).to.be.below(sortWorksiteCounty(a, b))
+        expect(0).to.be.above(sortWorksiteCounty(b, a))
+
+    })
+    it('4) test sortEmployerName', () => {
         var a = {"EMPLOYER_NAME": "a", TOTAL_WORKERS: 5, TOTAL_LCAS: 2}
         var b = {"EMPLOYER_NAME": "a", TOTAL_WORKERS: 5, TOTAL_LCAS: 2}
         expect(0).to.be.equal(sortEmployerName(a, b))
@@ -121,7 +154,7 @@ describe('Test autoComplete sorts', () => {
         expect(0).to.be.above(sortEmployerName(b, a))
 
     })
-    it('4) test sortWorksiteAddr1', () => {
+    it('5) test sortWorksiteAddr1', () => {
         var a = {"WORKSITE_ADDR1": "a", TOTAL_WORKERS: 5, TOTAL_LCAS: 2}
         var b = {"WORKSITE_ADDR1": "a", TOTAL_WORKERS: 5, TOTAL_LCAS: 2}
         expect(0).to.be.equal(sortWorksiteAddr1(a, b))
