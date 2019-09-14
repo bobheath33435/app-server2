@@ -10,10 +10,10 @@ const chalk = require('chalk')
 const expect = require('chai').expect
 const _ = require('lodash')
 
-const {sortWithField, sortWorksiteAddr1, sortWorksiteAddr2, sortWorksiteCity,
+const { accumulateData, sortWithField, sortWorksiteAddr1, sortWorksiteAddr2, sortWorksiteCity,
             sortWorksiteCounty, sortWorksiteState, sortEmployerName,
             sortEmployerAddress, sortEmployerCity, sortEmployerState,
-            sortJobTitle, sortSocCode
+            sortJobTitle, sortSocCode, sortWageLevel
         }
                  = require('../src/utilities/lcaParser')
 const { compress, decompress } = require('../src/utilities/compression')
@@ -413,6 +413,137 @@ describe('Test autoComplete sorts', () => {
         expect(0).to.be.above(sortSocCode(b, a))
 
     })
-    
- 
+    it('13) test sortWageLevel', () => {
+        var a = {"WAGE_LEVEL": "a", TOTAL_WORKERS: 5, TOTAL_LCAS: 2}
+        var b = {"WAGE_LEVEL": "a", TOTAL_WORKERS: 5, TOTAL_LCAS: 2}
+        expect(0).to.be.equal(sortWageLevel(a, b))
+        expect(0).to.be.equal(sortWageLevel(b, a))
+
+        a = {"WAGE_LEVEL": "a", TOTAL_WORKERS: 5, TOTAL_LCAS: 2}
+        b = {"WAGE_LEVEL": "x", TOTAL_WORKERS: 5, TOTAL_LCAS: 2}
+        expect(0).to.be.above(sortWageLevel(a, b))
+        expect(0).to.be.below(sortWageLevel(b, a))
+
+        a = {"WAGE_LEVEL": "a", TOTAL_WORKERS: 5, TOTAL_LCAS: 2}
+        b = {"WAGE_LEVEL": "x", TOTAL_WORKERS: 4, TOTAL_LCAS: 2}
+        expect(0).to.be.above(sortWageLevel(a, b))
+        expect(0).to.be.below(sortWageLevel(b, a))
+
+        a = {"WAGE_LEVEL": "a", TOTAL_WORKERS: 4, TOTAL_LCAS: 2}
+        b = {"WAGE_LEVEL": "x", TOTAL_WORKERS: 5, TOTAL_LCAS: 2}
+        expect(0).to.be.below(sortWageLevel(a, b))
+        expect(0).to.be.above(sortWageLevel(b, a))
+
+        a = {"WAGE_LEVEL": "a", TOTAL_WORKERS: 4, TOTAL_LCAS: 2}
+        b = {"WAGE_LEVEL": "x", TOTAL_WORKERS: 5, TOTAL_LCAS: 1}
+        expect(0).to.be.below(sortWageLevel(a, b))
+        expect(0).to.be.above(sortWageLevel(b, a))
+
+        a = {"WAGE_LEVEL": "a", TOTAL_WORKERS: 5, TOTAL_LCAS: 1}
+        b = {"WAGE_LEVEL": "x", TOTAL_WORKERS: 5, TOTAL_LCAS: 2}
+        expect(0).to.be.below(sortWageLevel(a, b))
+        expect(0).to.be.above(sortWageLevel(b, a))
+    })
+})
+
+describe('Test accumulateData', () => {
+    it('1) test accumulateData', () => {
+        var someMap = {}
+        var chunk = {'fruit': "Bananas", TOTAL_WORKERS: 5}
+        accumulateData(someMap, 'fruit', chunk)
+        logger.trace(chalk.bgRed.white.bold(`someMap: ${JSON.stringify(someMap, undefined, 2)}`))
+        var keys = Object.getOwnPropertyNames(someMap)
+        expect(1).to.be.equal(keys.length)
+        expect('Bananas').to.be.equal(keys[0])
+        var bananasObject = someMap[keys[0]]
+        expect('Bananas').to.be.equal(bananasObject['fruit'])
+        expect(1).to.be.equal(bananasObject[TOTAL_LCAS])
+        expect(5).to.be.equal(bananasObject[TOTAL_WORKERS])
+        delete bananasObject[TOTAL_LCAS]
+        delete bananasObject[TOTAL_WORKERS]
+        delete bananasObject['fruit']
+        expect(_.isEmpty(bananasObject)).to.be.true
+        delete someMap["Bananas"]
+        expect(_.isEmpty(someMap)).to.be.true
+    })
+    it('2) test accumulateData again', () => {
+        var someMap = {}
+        var chunk = {'fruit': "Bananas", TOTAL_WORKERS: 5}
+        accumulateData(someMap, 'fruit', chunk)
+        logger.trace(chalk.bgRed.white.bold(`someMap: ${JSON.stringify(someMap, undefined, 2)}`))
+        var keys = Object.getOwnPropertyNames(someMap)
+        expect(1).to.be.equal(keys.length)
+        expect('Bananas').to.be.equal(keys[0])
+        var bananasObject = someMap[keys[0]]
+        expect('Bananas').to.be.equal(bananasObject['fruit'])
+        expect(1).to.be.equal(bananasObject[TOTAL_LCAS])
+        expect(5).to.be.equal(bananasObject[TOTAL_WORKERS])
+
+        chunk = {'fruit': "Bananas", TOTAL_WORKERS: 6}
+        accumulateData(someMap, 'fruit', chunk)
+        keys = Object.getOwnPropertyNames(someMap)
+        expect(1).to.be.equal(keys.length)
+        expect('Bananas').to.be.equal(keys[0])
+        bananasObject = someMap[keys[0]]
+        expect('Bananas').to.be.equal(bananasObject['fruit'])
+        expect(2).to.be.equal(bananasObject[TOTAL_LCAS])
+        expect(11).to.be.equal(bananasObject[TOTAL_WORKERS])
+        delete bananasObject[TOTAL_LCAS]
+        delete bananasObject[TOTAL_WORKERS]
+        delete bananasObject['fruit']
+        expect(_.isEmpty(bananasObject)).to.be.true
+        delete someMap["Bananas"]
+        expect(_.isEmpty(someMap)).to.be.true
+    })
+    it('3) test accumulateData again', () => {
+        var someMap = {}
+        var chunk = {'fruit': "Bananas", TOTAL_WORKERS: 5}
+        accumulateData(someMap, 'fruit', chunk)
+        logger.trace(chalk.bgRed.white.bold(`someMap: ${JSON.stringify(someMap, undefined, 2)}`))
+        var keys = Object.getOwnPropertyNames(someMap)
+        expect(1).to.be.equal(keys.length)
+        expect('Bananas').to.be.equal(keys[0])
+        var bananasObject = someMap[keys[0]]
+        expect('Bananas').to.be.equal(bananasObject['fruit'])
+        expect(1).to.be.equal(bananasObject[TOTAL_LCAS])
+        expect(5).to.be.equal(bananasObject[TOTAL_WORKERS])
+
+        chunk = {'fruit': "Bananas", TOTAL_WORKERS: 6}
+        accumulateData(someMap, 'fruit', chunk)
+        keys = Object.getOwnPropertyNames(someMap)
+        expect(1).to.be.equal(keys.length)
+        expect('Bananas').to.be.equal(keys[0])
+        bananasObject = someMap[keys[0]]
+        expect('Bananas').to.be.equal(bananasObject['fruit'])
+        expect(2).to.be.equal(bananasObject[TOTAL_LCAS])
+        expect(11).to.be.equal(bananasObject[TOTAL_WORKERS])
+
+        chunk = {'fruit': "Mangos", TOTAL_WORKERS: 3}
+        accumulateData(someMap, 'fruit', chunk)
+        keys = Object.getOwnPropertyNames(someMap)
+        expect(2).to.be.equal(keys.length)
+        keys = keys.sort()
+        expect('Bananas').to.be.equal(keys[0])
+        bananasObject = someMap[keys[0]]
+        expect('Bananas').to.be.equal(bananasObject['fruit'])
+        expect(2).to.be.equal(bananasObject[TOTAL_LCAS])
+        expect(11).to.be.equal(bananasObject[TOTAL_WORKERS])
+        expect('Mangos').to.be.equal(keys[1])
+        var mangosObject = someMap[keys[1]]
+        expect('Mangos').to.be.equal(mangosObject['fruit'])
+        expect(1).to.be.equal(mangosObject[TOTAL_LCAS])
+        expect(3).to.be.equal(mangosObject[TOTAL_WORKERS])
+
+        delete bananasObject[TOTAL_LCAS]
+        delete bananasObject[TOTAL_WORKERS]
+        delete bananasObject['fruit']
+        delete mangosObject[TOTAL_LCAS]
+        delete mangosObject[TOTAL_WORKERS]
+        delete mangosObject['fruit']
+        expect(_.isEmpty(bananasObject)).to.be.true
+        expect(_.isEmpty(mangosObject)).to.be.true
+        delete someMap["Bananas"]
+        delete someMap["Mangos"]
+        expect(_.isEmpty(someMap)).to.be.true
+    })
 })

@@ -10,7 +10,8 @@ const { compress, decompress } = require('./utilities/compression')
 const { years } = require('./utilities/summarize')
 const { parseFile, sortEmployerName, sortEmployerAddress, sortEmployerCity,
                 sortEmployerState, sortWorksiteAddr1, sortWorksiteAddr2, sortWorksiteCity,
-                sortWorksiteCounty, sortWorksiteState, sortJobTitle, sortSocCode }
+                sortWorksiteCounty, sortWorksiteState, sortJobTitle, sortSocCode,
+                sortWageLevel }
             = require('./utilities/lcaParser')
 const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, EMPLOYER_ADDRESS,
     EMPLOYER_CITY, EMPLOYER_STATE, WORKSITE_CONGRESS_DISTRICT,
@@ -56,7 +57,8 @@ const cb = async(obj) => {
             employerCities: {},
             employerStates: {},
             jobTitles: {},
-            socCodes: {}
+            socCodes: {},
+            wageLevels: {}
         }
         const year = 2017
         await asyncForEach(years, async(year) => {
@@ -131,6 +133,11 @@ const saveAutocompleteData = async(autoCompleteMap) => {
                 = migrateToArray(autoCompleteMap.socCodes, sortSocCode)
         delete autoCompleteMap.socCodes
         await saveToDb(SOC_CODE, compress(socCodesArray))
+
+        const wageLevelArray
+                = migrateToArray(autoCompleteMap.wageLevels, sortWageLevel)
+        delete autoCompleteMap.wageLevels
+        await saveToDb(WAGE_LEVEL, compress(wageLevelArray))
 
         logger.info(chalk.bgBlue('Save autoComplete complete'))    
     }catch(e){

@@ -46,6 +46,7 @@ debugger
             accumulateData(autoCompleteMap.employerStates, EMPLOYER_STATE, chunk)
             accumulateData(autoCompleteMap.jobTitles, JOB_TITLE, chunk)
             accumulateData(autoCompleteMap.socCodes, SOC_CODE, chunk)
+            accumulateData(autoCompleteMap.wageLevels, WAGE_LEVEL, chunk)
     
             logger.trace(chalk.bgBlue.white.bold(`${JSON.stringify(chunk, undefined, 2)}`))
         })
@@ -92,7 +93,9 @@ const sortWorksiteCounty = (a, b) => sortWithField(a, b, WORKSITE_COUNTY)
 const sortWorksiteState = (a, b) => sortWithField(a, b, WORKSITE_STATE)
 const sortJobTitle = (a, b) => sortWithField(a, b, JOB_TITLE)
 const sortSocCode = (a, b) => sortWithField(a, b, SOC_CODE)
+const sortWageLevel = (a, b) => sortWithField(a, b, WAGE_LEVEL)
 module.exports = { parseFile,
+                    accumulateData,
                     sortWithField,
                     sortEmployerName,
                     sortEmployerAddress,
@@ -104,5 +107,6 @@ module.exports = { parseFile,
                     sortWorksiteCounty,
                     sortWorksiteState,
                     sortJobTitle,
-                    sortSocCode
+                    sortSocCode,
+                    sortWageLevel
                 }
