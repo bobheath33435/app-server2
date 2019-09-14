@@ -7,10 +7,11 @@ const log = console.log
 const {configSystem, config, platform, congressFilename} = require('../config')
 const modelMap = require('../models/dbRecords')
 const { compress, decompress } = require('../utilities/compression')
-const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT,
+const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, EMPLOYER_ADDRESS,
+    EMPLOYER_CITY, EMPLOYER_STATE, WORKSITE_CONGRESS_DISTRICT,
     WORKSITE_LATITUDE, WORKSITE_LONGITUDE, WORKSITE_ADDR1, WORKSITE_ADDR2,
     WORKSITE_CITY, WORKSITE_COUNTY, WORKSITE_STATE, TOTAL_WORKERS, TOTAL_LCAS, SOC_CODE, 
-    LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4,
+    JOB_TITLE, LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4,
     NEW_EMPLOYMENT, CONTINUED_EMPLOYMENT, CHANGE_PREVIOUS_EMPLOYMENT,
     NEW_CONCURRENT_EMPLOYMENT, CHANGE_EMPLOYER, AMENDED_PETITION,
     UNSPECIFIED, ANNUALIZED_PREVAILING_WAGE, ANNUALIZED_WAGE_RATE_OF_PAY,
@@ -34,51 +35,17 @@ const parseFile = async(filename, autoCompleteMap) => {
         })
         .on('data', (chunk) => {
 debugger
-            accumulateData(autoCompleteMap.employers, EMPLOYER_NAME, chunk)
-            // var employers = autoCompleteMap.employers
-            // const employerKey = chunk[EMPLOYER_NAME]
-            // if(undefined == employers[employerKey]){
-            //     logger.trace(chalk.bgGreen.white.bold(`reading ${chunk[EMPLOYER_NAME]}`))
-            //     employers[employerKey] = {
-            //         EMPLOYER_NAME: employerKey,
-            //         TOTAL_LCAS: 0,
-            //         TOTAL_WORKERS: 0
-            //     }
-            // }
-            // employers[employerKey].TOTAL_LCAS += 1
-            // employers[employerKey].TOTAL_WORKERS += Number(chunk[TOTAL_WORKERS])
-
+            accumulateData(autoCompleteMap.worksiteAddr1s, WORKSITE_ADDR1, chunk)
+            accumulateData(autoCompleteMap.worksiteAddr2s, WORKSITE_ADDR2, chunk)
             accumulateData(autoCompleteMap.worksiteCities, WORKSITE_CITY, chunk)
-            // var worksiteCities = autoCompleteMap.worksiteCities
-            // const cityKey = chunk[WORKSITE_CITY]
-            // if(undefined == worksiteCities[cityKey]){
-            //     logger.trace(chalk.bgGreen.white.bold(`reading ${chunk[WORKSITE_CITY]}`))
-            //     worksiteCities[cityKey] = {
-            //         WORKSITE_CITY: cityKey,
-            //         TOTAL_LCAS: 0,
-            //         TOTAL_WORKERS: 0
-            //     }
-            // }
-            // worksiteCities[cityKey].TOTAL_LCAS += 1
-            // worksiteCities[cityKey].TOTAL_WORKERS += Number(chunk[TOTAL_WORKERS])
-
             accumulateData(autoCompleteMap.worksiteCounties, WORKSITE_COUNTY, chunk)
-            // var worksiteCounties = autoCompleteMap.worksiteCounties
-            // const countyKey = chunk[WORKSITE_COUNTY]
-            // if(undefined == worksiteCounties[countyKey]){
-            //     logger.trace(chalk.bgGreen.white.bold(`reading ${chunk[WORKSITE_COUNTY]}`))
-            //     worksiteCounties[countyKey] = {
-            //         WORKSITE_COUNTY: countyKey,
-            //         TOTAL_LCAS: 0,
-            //         TOTAL_WORKERS: 0
-            //     }
-            // }
-            // worksiteCounties[countyKey].TOTAL_LCAS += 1
-            // worksiteCounties[countyKey].TOTAL_WORKERS += Number(chunk[TOTAL_WORKERS])
-            // if(cities[cityKey].totalWorkers > 100){
-            //     logger.info(`city: ${cities[cityKey].city}; totalWorkers: ${cities[cityKey].totalWorkers}`)
-            // }
-    
+            accumulateData(autoCompleteMap.worksiteStates, WORKSITE_STATE, chunk)
+            accumulateData(autoCompleteMap.employers, EMPLOYER_NAME, chunk)
+            accumulateData(autoCompleteMap.employerAddresses, EMPLOYER_ADDRESS, chunk)
+            accumulateData(autoCompleteMap.employerCities, EMPLOYER_CITY, chunk)
+            accumulateData(autoCompleteMap.employerStates, EMPLOYER_STATE, chunk)
+            accumulateData(autoCompleteMap.jobTitles, JOB_TITLE, chunk)
+            accumulateData(autoCompleteMap.socCodes, SOC_CODE, chunk)
     
             logger.trace(chalk.bgBlue.white.bold(`${JSON.stringify(chunk, undefined, 2)}`))
         })
@@ -98,11 +65,6 @@ const accumulateData = (map, property, chunk) => {
         obj[TOTAL_LCAS] = 0
         obj[TOTAL_WORKERS] = 0
         map[key] = obj
-        // map[key] = {
-        //     property: key,
-        //     TOTAL_LCAS: 0,
-        //     TOTAL_WORKERS: 0
-        // }
     }
     map[key].TOTAL_LCAS += 1
     map[key].TOTAL_WORKERS += Number(chunk[TOTAL_WORKERS])
@@ -120,12 +82,27 @@ const sortWithField = (a, b, field) => {
 }
 
 const sortEmployerName = (a, b) => sortWithField(a, b, EMPLOYER_NAME)
+const sortEmployerAddress = (a, b) => sortWithField(a, b, EMPLOYER_ADDRESS)
+const sortEmployerCity = (a, b) => sortWithField(a, b, EMPLOYER_CITY)
+const sortEmployerState = (a, b) => sortWithField(a, b, EMPLOYER_STATE)
 const sortWorksiteAddr1 = (a, b) => sortWithField(a, b, WORKSITE_ADDR1)
+const sortWorksiteAddr2 = (a, b) => sortWithField(a, b, WORKSITE_ADDR2)
 const sortWorksiteCity = (a, b) => sortWithField(a, b, WORKSITE_CITY)
 const sortWorksiteCounty = (a, b) => sortWithField(a, b, WORKSITE_COUNTY)
+const sortWorksiteState = (a, b) => sortWithField(a, b, WORKSITE_STATE)
+const sortJobTitle = (a, b) => sortWithField(a, b, JOB_TITLE)
+const sortSocCode = (a, b) => sortWithField(a, b, SOC_CODE)
 module.exports = { parseFile,
                     sortWithField,
+                    sortEmployerName,
+                    sortEmployerAddress,
+                    sortEmployerCity,
+                    sortEmployerState,
                     sortWorksiteAddr1, 
+                    sortWorksiteAddr2, 
                     sortWorksiteCity,
                     sortWorksiteCounty,
-                    sortEmployerName }
+                    sortWorksiteState,
+                    sortJobTitle,
+                    sortSocCode
+                }

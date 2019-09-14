@@ -19,13 +19,13 @@ autocompleteRouter.get('/autocomplete', async (req, res) => {
         logger.info('Processing get of AutoComplete data');
         debugger
 
-
         const autocompleteModel = modelMap['autocomplete']
         if(undefined === autocompleteModel){
             return res.status(500).send("Should not happen")
         }
     
-        var autocomplete = await autocompleteModel.find({"key": "autocomplete"})
+        logger.info(chalk.bgRed.white(`req.body: ${JSON.stringify(req.body)}`))
+        var autocomplete = await autocompleteModel.find(req.body)
         autocomplete = autocomplete[0].autocomplete
         autocomplete = decompress(autocomplete)
         res.status(202).send(autocomplete)
