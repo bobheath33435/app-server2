@@ -15,7 +15,7 @@ const cb = (obj) => {
 si.osInfo(cb)
 
 const { readSummarizedQueries } = require('./utilities/summarize')
-const h1bRecordRouter = require('./routers/h1bRecordRouter')
+const { h1bRecordRouter } = require('./routers/h1bRecordRouter')
 const usersRouter = require('./routers/usersRouter')
 const congressRouter = require('./routers/congressRouter')
 const autocompleteRouter = require('./routers/autoCompDataRouter')

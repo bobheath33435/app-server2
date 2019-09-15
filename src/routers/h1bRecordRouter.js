@@ -177,4 +177,4 @@ h1bRecordRouter.post('/h1b', (req, res) => {
     })
 })
 
-module.exports = h1bRecordRouter
+module.exports = { h1bRecordRouter, performQuery }

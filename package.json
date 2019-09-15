@@ -8,12 +8,13 @@
     "start:test": "mocha test/ --recursive --exit",
     "dev": "nodemon src/index.js",
     "test-watch": "nodemon --exec \"npm test\"",
-    "test": "mocha test/ --recursive --exit"
+    "test": "mocha test/ --recursive --exit -t 4000"
   },
   "keywords": [],
   "author": "Robert Heath",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "chalk": "^2.4.2",
     "csv-parser": "^2.3.0",
     "express": "^4.17.1",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "mocha": "^6.2.0",
-    "nodemon": "^1.19.1"
+    "nodemon": "^1.19.1",
+    "sinon": "^7.4.2"
   }
 }
