@@ -92,7 +92,10 @@ h1bRecordRouter.get('/h1bWsCd', async (req, res) => {
     }
 })
 
-h1bRecordRouter.get('/h1bWsState', async (req, res) => {
+h1bRecordRouter.get('/h1bWsState', async (req, res) => 
+            processWsState(req, res))
+
+const processWsState = async (req, res) => {
     try{
         logger.info('Processing get worksite state');
         logger.info(req.body)
@@ -109,7 +112,7 @@ h1bRecordRouter.get('/h1bWsState', async (req, res) => {
         logger.error('Route /h1bWsState: ' + e);
         res.status(500).send("Invalid request " + e)
     }
-})
+}
 
 h1bRecordRouter.get('/h1bSummary', async (req, res) => {
     try{
@@ -177,4 +180,4 @@ h1bRecordRouter.post('/h1b', (req, res) => {
     })
 })
 
-module.exports = { h1bRecordRouter, performQuery }
+module.exports = { h1bRecordRouter, performQuery, processWsState }

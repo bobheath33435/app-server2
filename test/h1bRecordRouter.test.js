@@ -12,7 +12,7 @@ const modelMap = require('../src/models/dbRecords')
 const { summarize, decompressSummaryRecord, readSummarizedQueries,
     createKey, summaryMap } = require('../src/utilities/summarize')
 
-const { performQuery } = require('../src/routers/h1bRecordRouter')
+const { performQuery, processWsState } = require('../src/routers/h1bRecordRouter')
 
 const expect = require('chai').expect
 const _ = require('lodash')
@@ -44,7 +44,21 @@ describe('Test h1bRecordRouter', () => {
         logger.info(chalk.bgRed.white.bold(`Unit test result: ${JSON.stringify(h1bSummary)}`))
         expect(_.isEmpty(h1bSummary)).to.be.false
      })
-     it('2) Testing performQuery() with key in summaryMap', async () => {
+     xit('2) Testing processWsState() without key in summaryMap', async () => {
+        expect(_.isEmpty(summaryMap)).to.be.true
+        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+        const query = { YEAR: 2017, WORKSITE_STATE: "FL" }
+        var req = {}
+        req.body = query
+        res = {}
+        res.send = (msg) => { return msg; }
+        res.status = (status) => { return res; }
+        res.json = (msg) => {  return msg; }
+        const h1bSummary = await processWsState(req, res)
+        logger.info(chalk.bgRed.white.bold(`Unit test result: ${JSON.stringify(h1bSummary)}`))
+        expect(_.isEmpty(h1bSummary)).to.be.false
+    })
+     it('3) Testing performQuery() with key in summaryMap', async () => {
         await readSummarizedQueries()
         expect(_.isEmpty(summaryMap)).to.be.false
         logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
@@ -52,5 +66,5 @@ describe('Test h1bRecordRouter', () => {
         const h1bSummary = await performQuery(query)
         logger.info(chalk.bgRed.white.bold(`Unit test result: ${JSON.stringify(h1bSummary)}`))
         expect(_.isEmpty(h1bSummary.status)).to.be.false
-     })
+    })
 })   
