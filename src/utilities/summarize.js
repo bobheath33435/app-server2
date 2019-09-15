@@ -549,7 +549,8 @@ const readSummarizedQueries = async() => {
     })
     
     logger.trace(keys)
-    logger.trace(summaryMap)
+    logger.trace("SummaryMap size: " + Object.getOwnPropertyNames(summaryMap).length)
+    return Promise.resolve(summaryMap)
 }
 
 module.exports = { 

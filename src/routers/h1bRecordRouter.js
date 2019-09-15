@@ -84,7 +84,7 @@ h1bRecordRouter.get('/h1bWsCd', async (req, res) => {
         if(_.isEmpty(wsState)){
             return res.status(500).send("Invalid worksite state")
         }
-        const h1bSummary = await performQuery(req.body)     
+        const h1bSummary = await performQuery(req, res)     
         res.status(200).json(h1bSummary)
     }catch(e){
         logger.error('Route /h1bWsCd: ' + e);
@@ -96,8 +96,9 @@ h1bRecordRouter.get('/h1bWsState', async (req, res) =>
             processWsState(req, res))
 
 const processWsState = async (req, res) => {
+    logger.info('Processing get worksite state');
     try{
-        logger.info('Processing get worksite state');
+        logger.info('Processing get worksite state inside');
         logger.info(req.body)
         const year = req.body[YEAR];
         logger.info('Year: ' + year)
@@ -106,10 +107,10 @@ const processWsState = async (req, res) => {
             return res.status(500).send("Invalid worksite state")
         }
         logger.info('Worksite State: ' + wsState)
-        const h1bSummary = await performQuery(req.body)     
-        res.status(200).json(h1bSummary)
+        await performQuery(req, res)     
     }catch(e){
         logger.error('Route /h1bWsState: ' + e);
+        logger.error('Stack: ' + e.stack);
         res.status(500).send("Invalid request " + e)
     }
 }
@@ -118,16 +119,17 @@ h1bRecordRouter.get('/h1bSummary', async (req, res) => {
     try{
         logger.info('Processing summary');
         logger.info(chalk.bgYellow.red(JSON.stringify(req.body)))
-        const h1bSummary = await performQuery(req.body)
-        res.status(200).json(h1bSummary)
+        await performQuery(req, res)
     }catch(e){
         logger.error('Route /h1bSummary: ' + e);
+        logger.error('Stack: ' + e.stack);
         res.status(500).send("Invalid request")
     }
 })
 
-const performQuery = async (query) => {
+const performQuery = async (req, res) => {
     const beginTime = moment()
+    const query = req.body
     const year = query[YEAR];
     const key = createKey(query)
     logger.info(chalk.bgRed.white('Key: ' + key))
@@ -161,7 +163,7 @@ const performQuery = async (query) => {
         logger.info(chalk.bgHex("#003300").white.bold(`Good Time: ${diff} secs -- query: `)
                  + chalk.bgHex("#003300").white.bold(`${JSON.stringify(query)}`))
     }
-    return h1bSummary
+    return res.status(200).json(h1bSummary)
 }
 
 h1bRecordRouter.post('/h1b', (req, res) => {
