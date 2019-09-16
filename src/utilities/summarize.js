@@ -474,17 +474,17 @@ const createKey = (queryIn) => {
     }
 
     if(undefined != query[WORKSITE_STATE]){
-        key += "_" + query[WORKSITE_STATE]
+        key += "_st_" + query[WORKSITE_STATE]
         delete query[WORKSITE_STATE]
     }
 
     if(undefined != query[WORKSITE_CITY]){
-        key += "_" + query[WORKSITE_CITY]
+        key += "_city_" + query[WORKSITE_CITY]
         delete query[WORKSITE_CITY]
     }
 
     if(undefined != query[WORKSITE_COUNTY]){
-        key += "_" + query[WORKSITE_COUNTY]
+        key += "_county_" + query[WORKSITE_COUNTY]
         delete query[WORKSITE_COUNTY]
     }
 

@@ -17,7 +17,8 @@ log4js.configure({
     categories: { default: { appenders: ['h1bData'], level: 'info' } }
 });
 const modelMap = require('../models/dbRecords')
-const { summarize, decompressSummaryRecord, createKey, summaryMap } = require('../utilities/summarize')
+const { summarize, decompressSummaryRecord, compressSummaryRecord,
+            createKey, summaryMap } = require('../utilities/summarize')
 const logger = log4js.getLogger('h1bData');
 
 h1bRecordRouter.get('/h1b', async (req, res) => {
@@ -67,7 +68,9 @@ h1bRecordRouter.get('/h1bCount', async (req, res) => {
     }
 })
 
-h1bRecordRouter.get('/h1bWsCd', async (req, res) => {
+h1bRecordRouter.get('/h1bWsCd', async (req, res) => processWsCd(req, res))
+
+const processWsCd = async(req, res) => {
     try{
         logger.info('Processing get worksite congressional district');
         logger.info(req.body)
@@ -90,7 +93,7 @@ h1bRecordRouter.get('/h1bWsCd', async (req, res) => {
         logger.error('Route /h1bWsCd: ' + e);
         res.status(500).send("Invalid request")
     }
-})
+}
 
 h1bRecordRouter.get('/h1bWsState', async (req, res) => 
             processWsState(req, res))
@@ -135,12 +138,16 @@ const performQuery = async (req, res) => {
     logger.info(chalk.bgRed.white('Key: ' + key))
     logger.info(chalk.bgGreenBright.red('Year: ' + year))
     var h1bSummary = {"data": {}}
+
+    const compress = true
     if(true == summaryMap[key]){
         logger.info("Sending summary data")
         const summaryModel = modelMap['summary']
         h1bSummary = await summaryModel.find({ "key": key })
         h1bSummary = h1bSummary[0]['summary']
-        // h1bSummary = decompressSummaryRecord(h1bSummary)
+        if(false == compress){
+            h1bSummary = decompressSummaryRecord(h1bSummary)
+        }
     }else{
         logger.info("Sending read data")
         const h1bModel = modelMap[year]
@@ -150,6 +157,9 @@ const performQuery = async (req, res) => {
         const h1bRecords = await h1bModel.find(query)
         logger.trace(h1bRecords)
         h1bSummary = summarize(h1bRecords, query)
+        if(true == compress){
+            h1bSummary = compressSummaryRecord(h1bSummary)
+        }
     }
     const endTime = moment()
     const diff = (endTime - beginTime) / 1000.
