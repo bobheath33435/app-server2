@@ -28,7 +28,7 @@ autocompleteRouter.get('/autocomplete', async (req, res) => {
         var autocomplete = await autocompleteModel.find(req.body)
         autocomplete = { status: autocomplete[0].autocomplete }
         autocomplete = decompress(autocomplete.status)
-        res.status(202).send(autocomplete)
+        res.status(200).send(autocomplete)
     }catch(e){
         logger.error(chalk.bgRed.white.bold("AutoComplete data request failed: " + e))
         logger.error(chalk.bgRed.white.bold("Stack: " + e.stack))
