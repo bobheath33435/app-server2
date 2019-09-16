@@ -6,11 +6,16 @@ const chalk = require('chalk')
 const moment = require('moment')
 const log = console.log;
 const _ = require('lodash')
-const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT,
-        WORKSITE_COUNTY, WORKSITE_STATE, TOTAL_WORKERS, TOTAL_LCAS, LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4,
-        UNSPECIFIED, h1bRecord } 
-            = require('../models/h1bRecordSchema')
-
+const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, EMPLOYER_ADDRESS,
+    EMPLOYER_CITY, EMPLOYER_STATE, WORKSITE_CONGRESS_DISTRICT,
+    WORKSITE_LATITUDE, WORKSITE_LONGITUDE, WORKSITE_ADDR1, WORKSITE_ADDR2,
+    WORKSITE_CITY, WORKSITE_COUNTY, WORKSITE_STATE, TOTAL_WORKERS, TOTAL_LCAS, SOC_CODE, 
+    JOB_TITLE, LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4,
+    NEW_EMPLOYMENT, CONTINUED_EMPLOYMENT, CHANGE_PREVIOUS_EMPLOYMENT,
+    NEW_CONCURRENT_EMPLOYMENT, CHANGE_EMPLOYER, AMENDED_PETITION,
+    UNSPECIFIED, ANNUALIZED_PREVAILING_WAGE, ANNUALIZED_WAGE_RATE_OF_PAY,
+    salaryLevels, h1bRecord } 
+        = require('../models/h1bRecordSchema')
 log4js.configure({
     // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
     appenders: { h1bData: { type: 'console' } },
@@ -88,7 +93,6 @@ const processWsCd = async(req, res) => {
             return res.status(500).send("Invalid worksite state")
         }
         const h1bSummary = await performQuery(req, res)     
-        res.status(200).json(h1bSummary)
     }catch(e){
         logger.error('Route /h1bWsCd: ' + e);
         res.status(500).send("Invalid request")
