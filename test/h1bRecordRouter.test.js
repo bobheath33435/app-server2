@@ -123,7 +123,7 @@ describe('Test h1bRecordRouter', () => {
         sinon.restore()
     })    
     logger.trace('Testing h1bRecordRouter');
-    it('1) Testing performQuery() (year-2017) with key in summaryMap', async () => {
+    xit('1) Testing performQuery() (year-2017) with key in summaryMap', async () => {
         expect(_.isEmpty(summaryMap)).to.be.false
         logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
         const year = 2017
@@ -136,7 +136,7 @@ describe('Test h1bRecordRouter', () => {
         res.json = (h1bRecord) => jsonTest.json(h1bRecord)
         await performQuery(req, res)   
     })
-    it('2) Testing performQuery() (year-2016) with key in summaryMap', async () => {
+    xit('2) Testing performQuery() (year-2016) with key in summaryMap', async () => {
         expect(_.isEmpty(summaryMap)).to.be.false
         logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
         const year = 2016
