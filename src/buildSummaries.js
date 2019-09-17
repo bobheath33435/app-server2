@@ -15,6 +15,19 @@ const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, WORKSITE_CONGRESS_DISTRICT
     salaryLevels, h1bRecord } 
         = require('./models/h1bRecordSchema')
 const log = console.log;
+log4js.configure({
+    // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
+    appenders: { h1bData: { type: 'console' } },
+    categories: { default: { appenders: ['h1bData'], level: 'info' } }
+});
+const modelMap = require('./models/dbRecords')
+const { summarizeAndCompress, createKey, years,
+            compressSummaryRecord, decompressSummaryRecord } = require('./utilities/summarize')
+const { initYearObject, mergeStateObjects, finalizeMerge} = require('./utilities/yearModules')
+
+const logger = log4js.getLogger('h1bData');
+
+/*
 const alaskaCounties = ["Aleutians East", "Aleutians West", "Anchorage", "Bethel", "Bristol Bay", "Denali", 
                             "Dillingham", "Fairbanks North Star", 
                             "Haines", "Juneau",  
@@ -796,426 +809,630 @@ const wyomingCounties = [
     "Johnson", "Laramie", "Lincoln", "Natrona", "Park", "Platte", "Sheridan", "Sublette", "Sweetwater",
     "Teton", "Uinta", "Washakie", "Weston"
 ]
-const wyomingCities = [
-    "Casper", "Cheyenne", "Jackson", "Laramie"
-]
-const states = [
-    {id: "AK",
-     counties: alaskaCounties,
-     cities: alaskaCities,
-     congressionalDistricts: 1
-    }, 
-    {id: "AL",
-     counties: alabamaCounties,
-     cities: alabamaCities,
-     congressionalDistricts: 7
-    }, 
-    {id: "AR",
-     counties: arkansasCounties,
-     cities: arkansasCities,
-     congressionalDistricts: 4
-    }, 
-    {id: "AZ",
-     counties: arizonaCounties,
-     cities: arizonaCities,
-     congressionalDistricts: 9
-    }, 
-    {id: "CA",
-     counties: californiaCounties,
-     cities: californiaCities,
-     congressionalDistricts: 53
-    }, 
-    {id: "CO",
-     counties: coloradoCounties,
-     cities: coloradoCities,
-     congressionalDistricts: 7
-    }, 
-    {id: "CT",
-     counties: connecticutCounties,
-     cities: connecticutCities,
-     congressionalDistricts: 5
-    }, 
-    {id: "DC",
-     cities: dcCities,
-     congressionalDistricts: 1
-    }, 
-    {id: "DE",
-     counties: delawareCounties,
-     cities: delawareCities,
-     congressionalDistricts: 1
-    }, 
-    {id: "FL",
-     counties: floridaCounties,
-     cities: floridaCities,
-     congressionalDistricts: 27
-    }, 
-    {id: "GA",
-     counties: georgiaCounties,
-     cities: georgiaCities,
-     congressionalDistricts: 14
-    }, 
-    {id: "GU",
-     cities: guamCities
-    }, 
-    {id: "HI",
-     counties: hawaiiCounties,
-     cities: hawaiiCities,
-     congressionalDistricts: 2
-    }, 
-    {id: "ID",
-     counties: idahoCounties,
-     cities: idahoCities,
-     congressionalDistricts: 2
-    }, 
-    {id: "IL",
-     counties: illinoisCounties,
-     cities: illinoisCities,
-     congressionalDistricts: 18
-    }, 
-    {id: "IN",
-     counties: indianaCounties,
-     cities: indianaCities,
-     congressionalDistricts: 9
-    }, 
-    {id: "IO",
-     counties: iowaCounties,
-     cities: iowaCities,
-     congressionalDistricts: 4
-    }, 
-    {id: "KS",
-     counties: kansasCounties,
-     cities: kansasCities,
-     congressionalDistricts: 4
-    }, 
-    {id: "KY",
-     counties: kentuckyCounties,
-     cities: kentuckyCities,
-     congressionalDistricts: 6
-    }, 
-    {id: "LA",
-     counties: louisianaCounties,
-     cities: louisianaCities,
-     congressionalDistricts: 6
-    }, 
-    {id: "MA",
-     counties: massachusettsCounties,
-     cities: massachusettsCities,
-     congressionalDistricts: 9
-    }, 
-    {id: "MD",
-     counties: marylandCounties,
-     cities: marylandCities,
-     congressionalDistricts: 8
-    }, 
-    {id: "ME",
-     counties: maineCounties,
-     cities: maineCities,
-     congressionalDistricts: 2
-    }, 
-    {id: "MI",
-     counties: michiganCounties,
-     cities: michiganCities,
-     congressionalDistricts: 14
-    }, 
-    {id: "MN",
-     counties: minnesotaCounties,
-     cities: minnesotaCities,
-     congressionalDistricts: 8
-    }, 
-    {id: "MO",
-     counties: missouriCounties,
-     cities: missouriCities,
-     congressionalDistricts: 8
-    }, 
-    {id: "MP",
-     cities: northernMarianaIslandsCities
-    }, 
-    {id: "MS",
-     counties: mississippiCounties,
-     cities: mississippiCities,
-     congressionalDistricts: 4
-    }, 
-    {id: "MT",
-     counties: montanaCounties,
-     cities: montanaCities,
-     congressionalDistricts: 1
-    }, 
-    {id: "NC",
-     counties: northCarolinaCounties,
-     cities: northCarolinaCities,
-     congressionalDistricts: 13
-    }, 
-    {id: "ND",
-     counties: northDakotaCounties,
-     cities: northDakotaCities,
-     congressionalDistricts: 1
-    }, 
-    {id: "NE",
-     counties: nebraskaCounties,
-     cities: nebraskaCities,
-     congressionalDistricts: 3
-    }, 
-    {id: "NH",
-     counties: newHampshireCounties,
-     cities: newHampshireCities,
-     congressionalDistricts: 2
-    }, 
-    {id: "NJ",
-     counties: newJerseyCounties,
-     cities: newJerseyCities,
-     congressionalDistricts: 12
-    }, 
-    {id: "NM",
-     counties: newMexicoCounties,
-     cities: newMexicoCities,
-     congressionalDistricts: 3
-    }, 
-    {id: "NV",
-     counties: nevadaCounties,
-     cities: nevadaCities,
-     congressionalDistricts: 4
-    }, 
-    {id: "NY",
-     counties: newYorkCounties,
-     cities: newYorkCities,
-     congressionalDistricts: 27
-    }, 
-    {id: "OH",
-     counties: ohioCounties,
-     cities: ohioCities,
-     congressionalDistricts: 16
-    }, 
-    {id: "OK",
-     counties: oklahomaCounties,
-     cities: oklahomaCities,
-     congressionalDistricts: 5
-    }, 
-    {id: "OR",
-     counties: oregonCounties,
-     cities: oregonCities,
-     congressionalDistricts: 5
-    }, 
-    {id: "PA",
-     counties: pennsylvaniaCounties,
-     cities: pennsylvaniaCities,
-     congressionalDistricts: 18
-    }, 
-    {id: "PR",
-     counties: puertoRicoCounties,
-     cities: puertoRicoCities
-    }, 
-    {id: "RI",
-     counties: rhodeIslandCounties,
-     cities: rhodeIslandCities,
-     congressionalDistricts: 2
-    }, 
-    {id: "SC",
-     counties: southCarolinaCounties,
-     cities: southCarolinaCities,
-     congressionalDistricts: 7
-    }, 
-    {id: "SD",
-     counties: southDakotaCounties,
-     cities: southDakotaCities,
-     congressionalDistricts: 3
-    }, 
-    {id: "TN",
-     counties: tennesseeCounties,
-     cities: tennesseeCities,
-     congressionalDistricts: 9
-    }, 
-    {id: "TX",
-     counties: texasCounties,
-     cities: texasCities,
-     congressionalDistricts: 36
-    }, 
-    {id: "UT",
-     counties:utahCounties,
-     cities: utahCities,
-     congressionalDistricts: 4
-    }, 
-    {id: "VA",
-     counties: virginiaCounties,
-     cities: virginiaCities,
-     congressionalDistricts: 23
-    }, 
-    {id: "VI",
-     cities: virginIslandsCities
-    }, 
-    {id: "VT",
-     counties: vermontCounties,
-     cities: vermontCities,
-     congressionalDistricts: 1
-    }, 
-    {id: "WA",
-     counties: washingtonCounties,
-     cities: washingtonCities,
-     congressionalDistricts: 10
-    }, 
-    {id: "WV",
-     counties: westVirginaCounties,
-     cities: westVirginaCities,
-     congressionalDistricts: 3
-    }, 
-    {id: "WI",
-     counties: wisconsinCounties,
-     cities: wisconsinCities,
-     congressionalDistricts: 8
-    }, 
-    {id: "WY",
-     counties: wyomingCounties,
-     cities: wyomingCities,
-     congressionalDistricts: 1
-    },
-]
+*/
+const { alaskaCounties, alabamaCounties, arkansasCounties, arizonaCounties, californiaCounties,
+    coloradoCounties, connecticutCounties, delawareCounties, floridaCounties, georgiaCounties,
+    hawaiiCounties, idahoCounties, illinoisCounties, indianaCounties, iowaCounties,
+    kansasCounties, kentuckyCounties, louisianaCounties, marylandCounties, maineCounties,
+    massachusettsCounties, michiganCounties, minnesotaCounties, mississippiCounties,
+    missouriCounties, montanaCounties, nebraskaCounties, newHampshireCounties, newJerseyCounties,
+    newMexicoCounties, newYorkCounties, nevadaCounties, northCarolinaCounties, northDakotaCounties,
+    ohioCounties, oklahomaCounties, oregonCounties, pennsylvaniaCounties, puertoRicoCounties,
+    rhodeIslandCounties, southCarolinaCounties, southDakotaCounties, tennesseeCounties,
+    texasCounties, utahCounties, vermontCounties, virginiaCounties, washingtonCounties,
+    westVirginaCounties, wisconsinCounties, wyomingCounties }
+        = require('./models/counties')
 
-const employerNames = [
-    "COGNIZANT TECHNOLOGY SOLUTIONS U.S. CORPORATION",
-    "DELOITTE CONSULTING LLP",
-    "WIPRO LIMITED",
-    "INFOSYS LIMITED",
-    "TATA CONSULTANCY SERVICES LIMITED",
-    "INFOSYS TECHNOLOGIES LIMITED",
-    "MPHASIS CORPORATION",
-    "IGATE TECHNOLOGIES INC.",
-    "PRICEWATERHOUSECOOPERS, LLP",
-    "SYNTEL INC",
-    "HCL AMERICA, INC.",
-    "DELOITTE & TOUCHE LLP",
-    "SYNTEL CONSULTING INC.",
-    "MINDTREE LIMITED",
-    "ACCENTURE LLP",
-    "APPLE INC.",
-    "CAPGEMINI AMERICA INC",
-    "PRICEWATERHOUSECOOPERS LLP",
-    "ORACLE AMERICA, INC.",
-    "ITELLIGENCE, INC.",
-    "PATNI AMERICAS INC.",
-    "SYNTEL CONSULTING INC",
-    "CISCO SYSTEMS, INC.",
-    "MICROSOFT CORPORATION",
-    "FUJITSU AMERICA, INC.",
-    "SYNOPSYS, INC.",
-    "IBM INDIA PRIVATE LIMITED",
-    "AMAZON CORPORATE LLC",
-    "ERNST & YOUNG U.S. LLP",
-    "DELOITTE TAX LLP",
-    "PRICEWATERHOUSECOOPERS ADVISORY SERVICES LLC",
-    "CAPGEMINI FINANCIAL SERVICES USA INC",
-    "NEW YORK CITY DEPARTMENT OF EDUCATION",
-    "BIRLASOFT INC",
-    "TECH MAHINDRA (AMERICAS),INC.",
-    "CSC COVANSYS CORPORATION",
-    "QUALCOMM TECHNOLOGIES, INC.",
-    "NVIDIA CORPORATION",
-    "INTEL CORPORATION",
-    "LARSEN & TOUBRO INFOTECH LIMITED",
-    "KFORCE INC.",
-    "MASTECH, INC., A MASTECH HOLDINGS, INC. COMPANY",
-    "CYIENT, INC.",
-    "GRANDISON MANAGEMENT, INC.",
-    "DAZ SYSTEMS, INC.",
-    "GOOGLE INC.",
-    "TECH MAHINDRA (AMERICAS), INC.",
-    "ADOBE SYSTEMS INCORPORATED",
-    "DELOITTE &AMP; TOUCHE LLP",
-    "COMPUTER SCIENCES CORPORATION",
-    "IBM CORPORATION",
-    "HEWLETT-PACKARD COMPANY",
-    "FACEBOOK, INC.",
-    "CGI TECHNOLOGIES AND SOLUTIONS INC.",
-    "UST GLOBAL INC.",
-    "TECH MAHINDRA ( AMERICAS), INC",
-    "SATYAM COMPUTER SERVICES LIMITED",
-    "QUALCOMM ATHEROS, INC.",
-    "ZENSAR TECHNOLOGIES INC.",
-    "DELOITTE TRANSACTIONS AND BUSINESS ANALYTICS LLP",
-    "JPMORGAN CHASE & CO.",
-    "MCKINSEY & COMPANY, INC. UNITED STATES",
-    "IGATE AMERICAS INC",
-    "BANK OF AMERICA N.A.",
-    "NTT DATA, INC.",
-    "INFOTECH ENTERPRISES AMERICA, INC.",
-    "JUNIPER NETWORKS, INC.",
-    "BROADCOM CORPORATION",
-    "TELECOM TECHNOLOGY SERVICES, INC.",
-    "ORACLE AMERICA, INC",
-    "INFOSYS  LIMITED",
-    "KPMG LLP",
-    "INTUIT INC.",
-    "EXPERIS US, INC.",
-    "HITACHI CONSULTING CORPORATION",
-    "GOLDMAN, SACHS & CO.",
-    "MASTECH DIGITAL TECHNOLOGIES, INC., A MASTECH DIGITAL, INC. COMPANY",
-    "CAPGEMINI U.S. LLC",
-    "HP ENTERPRISE SERVICES, LLC",
-    "HEXAWARE TECHNOLOGIES, INC.",
-    "APPLIED MATERIALS, INC.",
-    "UST GLOBAL INC",
-    "HEWLETT PACKARD ENTERPRISE COMPANY",
-    "CUMMINS INC.",
-    "EMC CORPORATION",
-    "SYNECHRON, INC.",
-    "UBER TECHNOLOGIES, INC.",
-    "EBAY INC.",
-    "IGATE GLOBAL SOLUTIONS, AN IGATE COMPANY",
-    "BLOOMBERG, LP",
-    "SERVICENOW, INC.",
-    "YAHOO! INC.",
-    "ZS ASSOCIATES, INC.",
-    "COMPUNNEL SOFTWARE GROUP, INC.",
-    "L&T TECHNOLOGY SERVICES LIMITED",
-    "NESS USA, INC.",
-    "THE BOSTON CONSULTING GROUP, INC.",
-    "VIRTUSA CORPORATION",
-    "GILEAD SCIENCES, INC.",
-    "TECH MAHINDRA (AMERICAS) INC.",
-    "ACCENTURE TECHNOLOGY SOLUTIONS",
-    "SATYAM COMPUTER SERVICES LTD",
-    "PAYPAL, INC.",
-    "JUNIPER NETWORKS (US), INC.",
-    "NIIT TECHNOLOGIES LIMITED",
-    "WAL-MART ASSOCIATES, INC."
-]
+const {
+    alaskaCities, alabamaCities, arkansasCities, arizonaCities, californiaCities, coloradoCities,
+    connecticutCities, dcCities, delawareCities, floridaCities, georgiaCities, guamCities,
+    hawaiiCities, idahoCities, illinoisCities, indianaCities, iowaCities, kansasCities,
+    kentuckyCities, louisianaCities, marylandCities, maineCities, massachusettsCities,
+    michiganCities, minnesotaCities, mississippiCities, missouriCities, montanaCities,
+    nebraskaCities, newHampshireCities, newJerseyCities, newMexicoCities, newYorkCities,
+    nevadaCities, northCarolinaCities, northDakotaCities, northernMarianaIslandsCities,
+    ohioCities, oklahomaCities, oregonCities, pennsylvaniaCities, puertoRicoCities, rhodeIslandCities,
+    southCarolinaCities, southDakotaCities, tennesseeCities, texasCities, utahCities,
+    vermontCities, virginIslandsCities, virginiaCities, washingtonCities, westVirginaCities,
+    wisconsinCities, wyomingCities } 
+        = require('./models/cities')
 
-const waitFor = async(num) => {
-    setTimeout( () => {
-        log("Timer expired")
-        Promise.resolve()
-    }, num)    
-}
+const { states } = require('./models/states')
 
-const asyncForEach = (async (array, callback) => {
-    for (let index = 0; index < array.length; index++) {
-      await callback(array[index], index, array);
-    }
-})
+// const states = [
+//     {id: "AK",
+//      counties: alaskaCounties,
+//      cities: alaskaCities,
+//      congressionalDistricts: 1
+//     }, 
+//     {id: "AL",
+//      counties: alabamaCounties,
+//      cities: alabamaCities,
+//      congressionalDistricts: 7
+//     }, 
+//     {id: "AR",
+//      counties: arkansasCounties,
+//      cities: arkansasCities,
+//      congressionalDistricts: 4
+//     }, 
+//     {id: "AZ",
+//      counties: arizonaCounties,
+//      cities: arizonaCities,
+//      congressionalDistricts: 9
+//     }, 
+//     {id: "CA",
+//      counties: californiaCounties,
+//      cities: californiaCities,
+//      congressionalDistricts: 53
+//     }, 
+//     {id: "CO",
+//      counties: coloradoCounties,
+//      cities: coloradoCities,
+//      congressionalDistricts: 7
+//     }, 
+//     {id: "CT",
+//      counties: connecticutCounties,
+//      cities: connecticutCities,
+//      congressionalDistricts: 5
+//     }, 
+//     {id: "DC",
+//      cities: dcCities,
+//      congressionalDistricts: 1
+//     }, 
+//     {id: "DE",
+//      counties: delawareCounties,
+//      cities: delawareCities,
+//      congressionalDistricts: 1
+//     }, 
+//     {id: "FL",
+//      counties: floridaCounties,
+//      cities: floridaCities,
+//      congressionalDistricts: 27
+//     }, 
+//     {id: "GA",
+//      counties: georgiaCounties,
+//      cities: georgiaCities,
+//      congressionalDistricts: 14
+//     }, 
+//     {id: "GU",
+//      cities: guamCities
+//     }, 
+//     {id: "HI",
+//      counties: hawaiiCounties,
+//      cities: hawaiiCities,
+//      congressionalDistricts: 2
+//     }, 
+//     {id: "ID",
+//      counties: idahoCounties,
+//      cities: idahoCities,
+//      congressionalDistricts: 2
+//     }, 
+//     {id: "IL",
+//      counties: illinoisCounties,
+//      cities: illinoisCities,
+//      congressionalDistricts: 18
+//     }, 
+//     {id: "IN",
+//      counties: indianaCounties,
+//      cities: indianaCities,
+//      congressionalDistricts: 9
+//     }, 
+//     {id: "IO",
+//      counties: iowaCounties,
+//      cities: iowaCities,
+//      congressionalDistricts: 4
+//     }, 
+//     {id: "KS",
+//      counties: kansasCounties,
+//      cities: kansasCities,
+//      congressionalDistricts: 4
+//     }, 
+//     {id: "KY",
+//      counties: kentuckyCounties,
+//      cities: kentuckyCities,
+//      congressionalDistricts: 6
+//     }, 
+//     {id: "LA",
+//      counties: louisianaCounties,
+//      cities: louisianaCities,
+//      congressionalDistricts: 6
+//     }, 
+//     {id: "MA",
+//      counties: massachusettsCounties,
+//      cities: massachusettsCities,
+//      congressionalDistricts: 9
+//     }, 
+//     {id: "MD",
+//      counties: marylandCounties,
+//      cities: marylandCities,
+//      congressionalDistricts: 8
+//     }, 
+//     {id: "ME",
+//      counties: maineCounties,
+//      cities: maineCities,
+//      congressionalDistricts: 2
+//     }, 
+//     {id: "MI",
+//      counties: michiganCounties,
+//      cities: michiganCities,
+//      congressionalDistricts: 14
+//     }, 
+//     {id: "MN",
+//      counties: minnesotaCounties,
+//      cities: minnesotaCities,
+//      congressionalDistricts: 8
+//     }, 
+//     {id: "MO",
+//      counties: missouriCounties,
+//      cities: missouriCities,
+//      congressionalDistricts: 8
+//     }, 
+//     {id: "MP",
+//      cities: northernMarianaIslandsCities
+//     }, 
+//     {id: "MS",
+//      counties: mississippiCounties,
+//      cities: mississippiCities,
+//      congressionalDistricts: 4
+//     }, 
+//     {id: "MT",
+//      counties: montanaCounties,
+//      cities: montanaCities,
+//      congressionalDistricts: 1
+//     }, 
+//     {id: "NC",
+//      counties: northCarolinaCounties,
+//      cities: northCarolinaCities,
+//      congressionalDistricts: 13
+//     }, 
+//     {id: "ND",
+//      counties: northDakotaCounties,
+//      cities: northDakotaCities,
+//      congressionalDistricts: 1
+//     }, 
+//     {id: "NE",
+//      counties: nebraskaCounties,
+//      cities: nebraskaCities,
+//      congressionalDistricts: 3
+//     }, 
+//     {id: "NH",
+//      counties: newHampshireCounties,
+//      cities: newHampshireCities,
+//      congressionalDistricts: 2
+//     }, 
+//     {id: "NJ",
+//      counties: newJerseyCounties,
+//      cities: newJerseyCities,
+//      congressionalDistricts: 12
+//     }, 
+//     {id: "NM",
+//      counties: newMexicoCounties,
+//      cities: newMexicoCities,
+//      congressionalDistricts: 3
+//     }, 
+//     {id: "NV",
+//      counties: nevadaCounties,
+//      cities: nevadaCities,
+//      congressionalDistricts: 4
+//     }, 
+//     {id: "NY",
+//      counties: newYorkCounties,
+//      cities: newYorkCities,
+//      congressionalDistricts: 27
+//     }, 
+//     {id: "OH",
+//      counties: ohioCounties,
+//      cities: ohioCities,
+//      congressionalDistricts: 16
+//     }, 
+//     {id: "OK",
+//      counties: oklahomaCounties,
+//      cities: oklahomaCities,
+//      congressionalDistricts: 5
+//     }, 
+//     {id: "OR",
+//      counties: oregonCounties,
+//      cities: oregonCities,
+//      congressionalDistricts: 5
+//     }, 
+//     {id: "PA",
+//      counties: pennsylvaniaCounties,
+//      cities: pennsylvaniaCities,
+//      congressionalDistricts: 18
+//     }, 
+//     {id: "PR",
+//      counties: puertoRicoCounties,
+//      cities: puertoRicoCities
+//     }, 
+//     {id: "RI",
+//      counties: rhodeIslandCounties,
+//      cities: rhodeIslandCities,
+//      congressionalDistricts: 2
+//     }, 
+//     {id: "SC",
+//      counties: southCarolinaCounties,
+//      cities: southCarolinaCities,
+//      congressionalDistricts: 7
+//     }, 
+//     {id: "SD",
+//      counties: southDakotaCounties,
+//      cities: southDakotaCities,
+//      congressionalDistricts: 3
+//     }, 
+//     {id: "TN",
+//      counties: tennesseeCounties,
+//      cities: tennesseeCities,
+//      congressionalDistricts: 9
+//     }, 
+//     {id: "TX",
+//      counties: texasCounties,
+//      cities: texasCities,
+//      congressionalDistricts: 36
+//     }, 
+//     {id: "UT",
+//      counties:utahCounties,
+//      cities: utahCities,
+//      congressionalDistricts: 4
+//     }, 
+//     {id: "VA",
+//      counties: virginiaCounties,
+//      cities: virginiaCities,
+//      congressionalDistricts: 23
+//     }, 
+//     {id: "VI",
+//      cities: virginIslandsCities
+//     }, 
+//     {id: "VT",
+//      counties: vermontCounties,
+//      cities: vermontCities,
+//      congressionalDistricts: 1
+//     }, 
+//     {id: "WA",
+//      counties: washingtonCounties,
+//      cities: washingtonCities,
+//      congressionalDistricts: 10
+//     }, 
+//     {id: "WV",
+//      counties: westVirginaCounties,
+//      cities: westVirginaCities,
+//      congressionalDistricts: 3
+//     }, 
+//     {id: "WI",
+//      counties: wisconsinCounties,
+//      cities: wisconsinCities,
+//      congressionalDistricts: 8
+//     }, 
+//     {id: "WY",
+//      counties: wyomingCounties,
+//      cities: wyomingCities,
+//      congressionalDistricts: 1
+//     },
+// ]
 
-const asyncForLoop = (async (count, callback) => {
-    for (let index = 0; index < count; index++) {
-      await callback(index);
-    }
-})
+const { employerNames } = require('./models/employerNames')
 
-const start = async () => {
-    await asyncForEach([1, 2, 3], async (num) => {
-      await waitFor(50);
-      console.log(num);
-    });
-    console.log('Done');
-}
+// const employerNames = [
+//     "COGNIZANT TECHNOLOGY SOLUTIONS U.S. CORPORATION",
+//     "DELOITTE CONSULTING LLP",
+//     "WIPRO LIMITED",
+//     "INFOSYS LIMITED",
+//     "TATA CONSULTANCY SERVICES LIMITED",
+//     "INFOSYS TECHNOLOGIES LIMITED",
+//     "MPHASIS CORPORATION",
+//     "IGATE TECHNOLOGIES INC.",
+//     "PRICEWATERHOUSECOOPERS, LLP",
+//     "SYNTEL INC",
+//     "HCL AMERICA, INC.",
+//     "DELOITTE & TOUCHE LLP",
+//     "SYNTEL CONSULTING INC.",
+//     "MINDTREE LIMITED",
+//     "ACCENTURE LLP",
+//     "APPLE INC.",
+//     "CAPGEMINI AMERICA INC",
+//     "PRICEWATERHOUSECOOPERS LLP",
+//     "ORACLE AMERICA, INC.",
+//     "ITELLIGENCE, INC.",
+//     "PATNI AMERICAS INC.",
+//     "SYNTEL CONSULTING INC",
+//     "CISCO SYSTEMS, INC.",
+//     "MICROSOFT CORPORATION",
+//     "FUJITSU AMERICA, INC.",
+//     "SYNOPSYS, INC.",
+//     "IBM INDIA PRIVATE LIMITED",
+//     "AMAZON CORPORATE LLC",
+//     "ERNST & YOUNG U.S. LLP",
+//     "DELOITTE TAX LLP",
+//     "PRICEWATERHOUSECOOPERS ADVISORY SERVICES LLC",
+//     "CAPGEMINI FINANCIAL SERVICES USA INC",
+//     "NEW YORK CITY DEPARTMENT OF EDUCATION",
+//     "BIRLASOFT INC",
+//     "TECH MAHINDRA (AMERICAS),INC.",
+//     "CSC COVANSYS CORPORATION",
+//     "QUALCOMM TECHNOLOGIES, INC.",
+//     "NVIDIA CORPORATION",
+//     "INTEL CORPORATION",
+//     "LARSEN & TOUBRO INFOTECH LIMITED",
+//     "KFORCE INC.",
+//     "MASTECH, INC., A MASTECH HOLDINGS, INC. COMPANY",
+//     "CYIENT, INC.",
+//     "GRANDISON MANAGEMENT, INC.",
+//     "DAZ SYSTEMS, INC.",
+//     "GOOGLE INC.",
+//     "TECH MAHINDRA (AMERICAS), INC.",
+//     "ADOBE SYSTEMS INCORPORATED",
+//     "DELOITTE &AMP; TOUCHE LLP",
+//     "COMPUTER SCIENCES CORPORATION",
+//     "IBM CORPORATION",
+//     "HEWLETT-PACKARD COMPANY",
+//     "FACEBOOK, INC.",
+//     "CGI TECHNOLOGIES AND SOLUTIONS INC.",
+//     "UST GLOBAL INC.",
+//     "TECH MAHINDRA ( AMERICAS), INC",
+//     "SATYAM COMPUTER SERVICES LIMITED",
+//     "QUALCOMM ATHEROS, INC.",
+//     "ZENSAR TECHNOLOGIES INC.",
+//     "DELOITTE TRANSACTIONS AND BUSINESS ANALYTICS LLP",
+//     "JPMORGAN CHASE & CO.",
+//     "MCKINSEY & COMPANY, INC. UNITED STATES",
+//     "IGATE AMERICAS INC",
+//     "BANK OF AMERICA N.A.",
+//     "NTT DATA, INC.",
+//     "INFOTECH ENTERPRISES AMERICA, INC.",
+//     "JUNIPER NETWORKS, INC.",
+//     "BROADCOM CORPORATION",
+//     "TELECOM TECHNOLOGY SERVICES, INC.",
+//     "ORACLE AMERICA, INC",
+//     "INFOSYS  LIMITED",
+//     "KPMG LLP",
+//     "INTUIT INC.",
+//     "EXPERIS US, INC.",
+//     "HITACHI CONSULTING CORPORATION",
+//     "GOLDMAN, SACHS & CO.",
+//     "MASTECH DIGITAL TECHNOLOGIES, INC., A MASTECH DIGITAL, INC. COMPANY",
+//     "CAPGEMINI U.S. LLC",
+//     "HP ENTERPRISE SERVICES, LLC",
+//     "HEXAWARE TECHNOLOGIES, INC.",
+//     "APPLIED MATERIALS, INC.",
+//     "UST GLOBAL INC",
+//     "HEWLETT PACKARD ENTERPRISE COMPANY",
+//     "CUMMINS INC.",
+//     "EMC CORPORATION",
+//     "SYNECHRON, INC.",
+//     "UBER TECHNOLOGIES, INC.",
+//     "EBAY INC.",
+//     "IGATE GLOBAL SOLUTIONS, AN IGATE COMPANY",
+//     "BLOOMBERG, LP",
+//     "SERVICENOW, INC.",
+//     "YAHOO! INC.",
+//     "ZS ASSOCIATES, INC.",
+//     "COMPUNNEL SOFTWARE GROUP, INC.",
+//     "L&T TECHNOLOGY SERVICES LIMITED",
+//     "NESS USA, INC.",
+//     "THE BOSTON CONSULTING GROUP, INC.",
+//     "VIRTUSA CORPORATION",
+//     "GILEAD SCIENCES, INC.",
+//     "TECH MAHINDRA (AMERICAS) INC.",
+//     "ACCENTURE TECHNOLOGY SOLUTIONS",
+//     "SATYAM COMPUTER SERVICES LTD",
+//     "PAYPAL, INC.",
+//     "JUNIPER NETWORKS (US), INC.",
+//     "NIIT TECHNOLOGIES LIMITED",
+//     "WAL-MART ASSOCIATES, INC.",
+//     "QUALCOMM INCORPORATED",
+//     "A.T. KEARNEY, INC.",
+//     "MANHATTAN ASSOCIATES, INC.",
+//     "HOUSTON INDEPENDENT SCHOOL DISTRICT",
+//     "MERRILL LYNCH",
+//     "MANAGEMENT HEALTH SYSTEMS, INC.",
+//     "CADENCE DESIGN SYSTEMS, INC.",
+//     "A2Z DEVELOPMENT CENTER, INC.",
+//     "VMWARE, INC.",
+//     "HCL GLOBAL SYSTEMS INC",
+//     "SAPIENT CORPORATION",
+//     "ORACLE FINANCIAL SERVICES SOFTWARE, INC.",
+//     "AGREEYA SOLUTIONS, INC.",
+//     "LINKEDIN CORPORATION",
+//     "POLARIS SOFTWARE LAB (INDIA) LTD.",
+//     "CAPITAL ONE SERVICES, LLC",
+//     "SYSTEM SOFT TECHNOLOGIES LLC",
+//     "HEADSTRONG SERVICES LLC",
+//     "KPIT INFOSYSTEMS, INC.",
+//     "CSC CONSULTING, INC.",
+//     "RBC CAPITAL MARKETS, LLC",
+//     "RANDSTAD TECHNOLOGIES, LP",
+//     "CVS RX SERVICES, INC.",
+//     "PERSISTENT SYSTEMS, INC.",
+//     "HTC GLOBAL SERVICES INC.",
+//     "LARSEN & TOUBRO LIMITED",
+//     "PEOPLE TECH GROUP INC.",
+//     "CINCINNATI CHILDREN'S HOSPITAL MEDICAL CENTER",
+//     "RELIABLE SOFTWARE RESOURCES, INC.",
+//     "CYPRESS SEMICONDUCTOR CORPORATION",
+//     "UNIVERSITY OF MICHIGAN",
+//     "YASH TECHNOLOGIES, INC.",
+//     "EXPEDIA, INC.",
+//     "THE MATHWORKS, INC.",
+//     "XORIANT CORPORATION",
+//     "GOLDMAN, SACHS &AMP; CO.",
+//     "EPIC SYSTEMS CORPORATION",
+//     "ITECH US, INC.",
+//     "INFINITE COMPUTING SYSTEMS, INC.",
+//     "DELOITTE FINANCIAL ADVISORY SERVICES LLP",
+//     "ERICSSON INC.",
+//     "AMAZON WEB SERVICES, INC.",
+//     "QUALCOMM INNOVATION CENTER INC.",
+//     "SATYAM-VENTURE ENGINEERING SERVICES PVT. LTD.",
+//     "SALESFORCE.COM, INC.",
+//     "NETAPP, INC.",
+//     "GOLDMAN SACHS SERVICES LLC",
+//     "SYMANTEC CORPORATION",
+//     "3I INFOTECH, INC.",
+//     "TELECOM TECHNOLOGY SERVICES, INC",
+//     "MARVELL SEMICONDUCTOR, INC.",
+//     "CIBER, INC.",
+//     "MENTOR GRAPHICS CORPORATION",
+//     "VALUEMOMENTUM, INC.",
+//     "FANNIE MAE",
+//     "MAKEURCAREER LLC",
+//     "SMARTPLAY, INC.",
+//     "EXLSERVICE.COM, LLC",
+//     "MAYO CLINIC",
+//     "CREDIT SUISSE SECURITIES (USA) LLC",
+//     "EPAM SYSTEMS, INC.",
+//     "MACHINE ZONE, INC.",
+//     "CITIBANK, N.A.",
+//     "DALLAS INDEPENDENT SCHOOL DISTRICT",
+//     "RITE AID CORP.",
+//     "MASTECH RESOURCING, INC.",
+//     "TECHNOSOFT CORPORATION",
+//     "YBRANT TECHNOLOGIES LLC.",
+//     "SCHLUMBERGER TECHNOLOGY CORPORATION",
+//     "TWITTER, INC.",
+//     "ASTIR IT SOLUTIONS INC.",
+//     "NATSOFT CORPORATION",
+//     "ERP ANALYSTS, INC.",
+//     "SAP AMERICA, INC.",
+//     "CLEVELAND CLINIC FOUNDATION",
+//     "MICRON TECHNOLOGY, INC.",
+//     "NATIONAL INSTITUTES OF HEALTH, HHS",
+//     "YALE UNIVERSITY",
+//     "ITC INFOTECH (USA), INC.",
+//     "DELOITTE SERVICES LP",
+//     "RJT COMPUQUEST, INC.",
+//     "HP INC.",
+//     "MARKETRX, INC (A COGNIZANT COMPANY)",
+//     "QUALCOMM DATACENTER TECHNOLOGIES, INC.",
+//     "SEARS HOLDINGS MANAGEMENT CORPORATION",
+//     "TRUSTEES OF THE UNIVERSITY OF PENNSYLVANIA",
+//     "HUMANA INC.",
+//     "ADVISORY LLC",
+//     "GUARDIAN HEALTHCARE PROVIDERS, INC.",
+//     "COLUMBIA UNIVERSITY",
+//     "CYBERTHINK INC",
+//     "CERNER CORPORATION",
+//     "VERIZON DATA SERVICES LLC",
+//     "AVCO CONSULTING INC",
+//     "PROFICIENT BUSINESS SYSTEMS, INC.",
+//     "SEAGATE US LLC",
+//     "CAYLEY AEROSPACE INC",
+//     "WILLIAM BEAUMONT HOSPITAL",
+//     "DMC EDUCATION & RESEARCH",
+//     "NAGARRO, INC.",
+//     "UCHICAGO ARGONNE, LLC",
+//     "DIASPARK, INC.",
+//     "TEXAS INSTRUMENTS INCORPORATED",
+//     "SATYAM COMPUTER SERVICES LTD.",
+//     "CIGNITI, INC.",
+//     "ECLINICALWORKS, LLC",
+//     "UNIVERSITY OF PITTSBURGH",
+//     "JACKSON THERAPY PARTNERS, LLC",
+//     "BLACKROCK FINANCIAL MANAGEMENT, INC.",
+//     "MARLABS, INC",
+//     "MASTECH ALLIANCE, INC., A MASTECH HOLDINGS COMPANY",
+//     "RCM TECHNOLOGIES INC",
+//     "AKVARR INC",
+//     "UNIVERSITY OF MINNESOTA",
+//     "COMMUNITY REHABILITATION SERVICES INC",
+//     "BROCADE COMMUNICATIONS SYSTEMS, INC.",
+//     "POPULUS GROUP LLC",
+//     "SMARTSOFT INTERNATIONAL, INC.",
+//     "YASH & LUJAN CONSULTING, INC.",
+//     "TECHDEMOCRACY LLC",
+//     "PERFICIENT, INC.",
+//     "INOVANT, LLC",
+//     "EPAM SYSTEMS, INC",
+//     "ADITI TECHNOLOGIES PVT. LTD.",
+//     "LOGIC PLANET INC",
+//     "HARVARD UNIVERSITY",
+//     "PHOTON INFOTECH, INC.",
+//     "ARICENT TECHNOLOGIES (HOLDINGS) LTD.",
+//     "EMORY UNIVERSITY",
+//     "SAMSUNG RESEARCH AMERICA, INC.",
+//     "AMGEN INC.",
+//     "MIRACLE SOFTWARE SYSYTEMS INC",
+//     "A10 NETWORKS, INC.",
+//     "VEDICSOFT SOLUTIONS LLC",
+//     "COLLABORATE SOLUTIONS INC",
+//     "COLLABERA INC.",
+//     "FISERV GLOBAL SERVICES, INC.",
+//     "AMERICAN EXPRESS TRAVEL RELATED SERVICES COMPANY, INC.",
+//     "DIONA (US), INC",
+//     "BARCLAYS SERVICES CORP.",
+//     "JOHNS HOPKINS UNIVERSITY",
+//     "T-MOBILE USA, INC.",
+//     "MORGAN STANLEY & CO. LLC",
+//     "TETRASOFT, INC.",
+//     "HEALTH CAROUSEL, LLC",
+//     "PRICEWATERHOUSECOOPERS ADVISORY LLC",
+//     "SALESFORCE.COM INC.",
+//     "UNIVERSITY OF FLORIDA",
+//     "POPULUS GROUP",
+//     "SLK AMERICA INC.",
+//     "UNIVERSITY OF CALIFORNIA, SAN FRANCISCO",
+//     "CYMA SYSTEMS INC",
+//     "WASHINGTON UNIVERSITY IN ST. LOUIS",
+//     "NORTHWESTERN UNIVERSITY",
+//     "COMCAST CABLE COMMUNICATIONS, LLC",
+//     "LSI CORPORATION, AN AVAGO TECHNOLOGIES COMPANY",
+//     "COMPUWARE CORPORATION",
+//     "HSBC BANK USA, N.A.",
+//     "ADVANCED MICRO DEVICES, INC.",
+//     "IDEXCEL, INC.",
+//     "OPTUM SERVICES, INC.",
+//     "IBM INDIA PVT. LTD.",
+//     "INTONE NETWORKS INC.",
+//     "HORIZON TECHNOLOGIES INC",
+//     "TESLA MOTORS, INC.",
+//     "GENPACT LLC",
+//     "BRILLIO, LLC",
+//     "THE UNIVERSITY OF IOWA",
+//     "INTRAEDGE, INC.",
+//     "AT&T SERVICES, INC.",
+//     "INTELLIGROUP, INC.",
+//     "DOTCOM TEAM, LLC",
+//     "THE OHIO STATE UNIVERSITY",
+//     "PYRAMID TECHNOLOGY SOLUTIONS, INC",
+//     "AMIRIT TECHNOLOGIES, INC.",
+//     "ORION SYSTEMS INTEGRATORS, INC",
+//     "BRONX-LEBANON HOSPITAL CENTER",
+//     "LATENTVIEW ANALYTICS CORPORATION",
+//     "CITIGROUP GLOBAL MARKETS INC.",
+//     "DUKE UNIVERSITY AND MEDICAL CENTER",
+//     "UNIVERSITY OF COLORADO",
+//     "UNIVERSITY OF WASHINGTON",
+//     "GENERAL MOTORS COMPANY",
+//     "MEMORIAL SLOAN-KETTERING CANCER CENTER",
+//     "GENERAL HOSPITAL CORPORATION"
+// ]
+
+const { asyncForEach, asyncForLoop } = require('./utilities/asyncRoutines')
+// const waitFor = async(num) => {
+//     setTimeout( () => {
+//         log("Timer expired")
+//         Promise.resolve()
+//     }, num)    
+// }
+
+// const asyncForEach = (async (array, callback) => {
+//     for (let index = 0; index < array.length; index++) {
+//       await callback(array[index], index, array);
+//     }
+// })
+
+// const asyncForLoop = (async (count, callback) => {
+//     for (let index = 0; index < count; index++) {
+//       await callback(index);
+//     }
+// })
+
+// const start = async () => {
+//     await asyncForEach([1, 2, 3], async (num) => {
+//       await waitFor(50);
+//       console.log(num);
+//     });
+//     console.log('Done');
+// }
    
-log4js.configure({
-    // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
-    appenders: { h1bData: { type: 'console' } },
-    categories: { default: { appenders: ['h1bData'], level: 'info' } }
-});
-const modelMap = require('./models/dbRecords')
-const { summarizeAndCompress, createKey, years,
-            compressSummaryRecord, decompressSummaryRecord } = require('./utilities/summarize')
-const { initYearObject, mergeStateObjects, finalizeMerge} = require('./utilities/yearModules')
-
-const logger = log4js.getLogger('h1bData');
 
 const processState = ( async(year, stateRecord) => {
     const worksiteState = stateRecord.id
@@ -1319,7 +1536,6 @@ const processCongDistrict = ( async(year, state, index) => {
     try{
         logger.info(chalk.bgHex("#1133aa").white.bold("Process Congress District Year: " + year + " - State: " + state +
                          " - Congressional District: " + index))
-        const h1bModel = modelMap[year]
         const query = {}
         query[YEAR] = year
         query[WORKSITE_STATE] = state
@@ -1329,6 +1545,24 @@ const processCongDistrict = ( async(year, state, index) => {
     
     }catch(e){
         logger.error(chalk.bgRed(`Process Congressional District, ${index}, ${state}, failed: ` + e))
+        logger.error(`Stack: ` + e.stack)
+        throw(e)
+    }
+    return Promise.resolve
+})
+
+const processEmployer = ( async(year, employer, index) => {
+    try{
+        logger.info(chalk.bgHex("#11aa33").white.bold("Process Employer Year: " + year + " - Employer: " + employer))
+        const query = {}
+        query[YEAR] = year
+        query[EMPLOYER_NAME] = employer
+        await queryAndSave(query)
+        logger.trace(chalk.bgBlue('End of block'))
+    
+    }catch(e){
+        logger.error(chalk.bgRed(`Process Employer, ${index}, ${employer}, failed: ` + e))
+        logger.error(`Stack: ` + e.stack)
         throw(e)
     }
     return Promise.resolve
@@ -1353,9 +1587,29 @@ const processStates = async (year) => {
         yearH1bObject = finalizeMerge(yearH1bObject)
         await saveSummary(createKey(query), compressSummaryRecord(yearH1bObject))
         logger.info(chalk.bgHex("#5511aa").white.bold("Save Year Record: " + year))
-        const x = 1
     }catch(e){
         logger.error(chalk.bgRed('Process States FAILED. ' + e))
+        logger.error(`Stack: ` + e.stack)
+        // return Promise.reject(e)
+    }
+    logger.trace(chalk.bgBlue('End of method'))
+    return Promise.resolve
+}
+
+const processEmployers = async (year) => {
+    try{
+        await asyncForEach(employerNames, async(employerName) => {
+           try{
+                const employerObject = await processEmployer(year, employerName)
+           }catch(e){
+                logger.error(chalk.bgRed(`Processing ${employerName} failed: ` + e))
+                logger.error(`Stack: ` + e.stack)
+                logger.error(chalk.bgRed('Continuning to other employers.'))
+            }
+        })
+    }catch(e){
+        logger.error(chalk.bgRed('Process States FAILED. ' + e))
+        logger.error(`Stack: ` + e.stack)
         // return Promise.reject(e)
     }
     logger.trace(chalk.bgBlue('End of method'))
@@ -1424,6 +1678,7 @@ const processYears = async () => {
             logger.info("Process Year: " + year)
             currentYear = year
             try{
+                await processEmployers(year)
                 await processStates(year)
             }catch(e){
                 logger.error(chalk.bgRed(`Processing ${year} failed: ` + e))
@@ -1462,6 +1717,5 @@ const cb = (obj) => {
     bldSummaries()
 }
 si.osInfo(cb)
-
 
 module.exports = { initYearObject, mergeStateObjects, finalizeMerge }

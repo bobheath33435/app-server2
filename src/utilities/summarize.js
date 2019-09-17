@@ -469,22 +469,22 @@ const createKey = (queryIn) => {
     var key = query[YEAR]
     delete query[YEAR]
     if(undefined != query[EMPLOYER_NAME]){
-        key += "_" + query[EMPLOYER_NAME]
+        key += "_emp_" + query[EMPLOYER_NAME]
         delete query[EMPLOYER_NAME]
     }
 
     if(undefined != query[WORKSITE_STATE]){
-        key += "_st_" + query[WORKSITE_STATE]
+        key += "_wst_" + query[WORKSITE_STATE]
         delete query[WORKSITE_STATE]
     }
 
     if(undefined != query[WORKSITE_CITY]){
-        key += "_city_" + query[WORKSITE_CITY]
+        key += "_wcity_" + query[WORKSITE_CITY]
         delete query[WORKSITE_CITY]
     }
 
     if(undefined != query[WORKSITE_COUNTY]){
-        key += "_county_" + query[WORKSITE_COUNTY]
+        key += "_wcounty_" + query[WORKSITE_COUNTY]
         delete query[WORKSITE_COUNTY]
     }
 

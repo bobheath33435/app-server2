@@ -34,14 +34,14 @@ describe('Test createKey', () => {
     
     it('2) createKey should create a key with {"YEAR": "xyz", "WORKSITE_STATE": "CA"}', () => {
         const key = createKey({"YEAR": "xyz", "WORKSITE_STATE": "CA"})
-        expect("xyz_st_CA").to.equal(key)
+        expect("xyz_wst_CA").to.equal(key)
     })  
     
     it('3) createKey should create a key with {"YEAR": "xyz", "WORKSITE_STATE": "CA", "WORKSITE_COUNTY": "SANTA CLARA ABC"}', () => {
         const key = createKey({"YEAR": "xyz", 
             "WORKSITE_STATE": "CA",
             "WORKSITE_COUNTY": "SANTA CLARA ABC"})
-        expect("xyz_st_CA_county_SANTA_CLARA_ABC").to.equal(key)
+        expect("xyz_wst_CA_wcounty_SANTA_CLARA_ABC").to.equal(key)
     })
     
     it('4) createKey should create a key with {"YEAR": "xyz", "WORKSITE_STATE": "CA", "WORKSITE_COUNTY": "SANTA CLARA ABC", "WORKSITE_CITY": "SAN JOSE"}', () => {
@@ -50,9 +50,21 @@ describe('Test createKey', () => {
             "WORKSITE_COUNTY": "SANTA CLARA ABC",
             "WORKSITE_CITY": "SAN JOSE"
         })
-        expect('xyz_st_CA_city_SAN_JOSE_county_SANTA_CLARA_ABC').to.equal(key)
+        expect('xyz_wst_CA_wcity_SAN_JOSE_wcounty_SANTA_CLARA_ABC').to.equal(key)
     })             
-    it('5) createKey should create a key with {"YEAR": "xyz", "WORKSITE_STATE": "CA", "WORKSITE_COUNTY": "SANTA CLARA ABC", "WORKSITE_CITY": "SAN JOSE", "EMPLOYER_ADDRESS": "123 MAIN ST"}', () => {
+    it('5) createKey should create a key with {"YEAR": "xyz", "EMPLOYER_NAME": "0123"', () => {
+        const key = createKey({"YEAR": "xyz", "EMPLOYER_NAME": "0123"})
+        expect("xyz_emp_0123").to.equal(key)
+    })             
+    it('6) createKey should create a key with {"YEAR": "xyz", "EMPLOYER_NAME": "0123", "WORKSITE_STATE": "CA"', () => {
+        const key = createKey({"YEAR": "xyz", "EMPLOYER_NAME": "0123", "WORKSITE_STATE": "CA"})
+        expect("xyz_emp_0123_wst_CA").to.equal(key)
+    })             
+    it('7) createKey should create a key with {"YEAR": "xyz", "EMPLOYER_NAME": "0123", "WORKSITE_COUNTY": "PALM BEACH"', () => {
+        const key = createKey({"YEAR": "xyz", "EMPLOYER_NAME": "0123", "WORKSITE_COUNTY": "PALM BEACH"})
+        expect("xyz_emp_0123_wcounty_PALM_BEACH").to.equal(key)
+    })             
+    it('8) createKey should create a key with {"YEAR": "xyz", "WORKSITE_STATE": "CA", "WORKSITE_COUNTY": "SANTA CLARA ABC", "WORKSITE_CITY": "SAN JOSE", "EMPLOYER_ADDRESS": "123 MAIN ST"}', () => {
         const key = createKey({"YEAR": "xyz", 
             "WORKSITE_STATE": "CA",
             "WORKSITE_COUNTY": "SANTA CLARA ABC",
