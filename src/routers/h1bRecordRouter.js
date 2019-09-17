@@ -24,11 +24,11 @@ const logger = log4js.getLogger('h1bData');
 h1bRecordRouter.get('/h1b', async (req, res) => {
     try{
         logger.info('Processing get');
-        log(chalk.bgYellow.red(JSON.stringify(req.body)))
+        logger.info(chalk.bgYellow.red(JSON.stringify(req.body)))
         const year = req.body.YEAR;
-        log(chalk.bgGreenBright.red('Year: ' + year))
+        logger.info(chalk.bgGreenBright.red('Year: ' + year))
         const caseNumber = req.body.CASE_NUMBER;
-        log('Case Number: ' + caseNumber)
+        logger.info('Case Number: ' + caseNumber)
      
         const h1bModel = modelMap[year]
         if(undefined === h1bModel){
@@ -47,11 +47,11 @@ h1bRecordRouter.get('/h1b', async (req, res) => {
 h1bRecordRouter.get('/h1bCount', async (req, res) => {
     try{
         logger.info('Processing get');
-        log(req.body)
+        logger.info(req.body)
         const year = req.body[YEAR];
-        log('Year: ' + year)
+        logger.info('Year: ' + year)
         const caseNumber = req.body[CASE_NUMBER];
-        log('Case Number: ' + caseNumber)
+        logger.info('Case Number: ' + caseNumber)
         const body = req.body
      
         const h1bModel = modelMap[year]
@@ -76,7 +76,6 @@ const processWsCd = async(req, res) => {
         logger.info(req.body)
         const year = req.body[YEAR];
         logger.info('Year: ' + year)
-        debugger
         const wsCD = req.body[WORKSITE_CONGRESS_DISTRICT];
         logger.info('Worksite Congressional District: ' + wsCD)
         if(!_.isNumber(wsCD)){
@@ -87,11 +86,10 @@ const processWsCd = async(req, res) => {
         if(_.isEmpty(wsState)){
             return res.status(500).send("Invalid worksite state")
         }
-        const h1bSummary = await performQuery(req, res)     
-        res.status(200).json(h1bSummary)
+        await performQuery(req, res)     
     }catch(e){
         logger.error('Route /h1bWsCd: ' + e);
-        res.status(500).send("Invalid request")
+        logger.error('Stack: ' + e.stack);
     }
 }
 

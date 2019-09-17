@@ -123,7 +123,7 @@ describe('Test h1bRecordRouter', () => {
         sinon.restore()
     })    
     logger.trace('Testing h1bRecordRouter');
-    xit('1) Testing performQuery() (year-2017) with key in summaryMap', async () => {
+    it('1) Testing performQuery() (year-2017) with key in summaryMap', async () => {
         expect(_.isEmpty(summaryMap)).to.be.false
         logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
         const year = 2017
@@ -136,7 +136,7 @@ describe('Test h1bRecordRouter', () => {
         res.json = (h1bRecord) => jsonTest.json(h1bRecord)
         await performQuery(req, res)   
     })
-    xit('2) Testing performQuery() (year-2016) with key in summaryMap', async () => {
+    it('2) Testing performQuery() (year-2016) with key in summaryMap', async () => {
         expect(_.isEmpty(summaryMap)).to.be.false
         logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
         const year = 2016
@@ -149,7 +149,7 @@ describe('Test h1bRecordRouter', () => {
         res.json = (h1bRecord) => jsonTest.json(h1bRecord)
         await performQuery(req, res)   
     })
-    xit('3) Testing performQuery() (year-2015) with key in summaryMap', async () => {
+    it('3) Testing performQuery() (year-2015) with key in summaryMap', async () => {
         expect(_.isEmpty(summaryMap)).to.be.false
         logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
         const year = 2015
@@ -503,12 +503,32 @@ describe('Test h1bRecordRouter', () => {
         logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
         const year = 2017
         const wsState = "ID"
-         var query = {}
+        var query = {}
         query[YEAR] = year
         query[WORKSITE_STATE] = wsState
         await request(app).get('/h1bWsState').send(query).expect(200)
     })
-    it('26) Testing \'/h1bWsState\' with undefined summaryMap', async () => {
+    it('26) Testing \'/h1bWsState\' with no state', async () => {
+        summaryMap = {}
+        expect(_.isEmpty(summaryMap)).to.be.true
+        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+        const year = 2017
+        var query = {}
+        query[YEAR] = year
+        await request(app).get('/h1bWsState').send(query).expect(500)
+    })
+    it('27) Testing \'/h1bWsState\' with empty state', async () => {
+        summaryMap = {}
+        expect(_.isEmpty(summaryMap)).to.be.true
+        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+        const year = 2017
+        const wsState = ""
+        var query = {}
+        query[YEAR] = year
+        query[WORKSITE_STATE] = wsState
+        await request(app).get('/h1bWsState').send(query).expect(500)
+    })
+    it('28) Testing \'/h1bWsState\' with undefined summaryMap', async () => {
         summaryMap = undefined
         expect(_.isEmpty(summaryMap)).to.be.true
         logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
@@ -519,7 +539,7 @@ describe('Test h1bRecordRouter', () => {
         query[WORKSITE_STATE] = wsState
         await request(app).get('/h1bWsState').send(query).expect(200)
     })
-    it('27) Testing \'/h1bWsState\' with key in summaryMap', async () => {
+    it('29) Testing \'/h1bWsState\' with key in summaryMap', async () => {
         expect(_.isEmpty(summaryMap)).to.be.false
         logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
         const year = 2017
@@ -529,7 +549,7 @@ describe('Test h1bRecordRouter', () => {
         query[WORKSITE_STATE] = wsState
         await request(app).get('/h1bWsState').send(query).expect(200)
     })
-    it('28) Testing \'/h1bWsState\' with invalid year', async () => {
+    it('30) Testing \'/h1bWsState\' with invalid year', async () => {
         expect(_.isEmpty(summaryMap)).to.be.false
         logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
         const year = 2009
@@ -539,7 +559,129 @@ describe('Test h1bRecordRouter', () => {
         query[WORKSITE_STATE] = wsState
         await request(app).get('/h1bWsState').send(query).expect(500)
     })
-    it('29) Testing \'/h1bSummary\' (year, state) without key in summaryMap', async () => {
+    it('31) Testing \'/h1bWsCd\' without key in summaryMap', async () => {
+        summaryMap = {}
+        expect(_.isEmpty(summaryMap)).to.be.true
+        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+        const year = 2017
+        const wsState = "FL"
+        const wsCongressDist = 21
+        var query = {}
+        query[YEAR] = year
+        query[WORKSITE_STATE] = wsState
+        query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
+        await request(app).get('/h1bWsState').send(query).expect(200)
+    })
+    it('32) Testing \'/h1bWsCd\' with no state', async () => {
+        summaryMap = {}
+        expect(_.isEmpty(summaryMap)).to.be.true
+        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+        const year = 2017
+        const wsCongressDist = 21
+        var query = {}
+        query[YEAR] = year
+        query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
+        await request(app).get('/h1bWsCd').send(query).expect(500)
+    })
+    it('33) Testing \'/h1bWsCd\' with no congressional district', async () => {
+        summaryMap = {}
+        expect(_.isEmpty(summaryMap)).to.be.true
+        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+        const year = 2017
+        const wsState = "GA"
+        var query = {}
+        query[YEAR] = year
+        query[WORKSITE_STATE] = wsState
+        await request(app).get('/h1bWsCd').send(query).expect(500)
+    })
+    it('34) Testing \'/h1bWsCd\' with empty state', async () => {
+        summaryMap = {}
+        expect(_.isEmpty(summaryMap)).to.be.true
+        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+        const year = 2017
+        const wsState = ""
+        var query = {}
+        query[YEAR] = year
+        query[WORKSITE_STATE] = wsState
+        await request(app).get('/h1bWsCd').send(query).expect(500)
+    })
+    it('35) Testing \'/h1bWsCd\' with congress district as char string', async () => {
+        summaryMap = {}
+        expect(_.isEmpty(summaryMap)).to.be.true
+        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+        const year = 2017
+        const wsState = "FL"
+        const wsCongressDist = "2"
+        var query = {}
+        query[YEAR] = year
+        query[WORKSITE_STATE] = wsState
+        query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
+        await request(app).get('/h1bWsCd').send(query).expect(500)
+    })
+    it('36) Testing \'/h1bWsCd\' with congress district as object', async () => {
+        summaryMap = {}
+        expect(_.isEmpty(summaryMap)).to.be.true
+        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+        const year = 2017
+        const wsState = "FL"
+        const wsCongressDist = {"id":"2"}
+        var query = {}
+        query[YEAR] = year
+        query[WORKSITE_STATE] = wsState
+        query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
+        await request(app).get('/h1bWsCd').send(query).expect(500)
+    })
+    it('37) Testing \'/h1bWsCd\' with congress district as array', async () => {
+        summaryMap = {}
+        expect(_.isEmpty(summaryMap)).to.be.true
+        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+        const year = 2017
+        const wsState = "FL"
+        const wsCongressDist = [2]
+        var query = {}
+        query[YEAR] = year
+        query[WORKSITE_STATE] = wsState
+        query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
+        await request(app).get('/h1bWsCd').send(query).expect(500)
+    })
+    it('38) Testing \'/h1bWsCd\' with undefined summaryMap', async () => {
+        summaryMap = undefined
+        expect(_.isEmpty(summaryMap)).to.be.true
+        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+        const year = 2017
+        const wsState = "FL"
+        const wsCongressDist = 2
+        var query = {}
+        query[YEAR] = year
+        query[WORKSITE_STATE] = wsState
+        query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
+        await request(app).get('/h1bWsCd').send(query).expect(200)
+    })
+    it('39) Testing \'/h1bWsCd\' with key in summaryMap', async () => {
+        expect(_.isEmpty(summaryMap)).to.be.false
+        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+        const year = 2017
+        const wsState = "AK"
+        const wsCongressDist = 1
+        var query = {}
+        query[YEAR] = year
+        query[WORKSITE_STATE] = wsState
+        query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
+        await request(app).get('/h1bWsCd').send(query).expect(200)
+    })
+    it('40) Testing \'/h1bWsCd\' with invalid year', async () => {
+        expect(_.isEmpty(summaryMap)).to.be.false
+        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+        const year = 2009
+        const wsState = "WY"
+        const wsCongressDist = 1
+        var query = {}
+        query[YEAR] = year
+        query[WORKSITE_STATE] = wsState
+        query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
+        await request(app).get('/h1bWsCd').send(query).expect(500)
+    })
+    it('41) Testing \'/h1bSummary\' (year, state) without key in summaryMap', async () => {
         summaryMap = {}
         expect(_.isEmpty(summaryMap)).to.be.true
         logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
@@ -550,7 +692,7 @@ describe('Test h1bRecordRouter', () => {
         query[WORKSITE_STATE] = wsState
         await request(app).get('/h1bSummary').send(query).expect(200)
     })
-    it('30) Testing \'/h1bSummary\' (year, state) with undefined summaryMap', async () => {
+    it('42) Testing \'/h1bSummary\' (year, state) with undefined summaryMap', async () => {
         summaryMap = undefined
         expect(_.isEmpty(summaryMap)).to.be.true
         logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
@@ -561,7 +703,7 @@ describe('Test h1bRecordRouter', () => {
         query[WORKSITE_STATE] = wsState
         await request(app).get('/h1bSummary').send(query).expect(200)
     })
-    it('31) Testing \'/h1bSummary\' (year, state) with key in summaryMap', async () => {
+    it('43) Testing \'/h1bSummary\' (year, state) with key in summaryMap', async () => {
         expect(_.isEmpty(summaryMap)).to.be.false
         logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
         const year = 2016
@@ -571,7 +713,7 @@ describe('Test h1bRecordRouter', () => {
         query[WORKSITE_STATE] = wsState
         await request(app).get('/h1bSummary').send(query).expect(200)
     })
-    it('32) Testing \'/h1bSummary\' (year, state) with invalid year', async () => {
+    it('44) Testing \'/h1bSummary\' (year, state) with invalid year', async () => {
         expect(_.isEmpty(summaryMap)).to.be.false
         logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
         const year = 2007
@@ -581,7 +723,7 @@ describe('Test h1bRecordRouter', () => {
         query[WORKSITE_STATE] = wsState
         await request(app).get('/h1bSummary').send(query).expect(500)
     })
-    it('33) Testing \'/h1bSummary\' (year, employerName) without key in summaryMap', async () => {
+    it('45) Testing \'/h1bSummary\' (year, employerName) without key in summaryMap', async () => {
         summaryMap = {}
         expect(_.isEmpty(summaryMap)).to.be.true
         logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
@@ -592,7 +734,7 @@ describe('Test h1bRecordRouter', () => {
         query[EMPLOYER_NAME] = empName
         await request(app).get('/h1bSummary').send(query).expect(200)
     })
-    it('34) Testing \'/h1bSummary\' (year, employerName) with undefined summaryMap', async () => {
+    it('46) Testing \'/h1bSummary\' (year, employerName) with undefined summaryMap', async () => {
         summaryMap = undefined
         expect(_.isEmpty(summaryMap)).to.be.true
         logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
@@ -603,7 +745,7 @@ describe('Test h1bRecordRouter', () => {
         query[EMPLOYER_NAME] = empName
         await request(app).get('/h1bSummary').send(query).expect(200)
     })
-    it('35) Testing \'/h1bSummary\' (year, employerName) with key in summaryMap', async () => {
+    it('47) Testing \'/h1bSummary\' (year, employerName) with key in summaryMap', async () => {
         expect(_.isEmpty(summaryMap)).to.be.false
         logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
         const year = 2016
@@ -613,7 +755,7 @@ describe('Test h1bRecordRouter', () => {
         query[EMPLOYER_NAME] = empName
         await request(app).get('/h1bSummary').send(query).expect(200)
     })
-    it('36) Testing \'/h1bSummary\' (year, employerName) with invalid year', async () => {
+    it('48) Testing \'/h1bSummary\' (year, employerName) with invalid year', async () => {
         expect(_.isEmpty(summaryMap)).to.be.false
         logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
         const year = 2007
