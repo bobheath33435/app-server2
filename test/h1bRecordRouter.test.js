@@ -105,665 +105,743 @@ class JsonTest {
 }
 
 describe('Test h1bRecordRouter', () => {
-    beforeEach(async() => {
-        summaryMap = await readSummarizedQueries()
-        logger.trace(`summaryMap: ${JSON.stringify(summaryMap, undefined, 2)}`)
-        log4js.configure({
-            // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
-            appenders: { h1bData: { type: 'console'} },
-            categories: { default: { appenders: ['h1bData'], level: 'warn' } }
-        });
+    describe('Test performQuery() handling a single year parameter', () => {
+        beforeEach(async() => {
+            summaryMap = await readSummarizedQueries()
+            logger.trace(`summaryMap: ${JSON.stringify(summaryMap, undefined, 2)}`)
+            log4js.configure({
+                // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
+                appenders: { h1bData: { type: 'console'} },
+                categories: { default: { appenders: ['h1bData'], level: 'warn' } }
+            });
+        })
+        afterEach(() => {
+            log4js.configure({
+                // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
+                appenders: { h1bData: { type: 'console'} },
+                categories: { default: { appenders: ['h1bData'], level: 'info' } }
+            });
+            sinon.restore()
+        })    
+        logger.trace('Testing h1bRecordRouter');
+        it('1) Testing performQuery() (year-2017) with key in summaryMap', async () => {
+            expect(_.isEmpty(summaryMap)).to.be.false
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2017
+            var query = {}
+            query[YEAR] = year
+            const req = { "body": query }
+            const res = {}
+            var jsonTest = new JsonTest(res, 200, query)
+            res.status = (val) => jsonTest.status(val)
+            res.json = (h1bRecord) => jsonTest.json(h1bRecord)
+            await performQuery(req, res)   
+        })
+        it('2) Testing performQuery() (year-2016) with key in summaryMap', async () => {
+            expect(_.isEmpty(summaryMap)).to.be.false
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2016
+            var query = {}
+            query[YEAR] = year
+            const req = { "body": query }
+            const res = {}
+            var jsonTest = new JsonTest(res, 200, query)
+            res.status = (val) => jsonTest.status(val)
+            res.json = (h1bRecord) => jsonTest.json(h1bRecord)
+            await performQuery(req, res)   
+        })
+        it('3) Testing performQuery() (year-2015) with key in summaryMap', async () => {
+            expect(_.isEmpty(summaryMap)).to.be.false
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2015
+            var query = {}
+            query[YEAR] = year
+            const req = { "body": query }
+            const res = {}
+            var jsonTest = new JsonTest(res, 200, query)
+            res.status = (val) => jsonTest.status(val)
+            res.json = (h1bRecord) => jsonTest.json(h1bRecord)
+            await performQuery(req, res)   
+        })
+        it('4) Testing performQuery() (year-2014) with key in summaryMap', async () => {
+            expect(_.isEmpty(summaryMap)).to.be.false
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2014
+            var query = {}
+            query[YEAR] = year
+            const req = { "body": query }
+            const res = {}
+            var jsonTest = new JsonTest(res, 200, query)
+            res.status = (val) => jsonTest.status(val)
+            res.json = (h1bRecord) => jsonTest.json(h1bRecord)
+            await performQuery(req, res)   
+        })
+        it('5) Testing performQuery() (year-2013) with key in summaryMap', async () => {
+            expect(_.isEmpty(summaryMap)).to.be.false
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2013
+            var query = {}
+            query[YEAR] = year
+            const req = { "body": query }
+            const res = {}
+            var jsonTest = new JsonTest(res, 200, query)
+            res.status = (val) => jsonTest.status(val)
+            res.json = (h1bRecord) => jsonTest.json(h1bRecord)
+            await performQuery(req, res)   
+        })
+        it('6) Testing performQuery() (year-2012) with key in summaryMap', async () => {
+            expect(_.isEmpty(summaryMap)).to.be.false
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2012
+            var query = {}
+            query[YEAR] = year
+            const req = { "body": query }
+            const res = {}
+            var jsonTest = new JsonTest(res, 200, query)
+            res.status = (val) => jsonTest.status(val)
+            res.json = (h1bRecord) => jsonTest.json(h1bRecord)
+            await performQuery(req, res)   
+        })
+        it('7) Testing performQuery() (year-2011) with key in summaryMap', async () => {
+            expect(_.isEmpty(summaryMap)).to.be.false
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2011
+            var query = {}
+            query[YEAR] = year
+            const req = { "body": query }
+            const res = {}
+            var jsonTest = new JsonTest(res, 200, query)
+            res.status = (val) => jsonTest.status(val)
+            res.json = (h1bRecord) => jsonTest.json(h1bRecord)
+            await performQuery(req, res)   
+        })
+        it('8) Testing performQuery() (year-2010) with key in summaryMap', async () => {
+            expect(_.isEmpty(summaryMap)).to.be.false
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2010
+            var query = {}
+            query[YEAR] = year
+            const req = { "body": query }
+            const res = {}
+            var jsonTest = new JsonTest(res, 200, query)
+            res.status = (val) => jsonTest.status(val)
+            res.json = (h1bRecord) => jsonTest.json(h1bRecord)
+            await performQuery(req, res)   
+        })
     })
-    afterEach(() => {
-        log4js.configure({
-            // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
-            appenders: { h1bData: { type: 'console'} },
-            categories: { default: { appenders: ['h1bData'], level: 'info' } }
-        });
-        sinon.restore()
-    })    
-    logger.trace('Testing h1bRecordRouter');
-    it('1) Testing performQuery() (year-2017) with key in summaryMap', async () => {
-        expect(_.isEmpty(summaryMap)).to.be.false
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2017
-        var query = {}
-        query[YEAR] = year
-        const req = { "body": query }
-        const res = {}
-        var jsonTest = new JsonTest(res, 200, query)
-        res.status = (val) => jsonTest.status(val)
-        res.json = (h1bRecord) => jsonTest.json(h1bRecord)
-        await performQuery(req, res)   
+    describe('Test performQuery()', () => {
+        beforeEach(async() => {
+            summaryMap = await readSummarizedQueries()
+            logger.trace(`summaryMap: ${JSON.stringify(summaryMap, undefined, 2)}`)
+            log4js.configure({
+                // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
+                appenders: { h1bData: { type: 'console'} },
+                categories: { default: { appenders: ['h1bData'], level: 'warn' } }
+            });
+        })
+        afterEach(() => {
+            log4js.configure({
+                // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
+                appenders: { h1bData: { type: 'console'} },
+                categories: { default: { appenders: ['h1bData'], level: 'info' } }
+            });
+            sinon.restore()
+        })    
+        it('1) Testing performQuery() (year, state) with undefined summaryMap', async () => {
+            summaryMap = undefined
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2016
+            const wsState = "WY"
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            const req = { "body": query }
+            const res = {}
+            var jsonTest = new JsonTest(res, 200, query)
+            res.status = (val) => jsonTest.status(val)
+            res.json = (h1bRecord) => jsonTest.json(h1bRecord)
+            await performQuery(req, res)
+        })
+        it('2) Testing performQuery() (year, state) without key in summaryMap', async () => {
+            summaryMap = {}
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2017
+            const wsState = "WV"
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            const req = { "body": query }
+            const res = {}
+            var jsonTest = new JsonTest(res, 200, query)
+            res.status = (val) => jsonTest.status(val)
+            res.json = (h1bRecord) => jsonTest.json(h1bRecord)
+            await performQuery(req, res)
+        })
+        it('3) Testing performQuery() (year, state) with key in summaryMap', async () => {
+            expect(_.isEmpty(summaryMap)).to.be.false
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2017
+            const wsState = "AK"
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            const req = { "body": query }
+            const res = {}
+            var jsonTest = new JsonTest(res, 200, query)
+            res.status = (val) => jsonTest.status(val)
+            res.json = (h1bRecord) => jsonTest.json(h1bRecord)
+            await performQuery(req, res)
+        })
+        it('4) Testing performQuery() (year, employer) with undefined summaryMap', async () => {
+            summaryMap = undefined
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2016
+            const empName = "PRICEWATERHOUSECOOPERS LLP"
+            var query = {}
+            query[YEAR] = year
+            query[EMPLOYER_NAME] = empName
+            const req = { "body": query }
+            const res = {}
+            var jsonTest = new JsonTest(res, 200, query)
+            res.status = (val) => jsonTest.status(val)
+            res.json = (h1bRecord) => jsonTest.json(h1bRecord)
+            await performQuery(req, res)
+        })
+        it('5) Testing performQuery() (year, employer) without key in summaryMap', async () => {
+            summaryMap = {}
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2017
+            const empName = "ADOBE SYSTEMS INCORPORATED"
+            var query = {}
+            query[YEAR] = year
+            query[EMPLOYER_NAME] = empName
+            const req = { "body": query }
+            const res = {}
+            var jsonTest = new JsonTest(res, 200, query)
+            res.status = (val) => jsonTest.status(val)
+            res.json = (h1bRecord) => jsonTest.json(h1bRecord)
+            await performQuery(req, res)
+        })
+        it('6) Testing performQuery() (year, employer) with key in summaryMap', async () => {
+            expect(_.isEmpty(summaryMap)).to.be.false
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2016
+            const empName = "MCKINSEY & COMPANY, INC. UNITED STATES"
+            var query = {}
+            query[YEAR] = year
+            query[EMPLOYER_NAME] = empName
+            const req = { "body": query }
+            const res = {}
+            var jsonTest = new JsonTest(res, 200, query)
+            res.status = (val) => jsonTest.status(val)
+            res.json = (h1bRecord) => jsonTest.json(h1bRecord)
+            await performQuery(req, res)
+        })
+        it('7) Testing performQuery() (year, state, city) with undefined summaryMap', async () => {
+            summaryMap = undefined
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2016
+            const wsState = "TX"
+            const wsCity = "PLANO"
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            query[WORKSITE_CITY] = wsCity
+            const req = { "body": query }
+            const res = {}
+            var jsonTest = new JsonTest(res, 200, query)
+            res.status = (val) => jsonTest.status(val)
+            res.json = (h1bRecord) => jsonTest.json(h1bRecord)
+            await performQuery(req, res)
+        })
+        it('8) Testing performQuery() (year, state, city) without key in summaryMap', async () => {
+            summaryMap = {}
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2016
+            const wsState = "NC"
+            const wsCity = "GREENSBORO"
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            query[WORKSITE_CITY] = wsCity
+            const req = { "body": query }
+            const res = {}
+            var jsonTest = new JsonTest(res, 200, query)
+            res.status = (val) => jsonTest.status(val)
+            res.json = (h1bRecord) => jsonTest.json(h1bRecord)
+            await performQuery(req, res)
+        })
+        it('9) Testing performQuery() (year, state, city) with key in summaryMap', async () => {
+            expect(_.isEmpty(summaryMap)).to.be.false
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2017
+            const wsState = "NC"
+            const wsCity = "GREENSBORO"
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            query[WORKSITE_CITY] = wsCity
+            const req = { "body": query }
+            const res = {}
+            var jsonTest = new JsonTest(res, 200, query)
+            res.status = (val) => jsonTest.status(val)
+            res.json = (h1bRecord) => jsonTest.json(h1bRecord)
+            await performQuery(req, res)
+        })
+        it('10) Testing performQuery() (year, state, county) with undefined summaryMap', async () => {
+            summaryMap = undefined
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2017
+            const wsState = "MD"
+            const wsCounty = "ANNE ARUNDEL"
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            query[WORKSITE_COUNTY] = wsCounty
+            const req = { "body": query }
+            const res = {}
+            var jsonTest = new JsonTest(res, 200, query)
+            res.status = (val) => jsonTest.status(val)
+            res.json = (h1bRecord) => jsonTest.json(h1bRecord)
+            await performQuery(req, res)
+        })
+        it('11) Testing performQuery() (year, state, county) without key in summaryMap', async () => {
+            summaryMap = {}
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2017
+            const wsState = "FL"
+            const wsCounty = "PALM BEACH"
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            query[WORKSITE_COUNTY] = wsCounty
+            const req = { "body": query }
+            const res = {}
+            var jsonTest = new JsonTest(res, 200, query)
+            res.status = (val) => jsonTest.status(val)
+            res.json = (h1bRecord) => jsonTest.json(h1bRecord)
+            await performQuery(req, res)
+        })
+        it('12) Testing performQuery() (year, state, county) with key in summaryMap', async () => {
+            expect(_.isEmpty(summaryMap)).to.be.false
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2017
+            const wsState = "NC"
+            const wsCounty = "DURHAM"
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            query[WORKSITE_COUNTY] = wsCounty
+            const req = { "body": query }
+            const res = {}
+            var jsonTest = new JsonTest(res, 200, query)
+            res.status = (val) => jsonTest.status(val)
+            res.json = (h1bRecord) => jsonTest.json(h1bRecord)
+            await performQuery(req, res)
+        })
+        it('13) Testing performQuery() (year, state, city) with key in summaryMap', async () => {
+            expect(_.isEmpty(summaryMap)).to.be.false
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2016
+            const wsState = "NC"
+            const wsCity = "DURHAM"
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            query[WORKSITE_CITY] = wsCity
+            const req = { "body": query }
+            const res = {}
+            var jsonTest = new JsonTest(res, 200, query)
+            res.status = (val) => jsonTest.status(val)
+            res.json = (h1bRecord) => jsonTest.json(h1bRecord)
+            await performQuery(req, res)
+        })
+        it('14) Testing performQuery() (year, state, congress district) with undefined summaryMap', async () => {
+            summaryMap = undefined
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2017
+            const wsState = "VA"
+            const wsCongressDist = 2
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
+            const req = { "body": query }
+            const res = {}
+            var jsonTest = new JsonTest(res, 200, query)
+            res.status = (val) => jsonTest.status(val)
+            res.json = (h1bRecord) => jsonTest.json(h1bRecord)
+            await performQuery(req, res)
+        })
+        it('15) Testing performQuery() (year, state, congress district) without key in summaryMap', async () => {
+            summaryMap = {}
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2017
+            const wsState = "NY"
+            const wsCongressDist = 10
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
+            const req = { "body": query }
+            const res = {}
+            var jsonTest = new JsonTest(res, 200, query)
+            res.status = (val) => jsonTest.status(val)
+            res.json = (h1bRecord) => jsonTest.json(h1bRecord)
+            await performQuery(req, res)
+        })
+        it('16) Testing performQuery() (year, state, congress district) with key in summaryMap', async () => {
+            expect(_.isEmpty(summaryMap)).to.be.false
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2016
+            const wsState = "NC"
+            const wsCongressDist = 4
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
+            const req = { "body": query }
+            const res = {}
+            var jsonTest = new JsonTest(res, 200, query)
+            res.status = (val) => jsonTest.status(val)
+            res.json = (h1bRecord) => jsonTest.json(h1bRecord)
+            await performQuery(req, res)
+        })
     })
-    it('2) Testing performQuery() (year-2016) with key in summaryMap', async () => {
-        expect(_.isEmpty(summaryMap)).to.be.false
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2016
-        var query = {}
-        query[YEAR] = year
-        const req = { "body": query }
-        const res = {}
-        var jsonTest = new JsonTest(res, 200, query)
-        res.status = (val) => jsonTest.status(val)
-        res.json = (h1bRecord) => jsonTest.json(h1bRecord)
-        await performQuery(req, res)   
+    describe('Test \'/h1bWsState\'', () => {
+        beforeEach(async() => {
+            summaryMap = await readSummarizedQueries()
+            logger.trace(`summaryMap: ${JSON.stringify(summaryMap, undefined, 2)}`)
+            log4js.configure({
+                // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
+                appenders: { h1bData: { type: 'console'} },
+                categories: { default: { appenders: ['h1bData'], level: 'warn' } }
+            });
+        })
+        afterEach(() => {
+            log4js.configure({
+                // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
+                appenders: { h1bData: { type: 'console'} },
+                categories: { default: { appenders: ['h1bData'], level: 'info' } }
+            });
+            sinon.restore()
+        })
+        it('1) Testing \'/h1bWsState\' without key in summaryMap', async () => {
+            summaryMap = {}
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2017
+            const wsState = "ID"
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            await request(app).get('/h1bWsState').send(query).expect(200)
+        })
+        it('2) Testing \'/h1bWsState\' with no state', async () => {
+            summaryMap = {}
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2017
+            var query = {}
+            query[YEAR] = year
+            await request(app).get('/h1bWsState').send(query).expect(500)
+        })
+        it('3) Testing \'/h1bWsState\' with empty state', async () => {
+            summaryMap = {}
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2017
+            const wsState = ""
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            await request(app).get('/h1bWsState').send(query).expect(500)
+        })
+        it('4) Testing \'/h1bWsState\' with undefined summaryMap', async () => {
+            summaryMap = undefined
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2017
+            const wsState = "WY"
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            await request(app).get('/h1bWsState').send(query).expect(200)
+        })
+        it('5) Testing \'/h1bWsState\' with key in summaryMap', async () => {
+            expect(_.isEmpty(summaryMap)).to.be.false
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2017
+            const wsState = "AK"
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            await request(app).get('/h1bWsState').send(query).expect(200)
+        })
+        it('6) Testing \'/h1bWsState\' with invalid year', async () => {
+            expect(_.isEmpty(summaryMap)).to.be.false
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2009
+            const wsState = "WY"
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            await request(app).get('/h1bWsState').send(query).expect(500)
+        })
     })
-    it('3) Testing performQuery() (year-2015) with key in summaryMap', async () => {
-        expect(_.isEmpty(summaryMap)).to.be.false
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2015
-        var query = {}
-        query[YEAR] = year
-        const req = { "body": query }
-        const res = {}
-        var jsonTest = new JsonTest(res, 200, query)
-        res.status = (val) => jsonTest.status(val)
-        res.json = (h1bRecord) => jsonTest.json(h1bRecord)
-        await performQuery(req, res)   
+    describe('Test \'/h1bWsCd\'', () => {
+        beforeEach(async() => {
+            summaryMap = await readSummarizedQueries()
+            logger.trace(`summaryMap: ${JSON.stringify(summaryMap, undefined, 2)}`)
+            log4js.configure({
+                // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
+                appenders: { h1bData: { type: 'console'} },
+                categories: { default: { appenders: ['h1bData'], level: 'warn' } }
+            });
+        })
+        afterEach(() => {
+            log4js.configure({
+                // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
+                appenders: { h1bData: { type: 'console'} },
+                categories: { default: { appenders: ['h1bData'], level: 'info' } }
+            });
+            sinon.restore()
+        })
+        it('1) Testing \'/h1bWsCd\' without key in summaryMap', async () => {
+            summaryMap = {}
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2017
+            const wsState = "FL"
+            const wsCongressDist = 21
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
+            await request(app).get('/h1bWsState').send(query).expect(200)
+        })
+        it('2) Testing \'/h1bWsCd\' with no state', async () => {
+            summaryMap = {}
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2017
+            const wsCongressDist = 21
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
+            await request(app).get('/h1bWsCd').send(query).expect(500)
+        })
+        it('3) Testing \'/h1bWsCd\' with no congressional district', async () => {
+            summaryMap = {}
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2017
+            const wsState = "GA"
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            await request(app).get('/h1bWsCd').send(query).expect(500)
+        })
+        it('4) Testing \'/h1bWsCd\' with empty state', async () => {
+            summaryMap = {}
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2017
+            const wsState = ""
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            await request(app).get('/h1bWsCd').send(query).expect(500)
+        })
+        it('5) Testing \'/h1bWsCd\' with congress district as char string', async () => {
+            summaryMap = {}
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2017
+            const wsState = "FL"
+            const wsCongressDist = "2"
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
+            await request(app).get('/h1bWsCd').send(query).expect(500)
+        })
+        it('6) Testing \'/h1bWsCd\' with congress district as object', async () => {
+            summaryMap = {}
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2017
+            const wsState = "FL"
+            const wsCongressDist = {"id":"2"}
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
+            await request(app).get('/h1bWsCd').send(query).expect(500)
+        })
+        it('7) Testing \'/h1bWsCd\' with congress district as array', async () => {
+            summaryMap = {}
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2017
+            const wsState = "FL"
+            const wsCongressDist = [2]
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
+            await request(app).get('/h1bWsCd').send(query).expect(500)
+        })
+        it('8) Testing \'/h1bWsCd\' with undefined summaryMap', async () => {
+            summaryMap = undefined
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2017
+            const wsState = "FL"
+            const wsCongressDist = 2
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
+            await request(app).get('/h1bWsCd').send(query).expect(200)
+        })
+        it('9) Testing \'/h1bWsCd\' with key in summaryMap', async () => {
+            expect(_.isEmpty(summaryMap)).to.be.false
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2017
+            const wsState = "AK"
+            const wsCongressDist = 1
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
+            await request(app).get('/h1bWsCd').send(query).expect(200)
+        })
+        it('10) Testing \'/h1bWsCd\' with invalid year', async () => {
+            expect(_.isEmpty(summaryMap)).to.be.false
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2009
+            const wsState = "WY"
+            const wsCongressDist = 1
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
+            await request(app).get('/h1bWsCd').send(query).expect(500)
+        })
     })
-    xit('4) Testing performQuery() (year-2014) with key in summaryMap', async () => {
-        expect(_.isEmpty(summaryMap)).to.be.false
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2014
-        var query = {}
-        query[YEAR] = year
-        const req = { "body": query }
-        const res = {}
-        var jsonTest = new JsonTest(res, 200, query)
-        res.status = (val) => jsonTest.status(val)
-        res.json = (h1bRecord) => jsonTest.json(h1bRecord)
-        await performQuery(req, res)   
-    })
-    xit('5) Testing performQuery() (year-2013) with key in summaryMap', async () => {
-        expect(_.isEmpty(summaryMap)).to.be.false
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2013
-        var query = {}
-        query[YEAR] = year
-        const req = { "body": query }
-        const res = {}
-        var jsonTest = new JsonTest(res, 200, query)
-        res.status = (val) => jsonTest.status(val)
-        res.json = (h1bRecord) => jsonTest.json(h1bRecord)
-        await performQuery(req, res)   
-    })
-    xit('6) Testing performQuery() (year-2012) with key in summaryMap', async () => {
-        expect(_.isEmpty(summaryMap)).to.be.false
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2012
-        var query = {}
-        query[YEAR] = year
-        const req = { "body": query }
-        const res = {}
-        var jsonTest = new JsonTest(res, 200, query)
-        res.status = (val) => jsonTest.status(val)
-        res.json = (h1bRecord) => jsonTest.json(h1bRecord)
-        await performQuery(req, res)   
-    })
-    xit('7) Testing performQuery() (year-2011) with key in summaryMap', async () => {
-        expect(_.isEmpty(summaryMap)).to.be.false
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2011
-        var query = {}
-        query[YEAR] = year
-        const req = { "body": query }
-        const res = {}
-        var jsonTest = new JsonTest(res, 200, query)
-        res.status = (val) => jsonTest.status(val)
-        res.json = (h1bRecord) => jsonTest.json(h1bRecord)
-        await performQuery(req, res)   
-    })
-    xit('8) Testing performQuery() (year-2010) with key in summaryMap', async () => {
-        expect(_.isEmpty(summaryMap)).to.be.false
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2010
-        var query = {}
-        query[YEAR] = year
-        const req = { "body": query }
-        const res = {}
-        var jsonTest = new JsonTest(res, 200, query)
-        res.status = (val) => jsonTest.status(val)
-        res.json = (h1bRecord) => jsonTest.json(h1bRecord)
-        await performQuery(req, res)   
-    })
-    it('9) Testing performQuery() (year, state) with undefined summaryMap', async () => {
-        summaryMap = undefined
-        expect(_.isEmpty(summaryMap)).to.be.true
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2016
-        const wsState = "WY"
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        const req = { "body": query }
-        const res = {}
-        var jsonTest = new JsonTest(res, 200, query)
-        res.status = (val) => jsonTest.status(val)
-        res.json = (h1bRecord) => jsonTest.json(h1bRecord)
-        await performQuery(req, res)
-    })
-    it('10) Testing performQuery() (year, state) without key in summaryMap', async () => {
-        summaryMap = {}
-        expect(_.isEmpty(summaryMap)).to.be.true
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2017
-        const wsState = "WV"
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        const req = { "body": query }
-        const res = {}
-        var jsonTest = new JsonTest(res, 200, query)
-        res.status = (val) => jsonTest.status(val)
-        res.json = (h1bRecord) => jsonTest.json(h1bRecord)
-        await performQuery(req, res)
-    })
-    it('11) Testing performQuery() (year, state) with key in summaryMap', async () => {
-        expect(_.isEmpty(summaryMap)).to.be.false
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2017
-        const wsState = "AK"
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        const req = { "body": query }
-        const res = {}
-        var jsonTest = new JsonTest(res, 200, query)
-        res.status = (val) => jsonTest.status(val)
-        res.json = (h1bRecord) => jsonTest.json(h1bRecord)
-        await performQuery(req, res)
-    })
-    it('12) Testing performQuery() (year, employer) with undefined summaryMap', async () => {
-        summaryMap = undefined
-        expect(_.isEmpty(summaryMap)).to.be.true
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2016
-        const empName = "PRICEWATERHOUSECOOPERS LLP"
-        var query = {}
-        query[YEAR] = year
-        query[EMPLOYER_NAME] = empName
-        const req = { "body": query }
-        const res = {}
-        var jsonTest = new JsonTest(res, 200, query)
-        res.status = (val) => jsonTest.status(val)
-        res.json = (h1bRecord) => jsonTest.json(h1bRecord)
-        await performQuery(req, res)
-    })
-    it('13) Testing performQuery() (year, employer) without key in summaryMap', async () => {
-        summaryMap = {}
-        expect(_.isEmpty(summaryMap)).to.be.true
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2017
-        const empName = "ADOBE SYSTEMS INCORPORATED"
-        var query = {}
-        query[YEAR] = year
-        query[EMPLOYER_NAME] = empName
-        const req = { "body": query }
-        const res = {}
-        var jsonTest = new JsonTest(res, 200, query)
-        res.status = (val) => jsonTest.status(val)
-        res.json = (h1bRecord) => jsonTest.json(h1bRecord)
-        await performQuery(req, res)
-    })
-    it('14) Testing performQuery() (year, employer) with key in summaryMap', async () => {
-        expect(_.isEmpty(summaryMap)).to.be.false
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2016
-        const empName = "MCKINSEY & COMPANY, INC. UNITED STATES"
-        var query = {}
-        query[YEAR] = year
-        query[EMPLOYER_NAME] = empName
-        const req = { "body": query }
-        const res = {}
-        var jsonTest = new JsonTest(res, 200, query)
-        res.status = (val) => jsonTest.status(val)
-        res.json = (h1bRecord) => jsonTest.json(h1bRecord)
-        await performQuery(req, res)
-    })
-    it('15) Testing performQuery() (year, state, city) with undefined summaryMap', async () => {
-        summaryMap = undefined
-        expect(_.isEmpty(summaryMap)).to.be.true
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2016
-        const wsState = "TX"
-        const wsCity = "PLANO"
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        query[WORKSITE_CITY] = wsCity
-        const req = { "body": query }
-        const res = {}
-        var jsonTest = new JsonTest(res, 200, query)
-        res.status = (val) => jsonTest.status(val)
-        res.json = (h1bRecord) => jsonTest.json(h1bRecord)
-        await performQuery(req, res)
-    })
-    it('16) Testing performQuery() (year, state, city) without key in summaryMap', async () => {
-        summaryMap = {}
-        expect(_.isEmpty(summaryMap)).to.be.true
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2016
-        const wsState = "NC"
-        const wsCity = "GREENSBORO"
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        query[WORKSITE_CITY] = wsCity
-        const req = { "body": query }
-        const res = {}
-        var jsonTest = new JsonTest(res, 200, query)
-        res.status = (val) => jsonTest.status(val)
-        res.json = (h1bRecord) => jsonTest.json(h1bRecord)
-        await performQuery(req, res)
-    })
-    it('17) Testing performQuery() (year, state, city) with key in summaryMap', async () => {
-        expect(_.isEmpty(summaryMap)).to.be.false
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2017
-        const wsState = "NC"
-        const wsCity = "GREENSBORO"
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        query[WORKSITE_CITY] = wsCity
-        const req = { "body": query }
-        const res = {}
-        var jsonTest = new JsonTest(res, 200, query)
-        res.status = (val) => jsonTest.status(val)
-        res.json = (h1bRecord) => jsonTest.json(h1bRecord)
-        await performQuery(req, res)
-    })
-    it('18) Testing performQuery() (year, state, county) with undefined summaryMap', async () => {
-        summaryMap = undefined
-        expect(_.isEmpty(summaryMap)).to.be.true
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2017
-        const wsState = "MD"
-        const wsCounty = "ANNE ARUNDEL"
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        query[WORKSITE_COUNTY] = wsCounty
-        const req = { "body": query }
-        const res = {}
-        var jsonTest = new JsonTest(res, 200, query)
-        res.status = (val) => jsonTest.status(val)
-        res.json = (h1bRecord) => jsonTest.json(h1bRecord)
-        await performQuery(req, res)
-    })
-    it('19) Testing performQuery() (year, state, county) without key in summaryMap', async () => {
-        summaryMap = {}
-        expect(_.isEmpty(summaryMap)).to.be.true
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2017
-        const wsState = "FL"
-        const wsCounty = "PALM BEACH"
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        query[WORKSITE_COUNTY] = wsCounty
-        const req = { "body": query }
-        const res = {}
-        var jsonTest = new JsonTest(res, 200, query)
-        res.status = (val) => jsonTest.status(val)
-        res.json = (h1bRecord) => jsonTest.json(h1bRecord)
-        await performQuery(req, res)
-    })
-    it('20) Testing performQuery() (year, state, county) with key in summaryMap', async () => {
-        expect(_.isEmpty(summaryMap)).to.be.false
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2017
-        const wsState = "NC"
-        const wsCounty = "DURHAM"
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        query[WORKSITE_COUNTY] = wsCounty
-        const req = { "body": query }
-        const res = {}
-        var jsonTest = new JsonTest(res, 200, query)
-        res.status = (val) => jsonTest.status(val)
-        res.json = (h1bRecord) => jsonTest.json(h1bRecord)
-        await performQuery(req, res)
-    })
-    it('21) Testing performQuery() (year, state, city) with key in summaryMap', async () => {
-        expect(_.isEmpty(summaryMap)).to.be.false
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2016
-        const wsState = "NC"
-        const wsCity = "DURHAM"
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        query[WORKSITE_CITY] = wsCity
-        const req = { "body": query }
-        const res = {}
-        var jsonTest = new JsonTest(res, 200, query)
-        res.status = (val) => jsonTest.status(val)
-        res.json = (h1bRecord) => jsonTest.json(h1bRecord)
-        await performQuery(req, res)
-    })
-    it('22) Testing performQuery() (year, state, congress district) with undefined summaryMap', async () => {
-        summaryMap = undefined
-        expect(_.isEmpty(summaryMap)).to.be.true
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2017
-        const wsState = "VA"
-        const wsCongressDist = 2
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
-        const req = { "body": query }
-        const res = {}
-        var jsonTest = new JsonTest(res, 200, query)
-        res.status = (val) => jsonTest.status(val)
-        res.json = (h1bRecord) => jsonTest.json(h1bRecord)
-        await performQuery(req, res)
-    })
-    it('23) Testing performQuery() (year, state, congress district) without key in summaryMap', async () => {
-        summaryMap = {}
-        expect(_.isEmpty(summaryMap)).to.be.true
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2017
-        const wsState = "NY"
-        const wsCongressDist = 10
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
-        const req = { "body": query }
-        const res = {}
-        var jsonTest = new JsonTest(res, 200, query)
-        res.status = (val) => jsonTest.status(val)
-        res.json = (h1bRecord) => jsonTest.json(h1bRecord)
-        await performQuery(req, res)
-    })
-    it('24) Testing performQuery() (year, state, congress district) with key in summaryMap', async () => {
-        expect(_.isEmpty(summaryMap)).to.be.false
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2016
-        const wsState = "NC"
-        const wsCongressDist = 4
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
-        const req = { "body": query }
-        const res = {}
-        var jsonTest = new JsonTest(res, 200, query)
-        res.status = (val) => jsonTest.status(val)
-        res.json = (h1bRecord) => jsonTest.json(h1bRecord)
-        await performQuery(req, res)
-    })
-    it('25) Testing \'/h1bWsState\' without key in summaryMap', async () => {
-        summaryMap = {}
-        expect(_.isEmpty(summaryMap)).to.be.true
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2017
-        const wsState = "ID"
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        await request(app).get('/h1bWsState').send(query).expect(200)
-    })
-    it('26) Testing \'/h1bWsState\' with no state', async () => {
-        summaryMap = {}
-        expect(_.isEmpty(summaryMap)).to.be.true
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2017
-        var query = {}
-        query[YEAR] = year
-        await request(app).get('/h1bWsState').send(query).expect(500)
-    })
-    it('27) Testing \'/h1bWsState\' with empty state', async () => {
-        summaryMap = {}
-        expect(_.isEmpty(summaryMap)).to.be.true
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2017
-        const wsState = ""
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        await request(app).get('/h1bWsState').send(query).expect(500)
-    })
-    it('28) Testing \'/h1bWsState\' with undefined summaryMap', async () => {
-        summaryMap = undefined
-        expect(_.isEmpty(summaryMap)).to.be.true
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2017
-        const wsState = "WY"
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        await request(app).get('/h1bWsState').send(query).expect(200)
-    })
-    it('29) Testing \'/h1bWsState\' with key in summaryMap', async () => {
-        expect(_.isEmpty(summaryMap)).to.be.false
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2017
-        const wsState = "AK"
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        await request(app).get('/h1bWsState').send(query).expect(200)
-    })
-    it('30) Testing \'/h1bWsState\' with invalid year', async () => {
-        expect(_.isEmpty(summaryMap)).to.be.false
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2009
-        const wsState = "WY"
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        await request(app).get('/h1bWsState').send(query).expect(500)
-    })
-    it('31) Testing \'/h1bWsCd\' without key in summaryMap', async () => {
-        summaryMap = {}
-        expect(_.isEmpty(summaryMap)).to.be.true
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2017
-        const wsState = "FL"
-        const wsCongressDist = 21
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
-        await request(app).get('/h1bWsState').send(query).expect(200)
-    })
-    it('32) Testing \'/h1bWsCd\' with no state', async () => {
-        summaryMap = {}
-        expect(_.isEmpty(summaryMap)).to.be.true
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2017
-        const wsCongressDist = 21
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
-        await request(app).get('/h1bWsCd').send(query).expect(500)
-    })
-    it('33) Testing \'/h1bWsCd\' with no congressional district', async () => {
-        summaryMap = {}
-        expect(_.isEmpty(summaryMap)).to.be.true
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2017
-        const wsState = "GA"
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        await request(app).get('/h1bWsCd').send(query).expect(500)
-    })
-    it('34) Testing \'/h1bWsCd\' with empty state', async () => {
-        summaryMap = {}
-        expect(_.isEmpty(summaryMap)).to.be.true
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2017
-        const wsState = ""
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        await request(app).get('/h1bWsCd').send(query).expect(500)
-    })
-    it('35) Testing \'/h1bWsCd\' with congress district as char string', async () => {
-        summaryMap = {}
-        expect(_.isEmpty(summaryMap)).to.be.true
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2017
-        const wsState = "FL"
-        const wsCongressDist = "2"
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
-        await request(app).get('/h1bWsCd').send(query).expect(500)
-    })
-    it('36) Testing \'/h1bWsCd\' with congress district as object', async () => {
-        summaryMap = {}
-        expect(_.isEmpty(summaryMap)).to.be.true
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2017
-        const wsState = "FL"
-        const wsCongressDist = {"id":"2"}
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
-        await request(app).get('/h1bWsCd').send(query).expect(500)
-    })
-    it('37) Testing \'/h1bWsCd\' with congress district as array', async () => {
-        summaryMap = {}
-        expect(_.isEmpty(summaryMap)).to.be.true
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2017
-        const wsState = "FL"
-        const wsCongressDist = [2]
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
-        await request(app).get('/h1bWsCd').send(query).expect(500)
-    })
-    it('38) Testing \'/h1bWsCd\' with undefined summaryMap', async () => {
-        summaryMap = undefined
-        expect(_.isEmpty(summaryMap)).to.be.true
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2017
-        const wsState = "FL"
-        const wsCongressDist = 2
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
-        await request(app).get('/h1bWsCd').send(query).expect(200)
-    })
-    it('39) Testing \'/h1bWsCd\' with key in summaryMap', async () => {
-        expect(_.isEmpty(summaryMap)).to.be.false
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2017
-        const wsState = "AK"
-        const wsCongressDist = 1
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
-        await request(app).get('/h1bWsCd').send(query).expect(200)
-    })
-    it('40) Testing \'/h1bWsCd\' with invalid year', async () => {
-        expect(_.isEmpty(summaryMap)).to.be.false
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2009
-        const wsState = "WY"
-        const wsCongressDist = 1
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        query[WORKSITE_CONGRESS_DISTRICT] = wsCongressDist
-        await request(app).get('/h1bWsCd').send(query).expect(500)
-    })
-    it('41) Testing \'/h1bSummary\' (year, state) without key in summaryMap', async () => {
-        summaryMap = {}
-        expect(_.isEmpty(summaryMap)).to.be.true
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2016
-        const wsState = "ID"
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        await request(app).get('/h1bSummary').send(query).expect(200)
-    })
-    it('42) Testing \'/h1bSummary\' (year, state) with undefined summaryMap', async () => {
-        summaryMap = undefined
-        expect(_.isEmpty(summaryMap)).to.be.true
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2017
-        const wsState = "WY"
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        await request(app).get('/h1bSummary').send(query).expect(200)
-    })
-    it('43) Testing \'/h1bSummary\' (year, state) with key in summaryMap', async () => {
-        expect(_.isEmpty(summaryMap)).to.be.false
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2016
-        const wsState = "AK"
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        await request(app).get('/h1bSummary').send(query).expect(200)
-    })
-    it('44) Testing \'/h1bSummary\' (year, state) with invalid year', async () => {
-        expect(_.isEmpty(summaryMap)).to.be.false
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2007
-        const wsState = "WY"
-        var query = {}
-        query[YEAR] = year
-        query[WORKSITE_STATE] = wsState
-        await request(app).get('/h1bSummary').send(query).expect(500)
-    })
-    it('45) Testing \'/h1bSummary\' (year, employerName) without key in summaryMap', async () => {
-        summaryMap = {}
-        expect(_.isEmpty(summaryMap)).to.be.true
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2016
-        const empName = "DELOITTE CONSULTING LLP"
-        var query = {}
-        query[YEAR] = year
-        query[EMPLOYER_NAME] = empName
-        await request(app).get('/h1bSummary').send(query).expect(200)
-    })
-    it('46) Testing \'/h1bSummary\' (year, employerName) with undefined summaryMap', async () => {
-        summaryMap = undefined
-        expect(_.isEmpty(summaryMap)).to.be.true
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2017
-        const empName = "COGNIZANT TECHNOLOGY SOLUTIONS U.S. CORPORATION"
-        var query = {}
-        query[YEAR] = year
-        query[EMPLOYER_NAME] = empName
-        await request(app).get('/h1bSummary').send(query).expect(200)
-    })
-    it('47) Testing \'/h1bSummary\' (year, employerName) with key in summaryMap', async () => {
-        expect(_.isEmpty(summaryMap)).to.be.false
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2016
-        const empName = "ORACLE AMERICA, INC."
-        var query = {}
-        query[YEAR] = year
-        query[EMPLOYER_NAME] = empName
-        await request(app).get('/h1bSummary').send(query).expect(200)
-    })
-    it('48) Testing \'/h1bSummary\' (year, employerName) with invalid year', async () => {
-        expect(_.isEmpty(summaryMap)).to.be.false
-        logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
-        const year = 2007
-        const empName = "ERNST & YOUNG U.S. LLP"
-        var query = {}
-        query[YEAR] = year
-        query[EMPLOYER_NAME] = empName
-        await request(app).get('/h1bSummary').send(query).expect(500)
+    describe('Test \'/h1bWsCd\'', () => {
+        beforeEach(async() => {
+            summaryMap = await readSummarizedQueries()
+            logger.trace(`summaryMap: ${JSON.stringify(summaryMap, undefined, 2)}`)
+            log4js.configure({
+                // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
+                appenders: { h1bData: { type: 'console'} },
+                categories: { default: { appenders: ['h1bData'], level: 'warn' } }
+            });
+        })
+        afterEach(() => {
+            log4js.configure({
+                // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
+                appenders: { h1bData: { type: 'console'} },
+                categories: { default: { appenders: ['h1bData'], level: 'info' } }
+            });
+            sinon.restore()
+        })
+        it('1) Testing \'/h1bSummary\' (year, state) without key in summaryMap', async () => {
+            summaryMap = {}
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2016
+            const wsState = "ID"
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            await request(app).get('/h1bSummary').send(query).expect(200)
+        })
+        it('2) Testing \'/h1bSummary\' (year, state) with undefined summaryMap', async () => {
+            summaryMap = undefined
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2017
+            const wsState = "WY"
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            await request(app).get('/h1bSummary').send(query).expect(200)
+        })
+        it('3) Testing \'/h1bSummary\' (year, state) with key in summaryMap', async () => {
+            expect(_.isEmpty(summaryMap)).to.be.false
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2016
+            const wsState = "AK"
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            await request(app).get('/h1bSummary').send(query).expect(200)
+        })
+        it('4) Testing \'/h1bSummary\' (year, state) with invalid year', async () => {
+            expect(_.isEmpty(summaryMap)).to.be.false
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2007
+            const wsState = "WY"
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            await request(app).get('/h1bSummary').send(query).expect(500)
+        })
+        it('5) Testing \'/h1bSummary\' (year, employerName) without key in summaryMap', async () => {
+            summaryMap = {}
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2016
+            const empName = "DELOITTE CONSULTING LLP"
+            var query = {}
+            query[YEAR] = year
+            query[EMPLOYER_NAME] = empName
+            await request(app).get('/h1bSummary').send(query).expect(200)
+        })
+        it('6) Testing \'/h1bSummary\' (year, employerName) with undefined summaryMap', async () => {
+            summaryMap = undefined
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2017
+            const empName = "COGNIZANT TECHNOLOGY SOLUTIONS U.S. CORPORATION"
+            var query = {}
+            query[YEAR] = year
+            query[EMPLOYER_NAME] = empName
+            await request(app).get('/h1bSummary').send(query).expect(200)
+        })
+        it('7) Testing \'/h1bSummary\' (year, employerName) with key in summaryMap', async () => {
+            expect(_.isEmpty(summaryMap)).to.be.false
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2016
+            const empName = "ORACLE AMERICA, INC."
+            var query = {}
+            query[YEAR] = year
+            query[EMPLOYER_NAME] = empName
+            await request(app).get('/h1bSummary').send(query).expect(200)
+        })
+        it('8) Testing \'/h1bSummary\' (year, employerName) with invalid year', async () => {
+            expect(_.isEmpty(summaryMap)).to.be.false
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2007
+            const empName = "ERNST & YOUNG U.S. LLP"
+            var query = {}
+            query[YEAR] = year
+            query[EMPLOYER_NAME] = empName
+            await request(app).get('/h1bSummary').send(query).expect(500)
+        })
     })
 })   
 
