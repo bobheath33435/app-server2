@@ -517,6 +517,59 @@ describe('Test h1bRecordRouter', () => {
             res.json = (h1bRecord) => jsonTest.json(h1bRecord)
             await performQuery(req, res)
         })
+        it('17) Testing performQuery() (year, state, county) with undefined summaryMap', async () => {
+            summaryMap = undefined
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2017
+            const wsState = "CA"
+            const wsCounty = 'ALAMEDA'
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            query[WORKSITE_COUNTY] = wsCounty
+            const req = { "body": query }
+            const res = {}
+            var jsonTest = new JsonTest(res, 200, query)
+            res.status = (val) => jsonTest.status(val)
+            res.json = (h1bRecord) => jsonTest.json(h1bRecord)
+            await performQuery(req, res)
+        })
+        it('18) Testing performQuery() (year, state, county) without key in summaryMap', async () => {
+            summaryMap = {}
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2014
+            const wsState = "PA"
+            const wsCounty = 'PHILADELPHIA'
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            query[WORKSITE_COUNTY] = wsCounty
+            const req = { "body": query }
+            const res = {}
+            var jsonTest = new JsonTest(res, 200, query)
+            res.status = (val) => jsonTest.status(val)
+            res.json = (h1bRecord) => jsonTest.json(h1bRecord)
+            await performQuery(req, res)
+        })
+        it('19) Testing performQuery() (year, state, county) with key in summaryMap', async () => {
+            expect(_.isEmpty(summaryMap)).to.be.false
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2016
+            const wsState = "NC"
+            const wsCounty = 'MECKLENBURG'
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            query[WORKSITE_COUNTY] = wsCounty
+            const req = { "body": query }
+            const res = {}
+            var jsonTest = new JsonTest(res, 200, query)
+            res.status = (val) => jsonTest.status(val)
+            res.json = (h1bRecord) => jsonTest.json(h1bRecord)
+            await performQuery(req, res)
+        })
     })
     describe('Test \'/h1bWsState\'', () => {
         beforeEach(async() => {
@@ -841,6 +894,58 @@ describe('Test h1bRecordRouter', () => {
             query[YEAR] = year
             query[EMPLOYER_NAME] = empName
             await request(app).get('/h1bSummary').send(query).expect(500)
+        })
+    })
+    describe('Test \'/h1bCount\'', () => {
+        beforeEach(async() => {
+            summaryMap = await readSummarizedQueries()
+            logger.trace(`summaryMap: ${JSON.stringify(summaryMap, undefined, 2)}`)
+            log4js.configure({
+                // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
+                appenders: { h1bData: { type: 'console'} },
+                categories: { default: { appenders: ['h1bData'], level: 'warn' } }
+            });
+        })
+        afterEach(() => {
+            log4js.configure({
+                // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
+                appenders: { h1bData: { type: 'console'} },
+                categories: { default: { appenders: ['h1bData'], level: 'info' } }
+            });
+            sinon.restore()
+        })
+        it('1) Testing \'/h1bCount\' (year, state)', async () => {
+            summaryMap = {}
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2016
+            const wsState = "ID"
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            await request(app).get('/h1bCount').send(query).expect(200)
+        })
+        it('2) Testing \'/h1bCount\' (year, county)', async () => {
+            summaryMap = {}
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2016
+            const wsCounty = "WAKE"
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_COUNTY] = wsCounty
+            await request(app).get('/h1bCount').send(query).expect(200)
+        })
+        it('3) Testing \'/h1bCount\' (year, state); invalid year', async () => {
+            summaryMap = {}
+            expect(_.isEmpty(summaryMap)).to.be.true
+            logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
+            const year = 2006
+            const wsState = "ID"
+            var query = {}
+            query[YEAR] = year
+            query[WORKSITE_STATE] = wsState
+            await request(app).get('/h1bCount').send(query).expect(500)
         })
     })
 })   

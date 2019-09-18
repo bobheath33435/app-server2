@@ -50,15 +50,14 @@ h1bRecordRouter.get('/h1bCount', async (req, res) => {
         logger.info(req.body)
         const year = req.body[YEAR];
         logger.info('Year: ' + year)
-        const caseNumber = req.body[CASE_NUMBER];
-        logger.info('Case Number: ' + caseNumber)
-        const body = req.body
+        // const caseNumber = req.body[CASE_NUMBER];
+        // logger.info('Case Number: ' + caseNumber)
+        // const body = req.body
      
         const h1bModel = modelMap[year]
         if(undefined === h1bModel){
             return res.status(500).send("Invalid year")
         }
-        debugger
     
         const count = await h1bModel.countDocuments(req.body)
         res.status(200).send({ "count": count })
