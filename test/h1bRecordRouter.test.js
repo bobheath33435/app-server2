@@ -8,7 +8,6 @@ const request = require('supertest')
 const log = console.log;
 const logger = log4js.getLogger('h1bData');
 const chalk = require('chalk')
-const sinon = require('sinon')
 const modelMap = require('../src/models/dbRecords')
 const { asyncForEach, asyncForLoop } = require('../src/utilities/asyncRoutines')
 const { summarize, decompressSummaryRecord, readSummarizedQueries,
@@ -17,8 +16,9 @@ var { summaryMap } = require('../src/utilities/summarize')
     
 const { performQuery, processWsState } = require('../src/routers/h1bRecordRouter')
 const { app } = require('../src/app')
-
 const expect = require('chai').expect
+const sinon = require('sinon')
+
 const _ = require('lodash')
 const { compress, decompress } = require('../src/utilities/compression')
 const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, EMPLOYER_ADDRESS,

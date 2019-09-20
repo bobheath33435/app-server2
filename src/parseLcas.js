@@ -102,7 +102,7 @@ const saveAutocompleteData = async(autoCompleteMap) => {
         const worksiteStatesArray
                 = migrateToArray(autoCompleteMap.worksiteStates, sortWorksiteState)
         delete autoCompleteMap.worksiteStates
-        await saveToDb(WORKSITE_STATE, compress(worksiteCountiesArray))
+        await saveToDb(WORKSITE_STATE, compress(worksiteStatesArray))
 
         const employerNamesArray
                 = migrateToArray(autoCompleteMap.employers, sortEmployerName)
