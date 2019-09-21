@@ -32,7 +32,7 @@ h1bRecordRouter.get('/h1b', async (req, res) => {
      
         const h1bModel = modelMap[year]
         if(undefined === h1bModel){
-            return res.status(500).send("Invalid year")
+            return res.status(500).send(h1bRecordRouter.INVALID_YEAR)
         }
     
         const h1bRecords = await h1bModel.find(req.body)
@@ -59,7 +59,7 @@ h1bRecordRouter.get('/h1bCaseNumber', async (req, res) => {
      
         const h1bModel = modelMap[year]
         if(undefined === h1bModel){
-            return res.status(500).send("Invalid year")
+            return res.status(500).send(h1bRecordRouter.INVALID_YEAR)
         }
     
         const h1bRecords = await h1bModel.find(myReq.body)
@@ -84,7 +84,7 @@ h1bRecordRouter.get('/h1bCount', async (req, res) => {
      
         const h1bModel = modelMap[year]
         if(undefined === h1bModel){
-            return res.status(500).send("Invalid year")
+            return res.status(500).send(h1bRecordRouter.INVALID_YEAR)
         }
     
         const count = await h1bModel.countDocuments(req.body)
@@ -177,7 +177,7 @@ const performQuery = async (req, res) => {
         logger.info("Sending read data")
         const h1bModel = modelMap[year]
         if(undefined === h1bModel){
-            return res.status(500).send("Invalid year")
+            return res.status(500).send(h1bRecordRouter.INVALID_YEAR)
         }    
         const h1bRecords = await h1bModel.find(query)
         logger.trace(h1bRecords)
@@ -246,4 +246,5 @@ const createCaseNumberQueryArray = (caseNumbers) => {
     return { $or: caseNumberArray }
 }
 h1bRecordRouter.INVALID_CASE_NUMBER = 'Case Number is invalid: '
+h1bRecordRouter.INVALID_YEAR = 'Invalid year'
 module.exports = { h1bRecordRouter, performQuery, processWsState, createCaseNumberQueryArray }

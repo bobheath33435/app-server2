@@ -794,7 +794,7 @@ describe('Test h1bRecordRouter', () => {
             await request(app).get('/h1bWsCd').send(query).expect(500)
         })
     })
-    describe('Test \'/h1bWsCd\'', () => {
+    describe('Test \'/h1bSummary\'', () => {
         beforeEach(async() => {
             summaryMap = await readSummarizedQueries()
             logger.trace(`summaryMap: ${JSON.stringify(summaryMap, undefined, 2)}`)
@@ -821,7 +821,10 @@ describe('Test h1bRecordRouter', () => {
             var query = {}
             query[YEAR] = year
             query[WORKSITE_STATE] = wsState
-            await request(app).get('/h1bSummary').send(query).expect(200)
+            const response = await request(app).get('/h1bSummary').send(query).expect(200)
+            const respObj = JSON.parse(response.text)
+            expect(1215).to.be.equal(respObj[TOTAL_WORKERS])
+            expect(765).to.be.equal(respObj[TOTAL_LCAS])
         })
         it('2) Testing \'/h1bSummary\' (year, state) with undefined summaryMap', async () => {
             summaryMap = undefined
@@ -832,7 +835,10 @@ describe('Test h1bRecordRouter', () => {
             var query = {}
             query[YEAR] = year
             query[WORKSITE_STATE] = wsState
-            await request(app).get('/h1bSummary').send(query).expect(200)
+            const response = await request(app).get('/h1bSummary').send(query).expect(200)
+            const respObj = JSON.parse(response.text)
+            expect(170).to.be.equal(respObj[TOTAL_WORKERS])
+            expect(113).to.be.equal(respObj[TOTAL_LCAS])
         })
         it('3) Testing \'/h1bSummary\' (year, state) with key in summaryMap', async () => {
             expect(_.isEmpty(summaryMap)).to.be.false
@@ -842,7 +848,10 @@ describe('Test h1bRecordRouter', () => {
             var query = {}
             query[YEAR] = year
             query[WORKSITE_STATE] = wsState
-            await request(app).get('/h1bSummary').send(query).expect(200)
+            const response = await request(app).get('/h1bSummary').send(query).expect(200)
+            const respObj = JSON.parse(response.text)
+            expect(329).to.be.equal(respObj[TOTAL_WORKERS])
+            expect(154).to.be.equal(respObj[TOTAL_LCAS])
         })
         it('4) Testing \'/h1bSummary\' (year, state) with invalid year', async () => {
             expect(_.isEmpty(summaryMap)).to.be.false
@@ -852,7 +861,9 @@ describe('Test h1bRecordRouter', () => {
             var query = {}
             query[YEAR] = year
             query[WORKSITE_STATE] = wsState
-            await request(app).get('/h1bSummary').send(query).expect(500)
+            const response = await request(app).get('/h1bSummary').send(query).expect(500)
+            expect(h1bRecordRouter.INVALID_YEAR).to.be.equal(response.text)
+            logger.trace(chalk.bgRed.white.bold(`response: ${JSON.stringify(response)}`))
         })
         it('5) Testing \'/h1bSummary\' (year, employerName) without key in summaryMap', async () => {
             summaryMap = {}
@@ -863,7 +874,10 @@ describe('Test h1bRecordRouter', () => {
             var query = {}
             query[YEAR] = year
             query[EMPLOYER_NAME] = empName
-            await request(app).get('/h1bSummary').send(query).expect(200)
+            const response = await request(app).get('/h1bSummary').send(query).expect(200)
+            const respObj = JSON.parse(response.text)
+            expect(122189).to.be.equal(respObj[TOTAL_WORKERS])
+            expect(7500).to.be.equal(respObj[TOTAL_LCAS])
         })
         it('6) Testing \'/h1bSummary\' (year, employerName) with undefined summaryMap', async () => {
             summaryMap = undefined
@@ -874,7 +888,10 @@ describe('Test h1bRecordRouter', () => {
             var query = {}
             query[YEAR] = year
             query[EMPLOYER_NAME] = empName
-            await request(app).get('/h1bSummary').send(query).expect(200)
+            const response = await request(app).get('/h1bSummary').send(query).expect(200)
+            const respObj = JSON.parse(response.text)
+            expect(50755).to.be.equal(respObj[TOTAL_WORKERS])
+            expect(2364).to.be.equal(respObj[TOTAL_LCAS])
         })
         it('7) Testing \'/h1bSummary\' (year, employerName) with key in summaryMap', async () => {
             expect(_.isEmpty(summaryMap)).to.be.false
@@ -884,7 +901,10 @@ describe('Test h1bRecordRouter', () => {
             var query = {}
             query[YEAR] = year
             query[EMPLOYER_NAME] = empName
-            await request(app).get('/h1bSummary').send(query).expect(200)
+            const response = await request(app).get('/h1bSummary').send(query).expect(200)
+            const respObj = JSON.parse(response.text)
+            expect(7307).to.be.equal(respObj[TOTAL_WORKERS])
+            expect(799).to.be.equal(respObj[TOTAL_LCAS])
         })
         it('8) Testing \'/h1bSummary\' (year, employerName) with invalid year', async () => {
             expect(_.isEmpty(summaryMap)).to.be.false
@@ -894,7 +914,20 @@ describe('Test h1bRecordRouter', () => {
             var query = {}
             query[YEAR] = year
             query[EMPLOYER_NAME] = empName
-            await request(app).get('/h1bSummary').send(query).expect(500)
+            const response = await request(app).get('/h1bSummary').send(query).expect(500)
+            logger.trace(chalk.bgRed.white.bold(`response: ${JSON.stringify(response.text)}`))
+            expect(h1bRecordRouter.INVALID_YEAR).to.be.equal(response.text)
+        })
+        it('9) Testing \'/h1bSummary\' (year, caseNumbers) with valid year', async () => {
+           const year = 2017
+            const caseNumbers = ["I-200-16293-304765", "I-200-16287-943040", "I-200-16305-330106"]
+            var query = {}
+            query[YEAR] = year
+            query[CASE_NUMBER] = caseNumbers
+            const response = await request(app).get('/h1bSummary').send(query).expect(200)
+            const respObj = JSON.parse(response.text)
+            expect(8).to.be.equal(respObj[TOTAL_WORKERS])
+            expect(3).to.be.equal(respObj[TOTAL_LCAS])
         })
     })
     describe('Test \'/h1bCount\'', () => {
@@ -1012,6 +1045,89 @@ describe('Test h1bRecordRouter', () => {
                 expect(e).to.be.equal(`${h1bRecordRouter.INVALID_CASE_NUMBER}\{\}`)
             }
         })    
+    })
+    describe('Test \'/h1bCaseNumber\'', () => {
+        beforeEach(async() => {
+            log4js.configure({
+                // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
+                appenders: { h1bData: { type: 'console'} },
+                categories: { default: { appenders: ['h1bData'], level: 'warn' } }
+            });
+        })
+        afterEach(() => {
+            log4js.configure({
+                // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
+                appenders: { h1bData: { type: 'console'} },
+                categories: { default: { appenders: ['h1bData'], level: 'info' } }
+            });
+            sinon.restore()
+        })
+        it('1) Testing \'/h1bCaseNumber\' with single Case Number', async() => {
+            const year = 2017
+            var query = {}
+            query[YEAR] = year
+            query[CASE_NUMBER] = "I-200-16274-852162"
+            const response = await request(app).get('/h1bCaseNumber').send(query).expect(200)
+            const respObj = JSON.parse(response.text)
+            logger.trace(`respObj: ${JSON.stringify(respObj, undefined, 2)}`)
+            expect(!_.isEmpty(respObj)).to.be.true
+            expect(_.isArray(respObj)).to.be.true
+            expect(1).to.be.equal(respObj.length)
+            const lca = respObj[0]
+            expect('HOME DEPOT USA, INC.').to.be.equal(lca[EMPLOYER_NAME])
+        })
+        it('2) Testing \'/h1bCaseNumber\' with an array of one Case Number', async() => {
+            const year = 2017
+            var query = {}
+            query[YEAR] = year
+            query[CASE_NUMBER] = ["I-200-16307-654309"]
+            const response = await request(app).get('/h1bCaseNumber').send(query).expect(200)
+            const respObj = JSON.parse(response.text)
+            logger.trace(`respObj: ${JSON.stringify(respObj, undefined, 2)}`)
+            expect(!_.isEmpty(respObj)).to.be.true
+            expect(_.isArray(respObj)).to.be.true
+            expect(1).to.be.equal(respObj.length)
+            const lca = respObj[0]
+            expect('PROGRAMMER ANALYST').to.be.equal(lca[JOB_TITLE])
+            expect('SYNTEL INC').to.be.equal(lca[EMPLOYER_NAME])
+        })
+        it('3) Testing \'/h1bCaseNumber\' with an array of three Case Numbers', async() => {
+            const year = 2017
+            var query = {}
+            query[YEAR] = year
+            query[CASE_NUMBER] = ["I-200-16293-304765", "I-200-16287-943040", "I-200-16305-330106"]
+            const response = await request(app).get('/h1bCaseNumber').send(query).expect(200)
+            const respObj = JSON.parse(response.text)
+            logger.trace(`respObj: ${JSON.stringify(respObj, undefined, 2)}`)
+            expect(!_.isEmpty(respObj)).to.be.true
+            expect(_.isArray(respObj)).to.be.true
+            expect(3).to.be.equal(respObj.length)
+            var lcas = respObj.sort((a, b) => (a[CASE_NUMBER] > b[CASE_NUMBER]) ? 1 : -1)
+            logger.trace(`lcas: ${JSON.stringify(lcas, undefined, 2)}`)
+            expect("I-200-16287-943040").to.be.equal(lcas[0][CASE_NUMBER])
+            expect("I-200-16293-304765").to.be.equal(lcas[1][CASE_NUMBER])
+            expect("I-200-16305-330106").to.be.equal(lcas[2][CASE_NUMBER])
+            var lca = respObj[0]
+            expect('ARCHITECT').to.be.equal(lca[JOB_TITLE])
+            expect(1).to.be.equal(lca[TOTAL_WORKERS])
+            expect(LEVEL_2).to.be.equal(lca[WAGE_LEVEL])
+            var lca = respObj[1]
+            expect('SENIOR SOFTWARE DEVELOPER').to.be.equal(lca[JOB_TITLE])
+            expect(6).to.be.equal(lca[TOTAL_WORKERS])
+            expect(LEVEL_3).to.be.equal(lca[WAGE_LEVEL])
+            var lca = respObj[2]
+            expect('ANALYST').to.be.equal(lca[JOB_TITLE])
+            expect('TATA CONSULTANCY SERVICES LIMITED').to.be.equal(lca[EMPLOYER_NAME])
+            expect(1).to.be.equal(lca[TOTAL_WORKERS])
+            expect(LEVEL_2).to.be.equal(lca[WAGE_LEVEL])
+        })
+        it('4) Testing \'/h1bCaseNumber\' with invalid year', async() => {
+            const year = 2001
+            var query = {}
+            query[YEAR] = year
+            query[CASE_NUMBER] = ["I-200-16307-654309"]
+            const response = await request(app).get('/h1bCaseNumber').send(query).expect(500)
+        })
     })
 })   
 
