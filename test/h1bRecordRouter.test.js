@@ -14,7 +14,8 @@ const { summarize, decompressSummaryRecord, readSummarizedQueries,
         createKey } = require('../src/utilities/summarize')
 var { summaryMap } = require('../src/utilities/summarize')
     
-const { performQuery, processWsState } = require('../src/routers/h1bRecordRouter')
+const { h1bRecordRouter, performQuery, processWsState, createCaseNumberQueryArray } 
+            = require('../src/routers/h1bRecordRouter')
 const { app } = require('../src/app')
 const expect = require('chai').expect
 const sinon = require('sinon')
@@ -947,6 +948,70 @@ describe('Test h1bRecordRouter', () => {
             query[WORKSITE_STATE] = wsState
             await request(app).get('/h1bCount').send(query).expect(500)
         })
+    })
+    describe('Test createCaseNumberQueryArray()', () => {
+        // It appears that I do not need this routine. I am leaving it because I may need
+        // it at a later date.
+        const goodStringArray = ['String 1', 'String 2', 'String 3']
+        const goodStringArrayTranslated = { $or: [{ CASE_NUMBER: goodStringArray[0]},
+                                                { CASE_NUMBER: goodStringArray[1]},
+                                                { CASE_NUMBER: goodStringArray[2]}
+                                                ]}
+        const badStringArray = ['String 1', 55]
+        beforeEach(async() => {
+            logger.trace(`summaryMap: ${JSON.stringify(summaryMap, undefined, 2)}`)
+            log4js.configure({
+                // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
+                appenders: { h1bData: { type: 'console'} },
+                categories: { default: { appenders: ['h1bData'], level: 'warn' } }
+            });
+        })
+        afterEach(() => {
+            log4js.configure({
+                // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
+                appenders: { h1bData: { type: 'console'} },
+                categories: { default: { appenders: ['h1bData'], level: 'info' } }
+            });
+            sinon.restore()
+        })
+        it('1) Testing createCaseNumberQueryArray with good array of strings', () => {
+            logger.trace(chalk.bgRed.white.bold
+                (`good: ${JSON.stringify(createCaseNumberQueryArray(goodStringArray), undefined, 2)}`))
+            logger.trace(chalk.bgRed.white.bold
+                (`expected: ${JSON.stringify(goodStringArrayTranslated, undefined, 2)}`))
+            expect(goodStringArrayTranslated).to.deep.equal(createCaseNumberQueryArray(goodStringArray))
+        })
+        it('2) Testing createCaseNumberQueryArray with a good single string', () => {
+            const singleString = "singleString"
+            expect(singleString).to.equal(createCaseNumberQueryArray(singleString))
+        })
+        it('3) Testing createCaseNumberQueryArray with bad array of strings', () => {
+            try{
+                const badValue = createCaseNumberQueryArray(badStringArray)
+                expect(false).to.be.true
+            }catch(e){
+                logger.trace(chalk.bgRed.white.bold(`e: ${JSON.stringify(e, undefined, 2)}`))
+                expect(e).to.be.equal(`${h1bRecordRouter.INVALID_CASE_NUMBER}55`)
+            }
+        })    
+        it('4) Testing createCaseNumberQueryArray with a number', () => {
+            try{
+                const badValue = createCaseNumberQueryArray(55)
+                expect(false).to.be.true
+            }catch(e){
+                logger.trace(chalk.bgRed.white.bold(`e: ${JSON.stringify(e, undefined, 2)}`))
+                expect(e).to.be.equal(`${h1bRecordRouter.INVALID_CASE_NUMBER}55`)
+            }
+        })    
+        it('5) Testing createCaseNumberQueryArray with an object', () => {
+            try{
+                const badValue = createCaseNumberQueryArray({})
+                expect(false).to.be.true
+            }catch(e){
+                logger.trace(chalk.bgRed.white.bold(`e: ${JSON.stringify(e, undefined, 2)}`))
+                expect(e).to.be.equal(`${h1bRecordRouter.INVALID_CASE_NUMBER}\{\}`)
+            }
+        })    
     })
 })   
 

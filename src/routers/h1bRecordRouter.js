@@ -34,12 +34,40 @@ h1bRecordRouter.get('/h1b', async (req, res) => {
         if(undefined === h1bModel){
             return res.status(500).send("Invalid year")
         }
-        debugger
     
         const h1bRecords = await h1bModel.find(req.body)
         res.status(202).json(h1bRecords)
     }catch(e){
         logger.error('Route /h1b: ' + e);
+        res.status(500).send("Invalid request")
+    }
+})
+
+h1bRecordRouter.get('/h1bCaseNumber', async (req, res) => {
+    try{
+        const beginTime = moment()
+        logger.info('Processing get');
+        var myReq = _.clone(req)
+        logger.info(chalk.bgYellow.red(`req: ${JSON.stringify(req.body)}`))
+        // logger.info(chalk.bgYellow.red(`myReq: ${JSON.stringify(myReq.body)}`))
+        // myReq[CASE_NUMBER] = createCaseNumberQueryArray(myReq.body[CASE_NUMBER])
+        logger.info(chalk.bgYellow.red(`myReq: ${JSON.stringify(myReq.body)}`))
+        const year = myReq.body.YEAR;
+        logger.info(chalk.bgGreenBright.red('Year: ' + year))
+        const caseNumber = myReq.body[CASE_NUMBER];
+        logger.info('Case Number: ' + caseNumber)
+     
+        const h1bModel = modelMap[year]
+        if(undefined === h1bModel){
+            return res.status(500).send("Invalid year")
+        }
+    
+        const h1bRecords = await h1bModel.find(myReq.body)
+        calcTime(beginTime, myReq.body)
+        res.status(200).json(h1bRecords)
+    }catch(e){
+        logger.error('Route /h1bCaseNumber: ' + e);
+        logger.error('Stack: ' + e.stack);
         res.status(500).send("Invalid request")
     }
 })
@@ -158,18 +186,7 @@ const performQuery = async (req, res) => {
             h1bSummary = compressSummaryRecord(h1bSummary)
         }
     }
-    const endTime = moment()
-    const diff = (endTime - beginTime) / 1000.
-    if(diff > 2.5){
-        logger.warn(chalk.bgRed.white.bold(`Bad Time: ${diff} secs -- query: `)
-                 + chalk.bgRed.white.bold(`${JSON.stringify(query)}`))
-    }else if(diff > 1.0){
-        logger.warn(chalk.bgHex("#cc4400").white.bold(`Warn Time: ${diff} secs -- query: `)
-                 + chalk.bgHex("#cc4400").white.bold(`${JSON.stringify(query)}`))  
-    }else{
-        logger.info(chalk.bgHex("#003300").white.bold(`Good Time: ${diff} secs -- query: `)
-                 + chalk.bgHex("#003300").white.bold(`${JSON.stringify(query)}`))
-    }
+    calcTime(beginTime, query)
     return res.status(200).json(h1bSummary)
 }
 
@@ -189,4 +206,44 @@ h1bRecordRouter.post('/h1b', (req, res) => {
     })
 })
 
-module.exports = { h1bRecordRouter, performQuery, processWsState }
+const calcTime = (beginTime, query) => {
+    const endTime = moment()
+    const diff = (endTime - beginTime) / 1000.
+    if(diff > 2.5){
+        logger.warn(chalk.bgRed.white.bold(`Bad Time: ${diff} secs -- query: `)
+                 + chalk.bgRed.white.bold(`${JSON.stringify(query)}`))
+    }else if(diff > 1.0){
+        logger.warn(chalk.bgHex("#cc4400").white.bold(`Warn Time: ${diff} secs -- query: `)
+                 + chalk.bgHex("#cc4400").white.bold(`${JSON.stringify(query)}`))  
+    }else{
+        logger.info(chalk.bgHex("#003300").white.bold(`Good Time: ${diff} secs -- query: `)
+                 + chalk.bgHex("#003300").white.bold(`${JSON.stringify(query)}`))
+    }
+}
+
+const createCaseNumberQueryArray = (caseNumbers) => {
+    // It appears that I do not need this routine. I am leaving it because I may need
+    // it at a later date.
+    if(!_.isArray(caseNumbers)){
+        if(!_.isString(caseNumbers)){
+            const str = JSON.stringify(caseNumbers)
+            logger.info(`caseNumbers: ${JSON.stringify(caseNumbers, undefined, 2)}`)
+            throw(`${h1bRecordRouter.INVALID_CASE_NUMBER}${str}`)
+        }
+        return caseNumbers
+    }
+    var caseNumberArray = []
+    caseNumbers.forEach((caseNumber) => {
+        if(!_.isString(caseNumber)){
+            const str = JSON.stringify(caseNumber)
+            throw(`${h1bRecordRouter.INVALID_CASE_NUMBER}${str}`)
+        }
+        var caseNumberItem = {}
+        caseNumberItem[CASE_NUMBER] = caseNumber
+        caseNumberArray.push(caseNumberItem)
+
+    })
+    return { $or: caseNumberArray }
+}
+h1bRecordRouter.INVALID_CASE_NUMBER = 'Case Number is invalid: '
+module.exports = { h1bRecordRouter, performQuery, processWsState, createCaseNumberQueryArray }
