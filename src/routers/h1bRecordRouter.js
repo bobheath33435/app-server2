@@ -21,27 +21,27 @@ const { summarize, decompressSummaryRecord, compressSummaryRecord,
             createKey, summaryMap } = require('../utilities/summarize')
 const logger = log4js.getLogger('h1bData');
 
-h1bRecordRouter.get('/h1b', async (req, res) => {
-    try{
-        logger.info('Processing get');
-        logger.info(chalk.bgYellow.red(JSON.stringify(req.body)))
-        const year = req.body.YEAR;
-        logger.info(chalk.bgGreenBright.red('Year: ' + year))
-        const caseNumber = req.body.CASE_NUMBER;
-        logger.info('Case Number: ' + caseNumber)
+// h1bRecordRouter.get('/h1b', async (req, res) => {
+//     try{
+//         logger.info('Processing get');
+//         logger.info(chalk.bgYellow.red(JSON.stringify(req.body)))
+//         const year = req.body.YEAR;
+//         logger.info(chalk.bgGreenBright.red('Year: ' + year))
+//         const caseNumber = req.body.CASE_NUMBER;
+//         logger.info('Case Number: ' + caseNumber)
      
-        const h1bModel = modelMap[year]
-        if(undefined === h1bModel){
-            return res.status(500).send(h1bRecordRouter.INVALID_YEAR)
-        }
+//         const h1bModel = modelMap[year]
+//         if(undefined === h1bModel){
+//             return res.status(500).send(h1bRecordRouter.INVALID_YEAR)
+//         }
     
-        const h1bRecords = await h1bModel.find(req.body)
-        res.status(202).json(h1bRecords)
-    }catch(e){
-        logger.error('Route /h1b: ' + e);
-        res.status(500).send("Invalid request")
-    }
-})
+//         const h1bRecords = await h1bModel.find(req.body)
+//         res.status(202).json(h1bRecords)
+//     }catch(e){
+//         logger.error('Route /h1b: ' + e);
+//         res.status(500).send("Invalid request")
+//     }
+// })
 
 h1bRecordRouter.get('/h1bCaseNumber', async (req, res) => {
     try{
