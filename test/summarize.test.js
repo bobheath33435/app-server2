@@ -903,7 +903,9 @@ const reOrderArray = (array) => {
     const newArray = []
 
     while(copyArray.length > 0){
-        const index = Math.random() * copyArray.length
+        // const index = Math.random() * copyArray.length
+        var index = _.random(copyArray.length, true)
+        index = _.floor(index)
         const arr = copyArray.splice(index, 1)
         newArray.push(arr[0])
     }
