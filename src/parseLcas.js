@@ -5,7 +5,7 @@ const log4js = require('log4js')
 const chalk = require('chalk')
 const log = console.log
 const {configSystem, config, platform, congressFilename} = require('./config')
-const { modelMap } = require('./models/dbRecords')
+const { modelMap, autocompleteKey } = require('./models/dbRecords')
 const { compress, decompress } = require('./utilities/compression')
 const { years } = require('./utilities/summarize')
 const { parseFile, sortEmployerName, sortEmployerAddress, sortEmployerCity,
@@ -152,7 +152,7 @@ const saveToDb = async (key, value) => {
         "key": key,
         "autocomplete": value
     }
-    const autocompleteModel = modelMap['autocomplete']
+    const autocompleteModel = modelMap[autocompleteKey]
     const autocompleteSummary = autocompleteModel(autoCompleteRecord)
     logger.info(chalk.bgGreen.white.bold(`${key} dataset being saved`))
     await autocompleteSummary.save()

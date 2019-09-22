@@ -24,7 +24,7 @@ log4js.configure({
     appenders: { h1bData: { type: 'console' } },
     categories: { default: { appenders: ['h1bData'], level: 'info' } }
 });
-const { modelMap } = require('../models/dbRecords')
+const { modelMap, summaryKey } = require('../models/dbRecords')
 const logger = log4js.getLogger('h1bData');
 
 // Summarize data from h1bRecords
@@ -540,7 +540,7 @@ const countItems = (array, search) => {
 
 const readSummarizedQueries = async() => {
     const projection = { _id: 0, "key": 1 }
-    const summaryModel = modelMap['summary']
+    const summaryModel = modelMap[summaryKey]
     const summaryQuery = {}
 
     const keys = await summaryModel.find(summaryQuery, projection)

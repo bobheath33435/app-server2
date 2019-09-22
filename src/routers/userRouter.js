@@ -12,7 +12,7 @@ log4js.configure({
     appenders: { h1bData: { type: 'console' } },
     categories: { default: { appenders: ['h1bData'], level: 'info' } }
 });
-const modelMap = require('../models/dbRecords')
+const { modelMap, userKey} = require('../models/dbRecords')
 const logger = log4js.getLogger('h1bData');
 
 userRouter.post('/register', async (req, res) => {

@@ -16,7 +16,7 @@ log4js.configure({
     appenders: { h1bData: { type: 'console' } },
     categories: { default: { appenders: ['h1bData'], level: 'info' } }
 });
-const { modelMap } = require('../models/dbRecords')
+const { modelMap, summaryKey } = require('../models/dbRecords')
 const { summarize, decompressSummaryRecord, compressSummaryRecord,
             createKey, summaryMap } = require('../utilities/summarize')
 const logger = log4js.getLogger('h1bData');
@@ -167,7 +167,7 @@ const performQuery = async (req, res) => {
     const compress = true
     if(true == summaryMap[key]){
         logger.info("Sending summary data")
-        const summaryModel = modelMap['summary']
+        const summaryModel = modelMap[summaryKey]
         h1bSummary = await summaryModel.find({ "key": key })
         h1bSummary = h1bSummary[0]['summary']
         if(false == compress){

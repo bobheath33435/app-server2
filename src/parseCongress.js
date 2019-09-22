@@ -5,7 +5,7 @@ const log4js = require('log4js')
 const chalk = require('chalk')
 const log = console.log
 const {configSystem, config, platform, congressFilename} = require('./config')
-const { modelMap } = require('./models/dbRecords')
+const { modelMap, congressKey } = require('./models/dbRecords')
 const { compress, decompress } = require('./utilities/compression')
 
 log4js.configure({
@@ -44,7 +44,7 @@ const saveCongress = async(congress) => {
             "key": 'congress',
             "congress": compress(congress)
         }
-        const congressModel = modelMap['congress']
+        const congressModel = modelMap[congressKey]
         const congressSummary = congressModel(congressRecord)
         logger.info(chalk.bgBlue('Save congress started'))
         await congressSummary.save()

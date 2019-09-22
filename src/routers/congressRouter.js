@@ -11,14 +11,14 @@ log4js.configure({
     appenders: { h1bData: { type: 'console' } },
     categories: { default: { appenders: ['h1bData'], level: 'info' } }
 });
-const { modelMap } = require('../models/dbRecords')
+const { modelMap, congressKey } = require('../models/dbRecords')
 const logger = log4js.getLogger('h1bData');
 
 congressRouter.get('/congress', async (req, res) => {
     try{
         logger.info('Processing get of congress data');
      
-        const congressModel = modelMap['congress']
+        const congressModel = modelMap[congressKey]
         if(undefined === congressModel){
             return res.status(500).send("Should not happen")
         }

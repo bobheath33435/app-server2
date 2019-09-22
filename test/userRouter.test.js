@@ -8,7 +8,6 @@ const request = require('supertest')
 const log = console.log;
 const logger = log4js.getLogger('h1bData');
 const chalk = require('chalk')
-const modelMap = require('../src/models/dbRecords')
 const { asyncForEach, asyncForLoop } = require('../src/utilities/asyncRoutines')
 const { summarize, decompressSummaryRecord, readSummarizedQueries,
         createKey } = require('../src/utilities/summarize')
