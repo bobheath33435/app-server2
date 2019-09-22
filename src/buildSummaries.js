@@ -26,7 +26,7 @@ const { states } = require('./models/states')
 const { employerNames } = require('./models/employerNames')
 const { asyncForEach, asyncForLoop } = require('./utilities/asyncRoutines')
 
-const modelMap = require('./models/dbRecords')
+const { modelMap } = require('./models/dbRecords')
 const { summarizeAndCompress, createKey, years,
             compressSummaryRecord, decompressSummaryRecord } = require('./utilities/summarize')
 const { initYearObject, mergeStateObjects, finalizeMerge} = require('./utilities/yearModules')

@@ -57,4 +57,4 @@ const modelMap = {
     2017: h1B2017,
     2018: h1B2018
 }
-module.exports = modelMap
+module.exports = { modelMap }

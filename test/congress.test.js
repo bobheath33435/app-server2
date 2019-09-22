@@ -7,7 +7,7 @@ log4js.configure({
 const log = console.log;
 const logger = log4js.getLogger('h1bData');
 const chalk = require('chalk')
-const modelMap = require('../src/models/dbRecords')
+const { modelMap } = require('../src/models/dbRecords')
 
 const expect = require('chai').expect
 const _ = require('lodash')

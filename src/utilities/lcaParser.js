@@ -5,7 +5,6 @@ const log4js = require('log4js')
 const chalk = require('chalk')
 const log = console.log
 const {configSystem, config, platform, congressFilename} = require('../config')
-const modelMap = require('../models/dbRecords')
 const { compress, decompress } = require('../utilities/compression')
 const { CASE_NUMBER, YEAR, WAGE_LEVEL, EMPLOYER_NAME, EMPLOYER_ADDRESS,
     EMPLOYER_CITY, EMPLOYER_STATE, WORKSITE_CONGRESS_DISTRICT,
