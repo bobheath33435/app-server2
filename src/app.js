@@ -17,12 +17,12 @@ const startTime = moment()
 logger.info(chalk.bgRed.white.bold(`Initialize: ${startTime.format('MMMM Do YYYY, h:mm:ss a')}`));
 
 const { h1bRecordRouter } = require('./routers/h1bRecordRouter')
-const usersRouter = require('./routers/usersRouter')
+const { userRouter } = require('./routers/userRouter')
 const congressRouter = require('./routers/congressRouter')
 const autocompleteRouter = require('./routers/autoCompDataRouter')
 app.use(express.json())
 app.use(h1bRecordRouter)
-app.use(usersRouter)
+app.use(userRouter)
 app.use(congressRouter)
 app.use(autocompleteRouter)
 
@@ -33,8 +33,6 @@ const cb = async(obj) => {
     // logger.info(`System Info: ${JSON.stringify(obj)}`)
     logger.info(chalk.bgRed.white.bold("Platform:") + ' ' + chalk.green.bold(obj.platform))
     logger.info(chalk.bgRed.white.bold("Hostname:") + ' ' + chalk.green.bold(obj.hostname))
-
-    // const modelMap = require('./models/dbRecords')
 
     await readSummarizedQueries()
     logger.trace("SummaryMap size: " + Object.getOwnPropertyNames(summaryMap).length)  

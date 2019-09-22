@@ -164,7 +164,7 @@ describe('Test h1bRecordRouter', () => {
             res.json = (h1bRecord) => jsonTest.json(h1bRecord)
             await performQuery(req, res)   
         })
-        it('4) Testing performQuery() (year-2014) with key in summaryMap', async () => {
+        xit('4) Testing performQuery() (year-2014) with key in summaryMap', async () => {
             expect(_.isEmpty(summaryMap)).to.be.false
             logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
             const year = 2014
@@ -177,7 +177,7 @@ describe('Test h1bRecordRouter', () => {
             res.json = (h1bRecord) => jsonTest.json(h1bRecord)
             await performQuery(req, res)   
         })
-        it('5) Testing performQuery() (year-2013) with key in summaryMap', async () => {
+        xit('5) Testing performQuery() (year-2013) with key in summaryMap', async () => {
             expect(_.isEmpty(summaryMap)).to.be.false
             logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
             const year = 2013
@@ -190,7 +190,7 @@ describe('Test h1bRecordRouter', () => {
             res.json = (h1bRecord) => jsonTest.json(h1bRecord)
             await performQuery(req, res)   
         })
-        it('6) Testing performQuery() (year-2012) with key in summaryMap', async () => {
+        xit('6) Testing performQuery() (year-2012) with key in summaryMap', async () => {
             expect(_.isEmpty(summaryMap)).to.be.false
             logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
             const year = 2012
@@ -203,7 +203,7 @@ describe('Test h1bRecordRouter', () => {
             res.json = (h1bRecord) => jsonTest.json(h1bRecord)
             await performQuery(req, res)   
         })
-        it('7) Testing performQuery() (year-2011) with key in summaryMap', async () => {
+        xit('7) Testing performQuery() (year-2011) with key in summaryMap', async () => {
             expect(_.isEmpty(summaryMap)).to.be.false
             logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
             const year = 2011
@@ -216,7 +216,7 @@ describe('Test h1bRecordRouter', () => {
             res.json = (h1bRecord) => jsonTest.json(h1bRecord)
             await performQuery(req, res)   
         })
-        it('8) Testing performQuery() (year-2010) with key in summaryMap', async () => {
+        xit('8) Testing performQuery() (year-2010) with key in summaryMap', async () => {
             expect(_.isEmpty(summaryMap)).to.be.false
             logger.trace(chalk.bgRed.white.bold(`summaryMap: ${JSON.stringify(summaryMap)}`))
             const year = 2010

@@ -78,7 +78,7 @@ const saveSummary = async(key, h1bObject) => {
         "summary": h1bObject
     }
     logger.trace(chalk.bgBlue('Save summary started'))
-    const summaryModel = modelMap['summary']
+    const summaryModel = modelMap['summarySave']
     const h1bSummary = summaryModel(summaryRecord)
     logger.trace(chalk.bgBlue('Save summary start'))
     await h1bSummary.save()

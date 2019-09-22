@@ -1,5 +1,19 @@
 const mongoose = require('mongoose');
 
+const userName = "userName"
+const password = "password"
+const email = "email"
+const firstName = "firstName"
+const lastName = "lastName"
+const subscriptionDate = "subscriptionDate"
+const membershipDate = "membershipDate"
+const role = "role"
+const orginization = "orginization"
+const purpose = "purpose"
+const phone = "phone"
+const key = "key"
+const status = "status"
+
 const roles = ['expired',
 								'pending',
 								'User',
@@ -13,10 +27,10 @@ const roles = ['expired',
 // User Schema
 const userSchema = mongoose.Schema({
 	userName: {
-		type: String,
-		index: true,
-    	unique: true,
-    	required: true
+		type: String
+		// index: true,
+    	// unique: true,
+    	// required: true
 	},
 	password: {
 		type: String,
@@ -69,4 +83,6 @@ const userSchema = mongoose.Schema({
 	}
 });
 
-module.exports = userSchema
+module.exports = { userName, password, email, firstName, lastName,
+			subscriptionDate, membershipDate, role, orginization, purpose, 
+			phone, key, status, userSchema }
