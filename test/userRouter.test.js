@@ -53,7 +53,62 @@ describe('Test UserRouter', () => {
             logger.trace(chalk.bgRed.white.bold(`response: ${JSON.stringify(response.text)}`))
             expect(userRouter.NO_CLIENT_DATA).to.be.equal(response.text)
         })
-        it('2) Testing /register with valid data', async () => {
+        it('2) Testing /register without firstName', async () => {
+            var clientData = {}
+            clientData[lastName] = "Bond"
+            clientData[email] = "ward@xxx.com"
+            clientData[userName] = "wmatt"
+            clientData[password] = "password"
+            var body = { clientData }
+            response = await request(app).post('/register').send(body).expect(500)
+            logger.trace(chalk.bgRed.white.bold(`response: ${JSON.stringify(response.text)}`))
+            expect(userRouter.INVALID_REQUEST).to.be.equal(response.text)
+        })
+        it('3) Testing /register without lastName', async () => {
+            var clientData = {}
+            clientData[firstName] = "Ward"
+            clientData[email] = "ward@xxx.com"
+            clientData[userName] = "wmatt"
+            clientData[password] = "password"
+            var body = { clientData }
+            response = await request(app).post('/register').send(body).expect(500)
+            logger.trace(chalk.bgRed.white.bold(`response: ${JSON.stringify(response.text)}`))
+            expect(userRouter.INVALID_REQUEST).to.be.equal(response.text)
+        })
+        it('4) Testing /register without email', async () => {
+            var clientData = {}
+            clientData[firstName] = "Ward"
+            clientData[lastName] = "Bond"
+            clientData[userName] = "wmatt"
+            clientData[password] = "password"
+            var body = { clientData }
+            response = await request(app).post('/register').send(body).expect(500)
+            logger.trace(chalk.bgRed.white.bold(`response: ${JSON.stringify(response.text)}`))
+            expect(userRouter.INVALID_REQUEST).to.be.equal(response.text)
+        })
+        it('5) Testing /register without userName', async () => {
+            var clientData = {}
+            clientData[firstName] = "Ward"
+            clientData[lastName] = "Bond"
+            clientData[email] = "ward@xxx.com"
+            clientData[password] = "password"
+            var body = { clientData }
+            response = await request(app).post('/register').send(body).expect(500)
+            logger.trace(chalk.bgRed.white.bold(`response: ${JSON.stringify(response.text)}`))
+            expect(userRouter.INVALID_REQUEST).to.be.equal(response.text)
+        })
+        it('6) Testing /register without password', async () => {
+            var clientData = {}
+            clientData[firstName] = "Ward"
+            clientData[lastName] = "Bond"
+            clientData[email] = "ward@xxx.com"
+            clientData[userName] = "wmatt"
+            var body = { clientData }
+            response = await request(app).post('/register').send(body).expect(500)
+            logger.trace(chalk.bgRed.white.bold(`response: ${JSON.stringify(response.text)}`))
+            expect(userRouter.INVALID_REQUEST).to.be.equal(response.text)
+        })
+        it('7) Testing /register with valid data', async () => {
             var clientData = {}
             clientData[firstName] = "Ward"
             clientData[lastName] = "Bond"
@@ -64,61 +119,6 @@ describe('Test UserRouter', () => {
             response = await request(app).post('/register').send(body).expect(201)
             logger.trace(chalk.bgRed.white.bold(`response: ${JSON.stringify(response.text)}`))
             expect(userRouter.NEW_USER_CREATED).to.be.equal(response.text)
-        })
-        it('3) Testing /register without firstName', async () => {
-            var clientData = {}
-            clientData[lastName] = "Bond"
-            clientData[email] = "ward@xxx.com"
-            clientData[userName] = "wmatt"
-            clientData[password] = "password"
-            var body = { clientData }
-            response = await request(app).post('/register').send(body).expect(500)
-            logger.trace(chalk.bgRed.white.bold(`response: ${JSON.stringify(response.text)}`))
-            expect(userRouter.INVALID_REQUEST).to.be.equal(response.text)
-        })
-        it('4) Testing /register without lastName', async () => {
-            var clientData = {}
-            clientData[firstName] = "Ward"
-            clientData[email] = "ward@xxx.com"
-            clientData[userName] = "wmatt"
-            clientData[password] = "password"
-            var body = { clientData }
-            response = await request(app).post('/register').send(body).expect(500)
-            logger.trace(chalk.bgRed.white.bold(`response: ${JSON.stringify(response.text)}`))
-            expect(userRouter.INVALID_REQUEST).to.be.equal(response.text)
-        })
-        it('5) Testing /register without email', async () => {
-            var clientData = {}
-            clientData[firstName] = "Ward"
-            clientData[lastName] = "Bond"
-            clientData[userName] = "wmatt"
-            clientData[password] = "password"
-            var body = { clientData }
-            response = await request(app).post('/register').send(body).expect(500)
-            logger.trace(chalk.bgRed.white.bold(`response: ${JSON.stringify(response.text)}`))
-            expect(userRouter.INVALID_REQUEST).to.be.equal(response.text)
-        })
-        it('6) Testing /register without userName', async () => {
-            var clientData = {}
-            clientData[firstName] = "Ward"
-            clientData[lastName] = "Bond"
-            clientData[email] = "ward@xxx.com"
-            clientData[password] = "password"
-            var body = { clientData }
-            response = await request(app).post('/register').send(body).expect(500)
-            logger.trace(chalk.bgRed.white.bold(`response: ${JSON.stringify(response.text)}`))
-            expect(userRouter.INVALID_REQUEST).to.be.equal(response.text)
-        })
-        it('7) Testing /register without password', async () => {
-            var clientData = {}
-            clientData[firstName] = "Ward"
-            clientData[lastName] = "Bond"
-            clientData[email] = "ward@xxx.com"
-            clientData[userName] = "wmatt"
-            var body = { clientData }
-            response = await request(app).post('/register').send(body).expect(500)
-            logger.trace(chalk.bgRed.white.bold(`response: ${JSON.stringify(response.text)}`))
-            expect(userRouter.INVALID_REQUEST).to.be.equal(response.text)
         })
     })
 })   
