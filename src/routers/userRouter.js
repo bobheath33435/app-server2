@@ -4,7 +4,7 @@ const log4js = require('log4js')
 const chalk = require('chalk')
 const _ = require('lodash')
 
-const { userSchema, userName, password, email, firstName, lastName,
+const { userSchema, userKey, userName, password, email, firstName, lastName,
     subscriptionDate, membershipDate, role, orginization, purpose, 
     phone, key, status} = require('../models/userSchema')
 const log = console.log;
@@ -14,7 +14,7 @@ log4js.configure({
     appenders: { h1bData: { type: 'console' } },
     categories: { default: { appenders: ['h1bData'], level: 'info' } }
 });
-const { modelMap, userKey} = require('../models/dbRecords')
+const { modelMap } = require('../models/dbRecords')
 const logger = log4js.getLogger('h1bData');
 
 userRouter.post('/register', async (req, res) => {

@@ -3,12 +3,11 @@ const log4js = require('log4js');
 const chalk = require('chalk')
 
 const { h1bRecordSchema } = require('./h1bRecordSchema')
-const { userSchema } = require('./userSchema')
+const { userSchema, userKey } = require('./userSchema')
 const summarySchema = require('./summarySchema')
 const congressSchema = require('./congressSchema')
 const autocompleteSchema = require('./autocompleteSchema')
 
-const userKey = 'user'
 const summaryKey = 'summary'
 const summarySaveKey = 'summarySave'
 const congressKey = "congress"
@@ -30,7 +29,7 @@ mongoose.connect(connectURL, {
     useCreateIndex: true
 })
 logger.info('After connect');
-const user = mongoose.model('users', userSchema)
+const user = mongoose.model(userKey, userSchema)
 const summary = mongoose.model('summary', summarySchema)
 const summary_save = mongoose.model('summarySave', summarySchema)
 const congress = mongoose.model('congress', congressSchema)
@@ -66,4 +65,4 @@ modelMap[summaryKey] = summary
 modelMap[summarySaveKey] = summary_save
 modelMap[congressKey] = congress
 modelMap[autocompleteKey] = autocomplete
-module.exports = { modelMap, userKey, summaryKey, summarySaveKey, congressKey, autocompleteKey }
+module.exports = { modelMap, summaryKey, summarySaveKey, congressKey, autocompleteKey }

@@ -3,7 +3,7 @@ const log4js = require('log4js');
 const chalk = require('chalk')
 const bcrypt = require("bcryptjs")
 
-const { modelMap, userKey} = require('./dbRecords')
+const { modelMap } = require('./dbRecords')
 const _ = require('lodash')
 log4js.configure({
     // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
@@ -13,6 +13,7 @@ log4js.configure({
  
 const logger = log4js.getLogger('h1bData');
 
+const userKey = "user"
 const userName = "userName"
 const password = "password"
 const email = "email"
@@ -120,7 +121,7 @@ userSchema.statics.findByCredentials = async(clientData) => {
 	return user
 }
 
-const UserModel = mongoose.model("user", userSchema)
-module.exports = { userName, password, email, firstName, lastName,
+const UserModel = mongoose.model(userKey, userSchema)
+module.exports = { userKey, userName, password, email, firstName, lastName,
 			subscriptionDate, membershipDate, role, orginization, purpose, 
 			phone, key, status, userSchema }

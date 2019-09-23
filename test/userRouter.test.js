@@ -19,8 +19,8 @@ const sinon = require('sinon')
 
 const _ = require('lodash')
 const { compress, decompress } = require('../src/utilities/compression')
-const { modelMap, userKey} = require('../src/models/dbRecords')
-const { userSchema, userName, password, email, firstName, lastName,
+const { modelMap } = require('../src/models/dbRecords')
+const { userSchema, userKey, userName, password, email, firstName, lastName,
     subscriptionDate, membershipDate, role, orginization, purpose, 
     phone, key, status} = require('../src/models/userSchema')
 
