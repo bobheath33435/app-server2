@@ -1,5 +1,17 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
+const log4js = require('log4js');
+const chalk = require('chalk')
 const bcrypt = require("bcryptjs")
+
+const { modelMap, userKey} = require('./dbRecords')
+const _ = require('lodash')
+log4js.configure({
+    // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
+    appenders: { h1bData: { type: 'console' } },
+    categories: { default: { appenders: ['h1bData'], level: 'info' } }
+});
+ 
+const logger = log4js.getLogger('h1bData');
 
 const userName = "userName"
 const password = "password"
@@ -24,6 +36,7 @@ const roles = ['expired',
 								'trial',
 								'goodwill',
 								'admin'];
+
 
 // User Schema
 const userSchema = mongoose.Schema({
@@ -89,8 +102,25 @@ userSchema.pre('save', async function(next)  {
 	if(user.isModified(password)){
 		user.password = await bcrypt.hash(user.password, 8)
 	}
+	next()
 })
 
+userSchema.statics.findByCredentials = async(clientData) => {
+	logger.trace(`userSchema clientData: ${JSON.stringify(clientData, undefined, 2)}`)
+	const query = _.pick(clientData, userName, email)
+	// const model = modelMap[userKey]
+	const user = await UserModel.findOne(query)
+	if(!user){
+		throw new Error("Unable to login")
+	}
+	const isMatch = await bcrypt.compare(clientData[password], user[password])
+	if(!isMatch){
+		throw new Error("Unable to login")
+	}
+	return user
+}
+
+const UserModel = mongoose.model("user", userSchema)
 module.exports = { userName, password, email, firstName, lastName,
 			subscriptionDate, membershipDate, role, orginization, purpose, 
 			phone, key, status, userSchema }

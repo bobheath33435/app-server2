@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const log4js = require('log4js');
+const chalk = require('chalk')
 
 const { h1bRecordSchema } = require('./h1bRecordSchema')
 const { userSchema } = require('./userSchema')
