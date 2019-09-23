@@ -18,8 +18,8 @@ const logger = log4js.getLogger('h1bData');
 userRouter.post('/register', async (req, res) => {
     try{
         logger.info('Processing register')
-        logger.error(chalk.rgb(255,255,0)("req.body: " + JSON.stringify(req.body)))
-        logger.error(chalk.rgb(255,0,255)("req.params: " + JSON.stringify(req.params)))
+        logger.trace(chalk.rgb(255,255,0)("req.body: " + JSON.stringify(req.body)))
+        logger.trace(chalk.rgb(255,0,255)("req.params: " + JSON.stringify(req.params)))
         var clientData = req.body.clientData
         if(undefined == clientData)
             return res.status(500).send(userRouter.NO_CLIENT_DATA)
@@ -41,9 +41,8 @@ userRouter.post('/register', async (req, res) => {
             return res.status(500).send("New user not created")
         }
         await newUser.save()
-        logger.error(`userModel: ${JSON.stringify(userModel, undefined, 2)}`)
-        logger.error(`clientData: ${JSON.stringify(clientData, undefined, 2)}`)
-        res.status(200).send("Gotcha")
+        logger.trace(`clientData: ${JSON.stringify(clientData, undefined, 2)}`)
+        res.status(201).send(userRouter.NEW_USER_CREATED)
     }catch(e){
         logger.error(chalk.bgRed.white.bold("Fatal error in /register: " + e))
         logger.error(chalk.bgRed.white.bold("Stack: " + e.stack))
@@ -53,4 +52,5 @@ userRouter.post('/register', async (req, res) => {
 
 userRouter.NO_CLIENT_DATA = "No Client Data"
 userRouter.INVALID_REQUEST = "Invalid Request"
+userRouter.NEW_USER_CREATED = "New UserCreated"
 module.exports = { userRouter }
