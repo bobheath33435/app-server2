@@ -208,7 +208,7 @@ describe('Test UserRouter', () => {
             logger.trace(chalk.bgRed.white.bold(`response: ${JSON.stringify(response.text)}`))
             expect(userRouter.NEW_USER_CREATED).to.be.equal(response.text)
         })
-        it('12) Empty', async () => {
+        xit('12) Empty', async () => {
         })
     })
 })   
