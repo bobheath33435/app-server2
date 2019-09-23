@@ -17,17 +17,32 @@ const logger = log4js.getLogger('h1bData');
 
 userRouter.post('/register', async (req, res) => {
     try{
+        logger.info('Processing register')
         logger.error(chalk.rgb(255,255,0)("req.body: " + JSON.stringify(req.body)))
         logger.error(chalk.rgb(255,0,255)("req.params: " + JSON.stringify(req.params)))
-        const clientData = req.body.clientData
+        var clientData = req.body.clientData
         if(undefined == clientData)
             return res.status(500).send(userRouter.NO_CLIENT_DATA)
-
-    //     logger.info('Processing register')
-    //     console.log(`req: ${JSON.stringify(req)}`)
-
-    //     const clientData = req.body.clientData
-    //     logger.info(`clientData: ${JSON.stringify(clientData, undefined, 2)}`)
+        const userModel = modelMap[userKey]
+        if(undefined === userModel){
+                return res.status(500).send(userRouter.INVALID_REQUEST)
+        }
+        const userName = clientData.userName
+        
+        const newUser = new userModel({
+            userName: clientData.userName,
+            firstName: clientData.firstName,
+            lastName: clientData.lastName,
+            email: clientData.email,
+            password: clientData.password,
+            status: "registered"
+        })
+        if(undefined == newUser){
+            return res.status(500).send("New user not created")
+        }
+        await newUser.save()
+        logger.error(`userModel: ${JSON.stringify(userModel, undefined, 2)}`)
+        logger.error(`clientData: ${JSON.stringify(clientData, undefined, 2)}`)
         res.status(200).send("Gotcha")
     }catch(e){
         logger.error(chalk.bgRed.white.bold("Fatal error in /register: " + e))

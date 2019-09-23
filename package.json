@@ -8,7 +8,9 @@
     "start:test": "mocha test/ --recursive --exit",
     "dev": "nodemon src/index.js",
     "test-watch": "nodemon --exec \"npm test\"",
-    "test": "mocha test/ --recursive --exit -t 15000"
+    "test-watch-user": "nodemon --exec \"npm test-user\"",
+    "test": "mocha test/ --recursive --exit -t 15000",
+    "test-user": "mocha test/userRouter.test.js  --exit -t 15000"
   },
   "keywords": [],
   "author": "Robert Heath",

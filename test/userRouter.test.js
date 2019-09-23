@@ -55,6 +55,7 @@ describe('Test UserRouter', () => {
             clientData[lastName] = "Bond"
             clientData[email] = "ward@xxx.com"
             clientData[userName] = "wmatt"
+            clientData[password] = "password"
             var body = { clientData }
             response = await request(app).post('/register').send(body).expect(200)
             logger.trace(chalk.bgRed.white.bold(`response: ${JSON.stringify(response.text)}`))

@@ -27,10 +27,10 @@ const roles = ['expired',
 // User Schema
 const userSchema = mongoose.Schema({
 	userName: {
-		type: String
-		// index: true,
-    	// unique: true,
-    	// required: true
+		type: String,
+		index: true,
+    	unique: true,
+    	required: true
 	},
 	password: {
 		type: String,
@@ -50,10 +50,10 @@ const userSchema = mongoose.Schema({
     	required: true
  	},
 	subscriptionDate: {
-		type: Number,
+		type: String,
 	},
 	membershipDate: {
-		type: Number,
+		type: String,
 	},
 	role: {
 		type: String,
