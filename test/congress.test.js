@@ -7,7 +7,7 @@ log4js.configure({
 const log = console.log;
 const logger = log4js.getLogger('h1bData');
 const chalk = require('chalk')
-const { modelMap, congressKey } = require('../src/models/dbRecords')
+const { CongressModel } = require('../src/models/congressSchema')
 
 const expect = require('chai').expect
 const _ = require('lodash')
@@ -19,9 +19,8 @@ describe('Sanity check of congressional data', () => {
     
     logger.trace('Sanity check of congressional data');
     it('1) read congressional data and check a few random properties', async () => {
-        const congressModel = modelMap[congressKey]
-        expect(!_.isEmpty(congressModel)).to.be.true
-        var congress = await congressModel.find({"key": "congress"})
+        expect(_.isEmpty(CongressModel)).to.be.false
+        var congress = await CongressModel.find({"key": "congress"})
         congress = congress[0].congress
         congress = decompress(congress)
         expect(!_.isEmpty(congress)).to.be.true

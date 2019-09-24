@@ -6,9 +6,6 @@ const { h1bRecordSchema } = require('./h1bRecordSchema')
 const congressSchema = require('./congressSchema')
 const autocompleteSchema = require('./autocompleteSchema')
 
-const congressKey = "congress"
-const autocompleteKey = "autocomplete"
-
 log4js.configure({
     // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },
     appenders: { h1bData: { type: 'console' } },
@@ -25,8 +22,6 @@ mongoose.connect(connectURL, {
     useCreateIndex: true
 })
 logger.info('After connect');
-const congress = mongoose.model('congress', congressSchema)
-const autocomplete = mongoose.model('autocomplete', autocompleteSchema)
 const h1B2010 = mongoose.model('H1bRecord10', h1bRecordSchema)
 const h1B2011 = mongoose.model('H1bRecord11', h1bRecordSchema)
 const h1B2012 = mongoose.model('H1bRecord12', h1bRecordSchema)
@@ -48,6 +43,5 @@ const modelMap = {
     2017: h1B2017,
     2018: h1B2018
 }
-modelMap[congressKey] = congress
-modelMap[autocompleteKey] = autocomplete
-module.exports = { modelMap, congressKey, autocompleteKey }
+
+module.exports = { modelMap }

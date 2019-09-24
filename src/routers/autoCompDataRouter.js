@@ -11,7 +11,7 @@ log4js.configure({
     appenders: { h1bData: { type: 'console' } },
     categories: { default: { appenders: ['h1bData'], level: 'info' } }
 });
-const { modelMap, autocompleteKey } = require('../models/dbRecords')
+const { AutocompleteModel } = require('../models/autocompleteSchema')
 const logger = log4js.getLogger('h1bData');
 
 autocompleteRouter.get('/autocomplete', async (req, res) => {
@@ -19,13 +19,12 @@ autocompleteRouter.get('/autocomplete', async (req, res) => {
         logger.info('Processing get of AutoComplete data');
         debugger
 
-        const autocompleteModel = modelMap[autocompleteKey]
-        if(undefined === autocompleteModel){
+        if(undefined === AutocompleteModel){
             return res.status(500).send("Should not happen")
         }
     
         logger.info(chalk.bgRed.white(`req.body: ${JSON.stringify(req.body)}`))
-        var autocomplete = await autocompleteModel.find(req.body)
+        var autocomplete = await AutocompleteModel.find(req.body)
         autocomplete = { status: autocomplete[0].autocomplete }
         autocomplete = decompress(autocomplete.status)
         res.status(200).send(autocomplete)

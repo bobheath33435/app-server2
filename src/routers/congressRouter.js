@@ -3,6 +3,7 @@ const express = require('express')
 const congressRouter = express.Router()
 const log4js = require('log4js')
 const chalk = require('chalk')
+const CongressModel = require('../models/congressSchema')
 const log = console.log;
 const { compress, decompress } = require('../utilities/compression')
 
@@ -11,19 +12,17 @@ log4js.configure({
     appenders: { h1bData: { type: 'console' } },
     categories: { default: { appenders: ['h1bData'], level: 'info' } }
 });
-const { modelMap, congressKey } = require('../models/dbRecords')
 const logger = log4js.getLogger('h1bData');
 
 congressRouter.get('/congress', async (req, res) => {
     try{
         logger.info('Processing get of congress data');
      
-        const congressModel = modelMap[congressKey]
-        if(undefined === congressModel){
+        if(undefined === CongressModel){
             return res.status(500).send("Should not happen")
         }
     
-        var congress = await congressModel.find({"key": "congress"})
+        var congress = await CongressModel.find({"key": "congress"})
         congress = congress[0].congress
         congress = decompress(congress)
         res.status(202).send(congress)

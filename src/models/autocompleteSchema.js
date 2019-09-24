@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 
-// SUmmary Schema
+const autocompleteKey = "autocomplete"
+
+// Autocomplete Schema
 const autocompleteSchema = mongoose.Schema({
 	key: {
 		type: String,
@@ -12,5 +14,13 @@ const autocompleteSchema = mongoose.Schema({
 	},
 
 });
+const connectURL = 'mongodb://127.0.0.1:27017/h1b'
 
-module.exports = autocompleteSchema
+mongoose.connect(connectURL, {
+	useNewUrlParser: true,
+	useCreateIndex: true
+})
+
+const AutocompleteModel = mongoose.model(autocompleteKey, autocompleteSchema)
+
+module.exports = { AutocompleteModel }
