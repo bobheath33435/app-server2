@@ -19,19 +19,17 @@ const sinon = require('sinon')
 
 const _ = require('lodash')
 const { compress, decompress } = require('../src/utilities/compression')
-const { modelMap } = require('../src/models/dbRecords')
-const { userSchema, userKey, userName, password, email, firstName, lastName,
+const { UserModel, userName, password, email, firstName, lastName,
     subscriptionDate, membershipDate, role, orginization, purpose, 
     phone, key, status} = require('../src/models/userSchema')
 
 describe('Test UserRouter', () => {
     describe('Test UserRouter', () => {
         beforeEach(async() => {
-            const userModel = modelMap[userKey]
             // var response = await userModel.deleteMany({})
-            var response = await userModel.deleteMany({userName: "wmatt", email: "ward@xxx.com"})
+            var response = await UserModel.deleteMany({userName: "wmatt", email: "ward@xxx.com"})
             logger.trace(`response: ${JSON.stringify(response)}`);
-            response = await userModel.deleteMany({userName: "bfife", email: "bfife@xxx.com"})
+            response = await UserModel.deleteMany({userName: "bfife", email: "bfife@xxx.com"})
             logger.trace(`response: ${JSON.stringify(response)}`);
             log4js.configure({
                 // appenders: { h1bData: { type: 'file', filename: 'h1bData.log' } },

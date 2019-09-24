@@ -122,6 +122,6 @@ userSchema.statics.findByCredentials = async(clientData) => {
 }
 
 const UserModel = mongoose.model(userKey, userSchema)
-module.exports = { userKey, userName, password, email, firstName, lastName,
+module.exports = { UserModel, userName, password, email, firstName, lastName,
 			subscriptionDate, membershipDate, role, orginization, purpose, 
-			phone, key, status, userSchema }
+			phone, key, status }

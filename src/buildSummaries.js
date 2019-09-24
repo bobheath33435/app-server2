@@ -26,7 +26,8 @@ const { states } = require('./models/states')
 const { employerNames } = require('./models/employerNames')
 const { asyncForEach, asyncForLoop } = require('./utilities/asyncRoutines')
 
-const { modelMap, summarySaveKey } = require('./models/dbRecords')
+const { modelMap } = require('./models/dbRecords')
+const { SummarySaveModel } = require('./models/summarySchema')
 const { summarizeAndCompress, createKey, years,
             compressSummaryRecord, decompressSummaryRecord } = require('./utilities/summarize')
 const { initYearObject, mergeStateObjects, finalizeMerge} = require('./utilities/yearModules')
@@ -78,8 +79,7 @@ const saveSummary = async(key, h1bObject) => {
         "summary": h1bObject
     }
     logger.trace(chalk.bgBlue('Save summary started'))
-    const summaryModel = modelMap[summarySaveKey]
-    const h1bSummary = summaryModel(summaryRecord)
+    const h1bSummary = SummarySaveModel(summaryRecord)
     logger.trace(chalk.bgBlue('Save summary start'))
     await h1bSummary.save()
     logger.trace(chalk.bgBlue('Save summary complete'))

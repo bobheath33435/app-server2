@@ -4,7 +4,7 @@ const log4js = require('log4js')
 const chalk = require('chalk')
 const _ = require('lodash')
 
-const { userSchema, userKey, userName, password, email, firstName, lastName,
+const { UserModel, userName, password, email, firstName, lastName,
     subscriptionDate, membershipDate, role, orginization, purpose, 
     phone, key, status} = require('../models/userSchema')
 const log = console.log;
@@ -14,7 +14,7 @@ log4js.configure({
     appenders: { h1bData: { type: 'console' } },
     categories: { default: { appenders: ['h1bData'], level: 'info' } }
 });
-const { modelMap } = require('../models/dbRecords')
+
 const logger = log4js.getLogger('h1bData');
 
 userRouter.post('/register', async (req, res) => {
@@ -25,12 +25,11 @@ userRouter.post('/register', async (req, res) => {
         var clientData = req.body.clientData
         if(undefined == clientData)
             return res.status(500).send(userRouter.NO_CLIENT_DATA)
-        const userModel = modelMap[userKey]
-        if(undefined === userModel){
+        if(undefined === UserModel){
                 return res.status(500).send(userRouter.INVALID_REQUEST)
         }
         
-        const newUser = new userModel({
+        const newUser = new UserModel({
             userName: clientData.userName,
             firstName: clientData.firstName,
             lastName: clientData.lastName,
@@ -59,11 +58,10 @@ userRouter.post('/login', async (req, res) => {
         var clientData = req.body.clientData
         if(undefined == clientData)
             return res.status(500).send(userRouter.NO_CLIENT_DATA)
-        const userModel = modelMap[userKey]
-        if(undefined === userModel){
+        if(undefined === UserModel){
                 return res.status(500).send(userRouter.INVALID_REQUEST)
         }
-        const user = await userModel.findByCredentials(clientData)
+        const user = await UserModel.findByCredentials(clientData)
         logger.trace(chalk.rgb(255,0,255)("user: " + JSON.stringify(user)))
         res.status(200).send(user)  
      }catch(e){
