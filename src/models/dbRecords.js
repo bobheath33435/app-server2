@@ -13,15 +13,7 @@ log4js.configure({
 });
  
 const logger = log4js.getLogger('h1bData');
-logger.info('Before connect');
 
-const connectURL = 'mongodb://127.0.0.1:27017/h1b'
-
-mongoose.connect(connectURL, {
-    useNewUrlParser: true,
-    useCreateIndex: true
-})
-logger.info('After connect');
 const h1B2010 = mongoose.model('H1bRecord10', h1bRecordSchema)
 const h1B2011 = mongoose.model('H1bRecord11', h1bRecordSchema)
 const h1B2012 = mongoose.model('H1bRecord12', h1bRecordSchema)

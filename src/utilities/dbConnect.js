@@ -10,21 +10,14 @@ log4js.configure({
 });
 const logger = log4js.getLogger('h1bData');
 
-const autocompleteKey = "autocomplete"
+const mongoConnect = () => {
+    logger.info('Before connect')
+    const connectURL = 'mongodb://127.0.0.1:27017/h1b'
+    mongoose.connect(connectURL, {
+        useNewUrlParser: true,
+        useCreateIndex: true
+    })
+    logger.info('After connect')
+}
 
-// Autocomplete Schema
-const autocompleteSchema = mongoose.Schema({
-	key: {
-		type: String,
-    	required: true
-	},
-	autocomplete: {
-		type: Object,
-    	required: true
-	},
-
-});
-
-const AutocompleteModel = mongoose.model(autocompleteKey, autocompleteSchema)
-
-module.exports = { AutocompleteModel }
+module.exports = { mongoConnect  }

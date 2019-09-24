@@ -15,7 +15,7 @@ log4js.configure({
 
 const startTime = moment()
 logger.info(chalk.bgRed.white.bold(`Initialize: ${startTime.format('MMMM Do YYYY, h:mm:ss a')}`));
-
+const { mongoConnect } = require('./utilities/dbConnect');
 const { h1bRecordRouter } = require('./routers/h1bRecordRouter')
 const { userRouter } = require('./routers/userRouter')
 const congressRouter = require('./routers/congressRouter')
@@ -30,6 +30,7 @@ const { readSummarizedQueries } = require('./utilities/summarize')
 var { summaryMap } = require('./utilities/summarize')
 
 const cb = async(obj) => {
+    mongoConnect()
     // logger.info(`System Info: ${JSON.stringify(obj)}`)
     logger.info(chalk.bgRed.white.bold("Platform:") + ' ' + chalk.green.bold(obj.platform))
     logger.info(chalk.bgRed.white.bold("Hostname:") + ' ' + chalk.green.bold(obj.hostname))

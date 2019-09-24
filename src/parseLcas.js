@@ -4,6 +4,8 @@ const si = require('systeminformation')
 const log4js = require('log4js')
 const chalk = require('chalk')
 const log = console.log
+const { mongoConnect } = require('./utilities/dbConnect');
+
 const {configSystem, config, platform, congressFilename} = require('./config')
 const { AutocompleteModel } = require('./models/autocompleteSchema')
 const { compress, decompress } = require('./utilities/compression')
@@ -42,6 +44,7 @@ const asyncForEach = (async (array, callback) => {
 
 const cb = async(obj) => {
     try{
+        mongoConnect()
         // logger.info(`System Info: ${JSON.stringify(obj)}`)
         logger.info(chalk.bgRed.white.bold("Platform:") + ' ' + chalk.green.bold(obj.platform))
         logger.info(chalk.bgRed.white.bold("Hostname:") + ' ' + chalk.green.bold(obj.hostname))

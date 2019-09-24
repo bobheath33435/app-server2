@@ -21,6 +21,7 @@ log4js.configure({
     categories: { default: { appenders: ['h1bData'], level: 'info' } }
 });
 const logger = log4js.getLogger('h1bData');
+const { mongoConnect } = require('./utilities/dbConnect');
 
 const { states } = require('./models/states')
 const { employerNames } = require('./models/employerNames')
@@ -297,6 +298,7 @@ const processYears = async () => {
 const bldSummaries = async () => {
     logger.info('Build summaries');
     // start()
+    mongoConnect()
     await processYears()
 
     setTimeout( () => {
