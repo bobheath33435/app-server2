@@ -298,7 +298,7 @@ const processYears = async () => {
 const bldSummaries = async () => {
     logger.info('Build summaries');
     // start()
-    mongoConnect()
+    await mongoConnect()
     await processYears()
 
     setTimeout( () => {

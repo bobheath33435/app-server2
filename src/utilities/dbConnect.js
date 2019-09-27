@@ -10,10 +10,10 @@ log4js.configure({
 });
 const logger = log4js.getLogger('h1bData');
 
-const mongoConnect = () => {
+const mongoConnect = async () => {
     logger.info('Before connect')
     const connectURL = 'mongodb://127.0.0.1:27017/h1b'
-    mongoose.connect(connectURL, {
+    await mongoose.connect(connectURL, {
         useNewUrlParser: true,
         useCreateIndex: true
     })

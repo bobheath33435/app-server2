@@ -44,7 +44,7 @@ const asyncForEach = (async (array, callback) => {
 
 const cb = async(obj) => {
     try{
-        mongoConnect()
+        await mongoConnect()
         // logger.info(`System Info: ${JSON.stringify(obj)}`)
         logger.info(chalk.bgRed.white.bold("Platform:") + ' ' + chalk.green.bold(obj.platform))
         logger.info(chalk.bgRed.white.bold("Hostname:") + ' ' + chalk.green.bold(obj.hostname))
@@ -82,6 +82,21 @@ const saveAutocompleteData = async(autoCompleteMap) => {
 
     try{
         logger.info(chalk.bgBlue('Save autoComplete started'))
+        const wageLevelArray
+                = migrateToArray(autoCompleteMap.wageLevels, sortWageLevel)
+        delete autoCompleteMap.wageLevels
+        await saveToDb(WAGE_LEVEL, compress(wageLevelArray))
+
+        const socCodesArray
+                = migrateToArray(autoCompleteMap.socCodes, sortSocCode)
+        delete autoCompleteMap.socCodes
+        await saveToDb(SOC_CODE, compress(socCodesArray))
+
+        const jobTitlesArray
+                = migrateToArray(autoCompleteMap.jobTitles, sortJobTitle)
+        delete autoCompleteMap.jobTitles
+        await saveToDb(JOB_TITLE, compress(jobTitlesArray))
+
         const worksiteAddr1s
                 = migrateToArray(autoCompleteMap.worksiteAddr1s, sortWorksiteAddr1)
         delete autoCompleteMap.worksiteAddr1s
@@ -126,21 +141,6 @@ const saveAutocompleteData = async(autoCompleteMap) => {
                 = migrateToArray(autoCompleteMap.employerStates, sortEmployerState)
         delete autoCompleteMap.employerStates
         await saveToDb(EMPLOYER_STATE, compress(employerStatesArray))
-
-        const jobTitlesArray
-                = migrateToArray(autoCompleteMap.jobTitles, sortJobTitle)
-        delete autoCompleteMap.jobTitles
-        await saveToDb(JOB_TITLE, compress(jobTitlesArray))
-
-        const socCodesArray
-                = migrateToArray(autoCompleteMap.socCodes, sortSocCode)
-        delete autoCompleteMap.socCodes
-        await saveToDb(SOC_CODE, compress(socCodesArray))
-
-        const wageLevelArray
-                = migrateToArray(autoCompleteMap.wageLevels, sortWageLevel)
-        delete autoCompleteMap.wageLevels
-        await saveToDb(WAGE_LEVEL, compress(wageLevelArray))
 
         logger.info(chalk.bgBlue('Save autoComplete complete'))    
     }catch(e){

@@ -18,8 +18,8 @@ const logger = log4js.getLogger('h1bData');
 
 var results = {}
 
-const cb = (obj) => {
-    mongoConnect()
+const cb = async(obj) => {
+    await mongoConnect()
     // logger.info(`System Info: ${JSON.stringify(obj)}`)
     logger.info(chalk.bgRed.white.bold("Platform:") + ' ' + chalk.green.bold(obj.platform))
     logger.info(chalk.bgRed.white.bold("Hostname:") + ' ' + chalk.green.bold(obj.hostname))
