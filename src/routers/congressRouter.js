@@ -3,7 +3,7 @@ const express = require('express')
 const congressRouter = express.Router()
 const log4js = require('log4js')
 const chalk = require('chalk')
-const CongressModel = require('../models/congressSchema')
+const { CongressModel } = require('../models/congressSchema')
 const log = console.log;
 const { compress, decompress } = require('../utilities/compression')
 
@@ -25,7 +25,7 @@ congressRouter.get('/congress', async (req, res) => {
         var congress = await CongressModel.find({"key": "congress"})
         congress = congress[0].congress
         congress = decompress(congress)
-        res.status(202).send(congress)
+        res.status(200).json(congress)
     }catch(e){
         logger.error(chalk.bgRed.white.bold("Congress request failed: " + e))
         logger.error(chalk.bgRed.white.bold("StackXX: " + e.stack))

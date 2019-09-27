@@ -10,7 +10,8 @@
     "test-watch": "nodemon --exec \"npm test\"",
     "test-watch-user": "nodemon --exec \"npm test-user\"",
     "test": "mocha test/ --recursive --exit -t 15000",
-    "test-user": "mocha test/userRouter.test.js  --exit -t 15000"
+    "test-user": "mocha test/userRouter.test.js  --exit -t 15000",
+    "test-congress": "mocha test/congress.test.js  --exit -t 15000"
   },
   "keywords": [],
   "author": "Robert Heath",
@@ -20,6 +21,7 @@
     "chalk": "^2.4.2",
     "csv-parser": "^2.3.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
     "log4js": "^4.5.1",
     "moment": "^2.24.0",
