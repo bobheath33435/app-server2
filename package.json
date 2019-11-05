@@ -26,7 +26,7 @@
     "log4js": "^4.5.1",
     "moment": "^2.24.0",
     "mongodb": "^3.3.0-beta2",
-    "mongoose": "^5.6.8",
+    "mongoose": "^5.7.5",
     "pako": "^1.0.10",
     "systeminformation": "^4.14.8",
     "underscore": "^1.9.1"
